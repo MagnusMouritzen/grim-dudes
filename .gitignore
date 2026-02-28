@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+client/dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Optional: keep sample data, ignore user-created if you add a separate folder later
+# data/user/

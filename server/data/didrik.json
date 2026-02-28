@@ -1,0 +1,19 @@
+{
+  "id": "didrik",
+  "name": "Didrik",
+  "description": "Hejsa",
+  "characteristics": {
+    "WS": 13,
+    "BS": 13,
+    "S": 13,
+    "T": 245,
+    "I": 564,
+    "Ag": 3,
+    "Dex": 43,
+    "Int": 54,
+    "WP": 65,
+    "Fel": 345
+  },
+  "wounds": 213,
+  "movement": 34
+}

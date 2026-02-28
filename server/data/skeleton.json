@@ -1,0 +1,23 @@
+{
+  "id": "skeleton",
+  "name": "Skeleton",
+  "description": "Reanimated bones in the service of necromancers.",
+  "characteristics": {
+    "WS": 35,
+    "BS": 30,
+    "S": 35,
+    "T": 35,
+    "I": 30,
+    "Ag": 30,
+    "Dex": 25,
+    "Int": 25,
+    "WP": 25,
+    "Fel": 10
+  },
+  "wounds": 10,
+  "movement": 4,
+  "skills": ["Athletics", "Dodge", "Melee (Basic)", "Perception"],
+  "talents": ["Fearless", "Undead"],
+  "armour": "None",
+  "weapons": "Rusty sword, crumbling shield"
+}

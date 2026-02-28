@@ -1,0 +1,23 @@
+{
+  "id": "rat-catcher",
+  "name": "Rat Catcher",
+  "description": "A grim-faced professional with a small but vicious dog.",
+  "characteristics": {
+    "WS": 32,
+    "BS": 31,
+    "S": 31,
+    "T": 33,
+    "I": 30,
+    "Ag": 35,
+    "Dex": 32,
+    "Int": 28,
+    "WP": 29,
+    "Fel": 28
+  },
+  "wounds": 11,
+  "movement": 4,
+  "skills": ["Animal Care", "Athletics", "Consume Alcohol", "Dodge", "Endurance", "Intuition", "Melee (Basic)", "Outdoor Survival", "Perception", "Stealth (Rural)", "Trade (Poisoner)"],
+  "talents": ["Rover", "Rattler", "Resistance (Disease)"],
+  "armour": "Leather jerkin",
+  "weapons": "Sling, club, small but vicious dog"
+}

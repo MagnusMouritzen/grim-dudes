@@ -1,0 +1,23 @@
+{
+  "id": "chaos-warrior",
+  "name": "Chaos Warrior",
+  "description": "A champion of the Dark Gods, encased in baroque armour.",
+  "characteristics": {
+    "WS": 55,
+    "BS": 45,
+    "S": 55,
+    "T": 50,
+    "I": 45,
+    "Ag": 40,
+    "Dex": 40,
+    "Int": 45,
+    "WP": 50,
+    "Fel": 35
+  },
+  "wounds": 18,
+  "movement": 5,
+  "skills": ["Athletics", "Cool", "Dodge", "Endurance", "Intimidate", "Language (Dark Tongue)", "Melee (Basic)", "Melee (Cavalry)", "Perception", "Willpower"],
+  "talents": ["Furious Assault", "Menacing", "Warrior Born", "Strike to Stun"],
+  "armour": "Full plate (Chaos-forged)",
+  "weapons": "Runefang, shield"
+}
