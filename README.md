@@ -72,7 +72,14 @@ Each JSON file in `server/data/` can have:
 - `id`, `name`, `description`
 - `characteristics`: `WS`, `BS`, `S`, `T`, `I`, `Ag`, `Dex`, `Int`, `WP`, `Fel` (numbers)
 - `wounds`, `movement`
-- `skills`, `talents` (arrays of strings)
-- `armour`, `weapons` (strings)
+- `skills`: array of `{ \"name\": string, \"advances\": number }`
+- `talents`: array of strings
+- `traits`: array of strings (names that exist in `traits.json`)
+- `armour`, `weapons`: strings
+
+Reference data:
+
+- `server/data/skills.json` — list of all skills and their associated characteristic.
+- `server/data/traits.json` — list of all traits and their descriptions.
 
 Example: see `server/data/skeleton.json` or `server/data/chaos-warrior.json`.

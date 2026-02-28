@@ -1,0 +1,39 @@
+{
+  "id": "en-gut",
+  "name": "En gut",
+  "characteristics": {
+    "WS": 10,
+    "BS": 11,
+    "S": 12,
+    "T": 13,
+    "I": 14,
+    "Ag": 15,
+    "Dex": 16,
+    "Int": 17,
+    "WP": 18,
+    "Fel": 19
+  },
+  "wounds": 20,
+  "movement": 4,
+  "skills": [
+    {
+      "name": "Cool",
+      "advances": 3
+    },
+    {
+      "name": "Endurance",
+      "advances": 10
+    },
+    {
+      "name": "Melee (Basic)",
+      "advances": 5
+    }
+  ],
+  "talents": [
+    "hej"
+  ],
+  "traits": [
+    "Menacing",
+    "Rover"
+  ]
+}

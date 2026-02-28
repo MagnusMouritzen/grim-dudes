@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, 'data');
+const SKILLS_FILE = path.join(DATA_DIR, 'skills.json');
+const TRAITS_FILE = path.join(DATA_DIR, 'traits.json');
 
 const app = express();
 app.use(cors());
@@ -24,7 +26,14 @@ if (!fs.existsSync(DATA_DIR)) {
 
 function listStatBlockFiles() {
   if (!fs.existsSync(DATA_DIR)) return [];
-  return fs.readdirSync(DATA_DIR).filter((f) => f.endsWith('.json'));
+  return fs
+    .readdirSync(DATA_DIR)
+    .filter(
+      (f) =>
+        f.endsWith('.json') &&
+        f !== path.basename(SKILLS_FILE) &&
+        f !== path.basename(TRAITS_FILE)
+    );
 }
 
 function idToFilename(id) {
@@ -85,6 +94,30 @@ app.post('/api/statblocks', (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Failed to save stat block' });
   }
+});
+
+function loadJsonArray(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return [];
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const data = JSON.parse(raw);
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.error(`Failed to load JSON from ${filePath}`, err);
+    return [];
+  }
+}
+
+// Reference data: skills
+app.get('/api/skills', (req, res) => {
+  const skills = loadJsonArray(SKILLS_FILE);
+  res.json(skills);
+});
+
+// Reference data: traits
+app.get('/api/traits', (req, res) => {
+  const traits = loadJsonArray(TRAITS_FILE);
+  res.json(traits);
 });
 
 // SPA fallback

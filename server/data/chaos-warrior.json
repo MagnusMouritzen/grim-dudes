@@ -16,8 +16,20 @@
   },
   "wounds": 18,
   "movement": 5,
-  "skills": ["Athletics", "Cool", "Dodge", "Endurance", "Intimidate", "Language (Dark Tongue)", "Melee (Basic)", "Melee (Cavalry)", "Perception", "Willpower"],
-  "talents": ["Furious Assault", "Menacing", "Warrior Born", "Strike to Stun"],
+  "skills": [
+    { "name": "Athletics", "advances": 10 },
+    { "name": "Cool", "advances": 15 },
+    { "name": "Dodge", "advances": 10 },
+    { "name": "Endurance", "advances": 10 },
+    { "name": "Intimidate", "advances": 20 },
+    { "name": "Language (Dark Tongue)", "advances": 10 },
+    { "name": "Melee (Basic)", "advances": 20 },
+    { "name": "Melee (Cavalry)", "advances": 15 },
+    { "name": "Perception", "advances": 10 },
+    { "name": "Willpower", "advances": 15 }
+  ],
+  "talents": ["Furious Assault", "Warrior Born", "Strike to Stun"],
+  "traits": ["Menacing", "Implacable"],
   "armour": "Full plate (Chaos-forged)",
   "weapons": "Runefang, shield"
 }

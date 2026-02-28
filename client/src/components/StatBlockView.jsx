@@ -7,14 +7,32 @@ const API = '/api';
 export default function StatBlockView() {
   const { id } = useParams();
   const [block, setBlock] = useState(null);
+  const [skillsRef, setSkillsRef] = useState([]);
+  const [traitsRef, setTraitsRef] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!id) return;
-    fetch(`${API}/statblocks/${encodeURIComponent(id)}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Not found'))))
-      .then(setBlock)
+    setLoading(true);
+    setError(null);
+
+    const fetchBlock = fetch(`${API}/statblocks/${encodeURIComponent(id)}`).then((r) =>
+      r.ok ? r.json() : Promise.reject(new Error('Not found'))
+    );
+    const fetchSkills = fetch(`${API}/skills`).then((r) =>
+      r.ok ? r.json() : Promise.reject(new Error('Failed to load skills'))
+    );
+    const fetchTraits = fetch(`${API}/traits`).then((r) =>
+      r.ok ? r.json() : Promise.reject(new Error('Failed to load traits'))
+    );
+
+    Promise.all([fetchBlock, fetchSkills, fetchTraits])
+      .then(([blockData, skillsData, traitsData]) => {
+        setBlock(blockData);
+        setSkillsRef(Array.isArray(skillsData) ? skillsData : []);
+        setTraitsRef(Array.isArray(traitsData) ? traitsData : []);
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [id]);
@@ -30,8 +48,13 @@ export default function StatBlockView() {
 
   return (
     <div>
-      <Link to="/" className="text-parchment/80 hover:text-parchment text-sm mb-4 inline-block">← Bestiary</Link>
-      <StatBlockCard block={block} />
+      <Link
+        to="/"
+        className="text-parchment/80 hover:text-parchment text-sm mb-4 inline-block"
+      >
+        ← Bestiary
+      </Link>
+      <StatBlockCard block={block} skillsRef={skillsRef} traitsRef={traitsRef} />
     </div>
   );
 }

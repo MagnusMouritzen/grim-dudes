@@ -1,0 +1,19 @@
+[
+  { "name": "Animal Care", "characteristic": "Int" },
+  { "name": "Athletics", "characteristic": "Ag" },
+  { "name": "Consume Alcohol", "characteristic": "T" },
+  { "name": "Cool", "characteristic": "WP" },
+  { "name": "Dodge", "characteristic": "Ag" },
+  { "name": "Endurance", "characteristic": "T" },
+  { "name": "Intimidate", "characteristic": "S" },
+  { "name": "Intuition", "characteristic": "I" },
+  { "name": "Language (Dark Tongue)", "characteristic": "Int" },
+  { "name": "Melee (Basic)", "characteristic": "WS" },
+  { "name": "Melee (Cavalry)", "characteristic": "WS" },
+  { "name": "Outdoor Survival", "characteristic": "Int" },
+  { "name": "Perception", "characteristic": "I" },
+  { "name": "Stealth (Rural)", "characteristic": "Ag" },
+  { "name": "Trade (Poisoner)", "characteristic": "Dex" },
+  { "name": "Willpower", "characteristic": "WP" }
+]
+

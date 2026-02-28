@@ -1,10 +1,59 @@
 const CHAR_ORDER = ['WS', 'BS', 'S', 'T', 'I', 'Ag', 'Dex', 'Int', 'WP', 'Fel'];
 
-export default function StatBlockCard({ block, compact = false }) {
+function normaliseSkills(skills) {
+  if (!Array.isArray(skills)) return [];
+  return skills.map((s) => {
+    if (typeof s === 'string') {
+      return { name: s, advances: 0 };
+    }
+    const name = s.name || s.skill || '';
+    const advances = Number.isFinite(s.advances) ? s.advances : 0;
+    return { name, advances };
+  });
+}
+
+function buildSkillDisplay(block, skillsRef) {
+  const ch = block.characteristics || {};
+  const refMap = new Map(
+    (Array.isArray(skillsRef) ? skillsRef : []).map((s) => [s.name, s])
+  );
+  const normalised = normaliseSkills(block.skills);
+
+  const withTotals = normalised
+    .filter((s) => s.name)
+    .map((s) => {
+      const ref = refMap.get(s.name);
+      const charKey = ref?.characteristic;
+      const base = charKey && typeof ch[charKey] === 'number' ? ch[charKey] : 0;
+      const total = base + (Number.isFinite(s.advances) ? s.advances : 0);
+      return { ...s, characteristic: charKey, total };
+    });
+
+  withTotals.sort((a, b) => a.name.localeCompare(b.name));
+  return withTotals;
+}
+
+function buildTraitsDisplay(block, traitsRef) {
+  const names = Array.isArray(block.traits) ? block.traits : [];
+  const map = new Map(
+    (Array.isArray(traitsRef) ? traitsRef : []).map((t) => [t.name, t])
+  );
+  const items = names
+    .filter((n) => typeof n === 'string' && n.trim())
+    .map((name) => ({
+      name,
+      description: map.get(name)?.description || '',
+    }));
+  items.sort((a, b) => a.name.localeCompare(b.name));
+  return items;
+}
+
+export default function StatBlockCard({ block, compact = false, skillsRef, traitsRef }) {
   if (!block) return null;
   const ch = block.characteristics || {};
-  const skills = Array.isArray(block.skills) ? block.skills : [];
   const talents = Array.isArray(block.talents) ? block.talents : [];
+  const skillsWithTotals = buildSkillDisplay(block, skillsRef);
+  const traits = buildTraitsDisplay(block, traitsRef);
 
   if (compact) {
     return (
@@ -50,10 +99,54 @@ export default function StatBlockCard({ block, compact = false }) {
             <p className="text-parchment font-semibold">{block.movement ?? '—'}</p>
           </div>
         </div>
-        {skills.length > 0 && (
+        {skillsWithTotals.length > 0 && (
           <section>
-            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">Skills</h3>
-            <p className="text-parchment/95">{skills.join(', ')}</p>
+            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">
+              Skills
+            </h3>
+            <div className="flex flex-wrap gap-2 text-sm">
+              {skillsWithTotals.map((skill) => (
+                <span
+                  key={skill.name}
+                  className="inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5"
+                  title={
+                    skill.characteristic
+                      ? `${skill.name}: ${skill.characteristic} ${ch[skill.characteristic] ?? 0} + Advances ${skill.advances} = ${skill.total}`
+                      : `${skill.name}: Advances ${skill.advances} (no linked characteristic)`
+                  }
+                >
+                  <span className="text-parchment/95 mr-1">{skill.name}</span>
+                  <span className="text-gold font-semibold text-xs">
+                    {skill.total}
+                  </span>
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+        {traits.length > 0 && (
+          <section>
+            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">
+              Traits
+            </h3>
+            <div className="flex flex-wrap gap-2 text-sm">
+              {traits.map((trait) => (
+                <span
+                  key={trait.name}
+                  className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5 cursor-help"
+                >
+                  <span className="text-parchment/95">{trait.name}</span>
+                  {trait.description && (
+                    <span className="pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 w-64 rounded border border-gold/40 bg-[#15110c] px-3 py-2 text-xs text-parchment shadow-lg shadow-black/60">
+                      <span className="block text-gold/80 font-semibold mb-1">
+                        {trait.name}
+                      </span>
+                      <span className="text-parchment/90">{trait.description}</span>
+                    </span>
+                  )}
+                </span>
+              ))}
+            </div>
           </section>
         )}
         {talents.length > 0 && (

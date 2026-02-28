@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Undead",
+    "description": "This creature does not breathe, is immune to poison and disease, and is unaffected by the Bleeding Condition. It never gains Fatigued from sleep deprivation."
+  },
+  {
+    "name": "Fearless",
+    "description": "Automatically passes Fear Tests related to a specified subject, and never gains the Frightened Condition from that subject."
+  },
+  {
+    "name": "Rover",
+    "description": "Used to a life on the road; gains bonuses to Stealth and Survival tests in the wilderness."
+  },
+  {
+    "name": "Menacing",
+    "description": "Imposing presence grants bonuses to Intimidate Tests."
+  },
+  {
+    "name": "Warrior Born",
+    "description": "Raised for battle; gains bonuses to Melee Tests in their favoured weapon group."
+  },
+  {
+    "name": "Implacable",
+    "description": "Never gives up the chase once prey is marked; gains bonuses when pursuing foes."
+  }
+]
+

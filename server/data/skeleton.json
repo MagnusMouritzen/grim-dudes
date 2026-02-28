@@ -16,8 +16,14 @@
   },
   "wounds": 10,
   "movement": 4,
-  "skills": ["Athletics", "Dodge", "Melee (Basic)", "Perception"],
-  "talents": ["Fearless", "Undead"],
+  "skills": [
+    { "name": "Athletics", "advances": 0 },
+    { "name": "Dodge", "advances": 10 },
+    { "name": "Melee (Basic)", "advances": 10 },
+    { "name": "Perception", "advances": 0 }
+  ],
+  "talents": ["Fearless"],
+  "traits": ["Undead"],
   "armour": "None",
   "weapons": "Rusty sword, crumbling shield"
 }

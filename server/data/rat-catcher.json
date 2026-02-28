@@ -16,8 +16,21 @@
   },
   "wounds": 11,
   "movement": 4,
-  "skills": ["Animal Care", "Athletics", "Consume Alcohol", "Dodge", "Endurance", "Intuition", "Melee (Basic)", "Outdoor Survival", "Perception", "Stealth (Rural)", "Trade (Poisoner)"],
-  "talents": ["Rover", "Rattler", "Resistance (Disease)"],
+  "skills": [
+    { "name": "Animal Care", "advances": 5 },
+    { "name": "Athletics", "advances": 5 },
+    { "name": "Consume Alcohol", "advances": 10 },
+    { "name": "Dodge", "advances": 5 },
+    { "name": "Endurance", "advances": 5 },
+    { "name": "Intuition", "advances": 5 },
+    { "name": "Melee (Basic)", "advances": 5 },
+    { "name": "Outdoor Survival", "advances": 10 },
+    { "name": "Perception", "advances": 10 },
+    { "name": "Stealth (Rural)", "advances": 10 },
+    { "name": "Trade (Poisoner)", "advances": 5 }
+  ],
+  "talents": ["Rover", "Resistance (Disease)"],
+  "traits": ["Rattler"],
   "armour": "Leather jerkin",
   "weapons": "Sling, club, small but vicious dog"
 }
