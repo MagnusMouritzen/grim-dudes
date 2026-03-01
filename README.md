@@ -69,7 +69,7 @@ PORT=8080 npm run preview
 
 Each JSON file in `server/data/` can have:
 
-- `id`, `name`, `description`
+- `id`, `name`
 - `characteristics`: `WS`, `BS`, `S`, `T`, `I`, `Ag`, `Dex`, `Int`, `WP`, `Fel` (numbers)
 - `wounds`, `movement`
 - `skills`: array of `{ \"name\": string, \"advances\": number }`

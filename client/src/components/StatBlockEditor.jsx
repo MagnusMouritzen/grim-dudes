@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 
 const API = '/api';
 const CHAR_ORDER = ['WS', 'BS', 'S', 'T', 'I', 'Ag', 'Dex', 'Int', 'WP', 'Fel'];
@@ -8,15 +8,16 @@ const emptyCharacteristics = Object.fromEntries(CHAR_ORDER.map((k) => [k, '']));
 
 export default function StatBlockEditor() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [allSkills, setAllSkills] = useState([]);
   const [allTraits, setAllTraits] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedTraits, setSelectedTraits] = useState([]);
+  const [existingId, setExistingId] = useState(null);
   const [form, setForm] = useState({
     name: '',
-    description: '',
     characteristics: { ...emptyCharacteristics },
     wounds: '',
     movement: '',
@@ -55,6 +56,38 @@ export default function StatBlockEditor() {
         // fail silently; editor will still work without reference data
       });
   }, []);
+
+  useEffect(() => {
+    if (!id) return;
+    fetch(`${API}/statblocks/${encodeURIComponent(id)}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Not found'))))
+      .then((data) => {
+        setExistingId(data.id);
+        setForm((prev) => ({
+          ...prev,
+          name: data.name || '',
+          characteristics: { ...emptyCharacteristics, ...(data.characteristics || {}) },
+          wounds: data.wounds != null ? String(data.wounds) : '',
+          movement: data.movement != null ? String(data.movement) : '',
+          talents: Array.isArray(data.talents) ? data.talents.join(', ') : '',
+          armour: data.armour || '',
+          weapons: data.weapons || '',
+        }));
+        const normalisedSkills = (Array.isArray(data.skills) ? data.skills : []).map((s) => {
+          if (typeof s === 'string') return { name: s, advances: 0 };
+          const name = s.name || s.skill || '';
+          const advances = Number.isFinite(s.advances) ? s.advances : 0;
+          return { name, advances };
+        });
+        setSelectedSkills(normalisedSkills);
+        setSelectedTraits(
+          Array.isArray(data.traits)
+            ? data.traits.slice().sort((a, b) => a.localeCompare(b))
+            : []
+        );
+      })
+      .catch((e) => setError(e.message));
+  }, [id]);
 
   const addSkill = (name) => {
     setSelectedSkills((prev) => {
@@ -99,8 +132,8 @@ export default function StatBlockEditor() {
       if (v !== '' && v != null) characteristics[k] = num(v) ?? v;
     });
     return {
+      id: existingId || undefined,
       name: form.name || 'Unnamed',
-      description: form.description || undefined,
       characteristics: Object.keys(characteristics).length ? characteristics : undefined,
       wounds: num(form.wounds),
       movement: num(form.movement),
@@ -130,8 +163,15 @@ export default function StatBlockEditor() {
 
   return (
     <div>
-      <Link to="/" className="text-parchment/80 hover:text-parchment text-sm mb-4 inline-block">← Bestiary</Link>
-      <h1 className="font-display text-3xl text-gold mb-6 tracking-wide">New Stat Block</h1>
+      <Link
+        to="/"
+        className="text-parchment/80 hover:text-parchment text-sm mb-4 inline-block"
+      >
+        ← Bestiary
+      </Link>
+      <h1 className="font-display text-3xl text-gold mb-6 tracking-wide">
+        {id ? 'Edit Stat Block' : 'New Stat Block'}
+      </h1>
 
       <div className="rounded-lg border-2 border-iron/70 bg-[#0f0d0a] p-6 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)] lg:gap-8">
         <div className="space-y-6">
@@ -151,17 +191,6 @@ export default function StatBlockEditor() {
               className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment placeholder-parchment/40 focus:border-gold/60 focus:outline-none"
             />
           </div>
-          <div>
-            <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Description</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => update('description', e.target.value)}
-              placeholder="Short flavour text"
-              rows={2}
-              className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment placeholder-parchment/40 focus:border-gold/60 focus:outline-none resize-y"
-            />
-          </div>
-
           <section>
             <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-3 font-semibold">Characteristics</h3>
             <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">

@@ -1,12 +1,11 @@
 {
   "id": "didrik",
   "name": "Didrik",
-  "description": "Hejsa",
   "characteristics": {
     "WS": 13,
     "BS": 13,
     "S": 13,
-    "T": 245,
+    "T": 25,
     "I": 564,
     "Ag": 3,
     "Dex": 43,

@@ -11,6 +11,7 @@ export default function App() {
         <Route path="/" element={<StatBlockList />} />
         <Route path="/statblock/:id" element={<StatBlockView />} />
         <Route path="/new" element={<StatBlockEditor />} />
+        <Route path="/statblock/:id/edit" element={<StatBlockEditor />} />
       </Routes>
     </Layout>
   );

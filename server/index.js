@@ -84,7 +84,9 @@ app.get('/api/statblocks/:id', (req, res) => {
 app.post('/api/statblocks', (req, res) => {
   try {
     const body = req.body;
-    const id = (body.name || 'statblock').replace(/[^a-z0-9-_]/gi, '-').replace(/-+/g, '-').toLowerCase() || 'statblock';
+    const baseId = body.id || body.name || 'statblock';
+    const id =
+      baseId.replace(/[^a-z0-9-_]/gi, '-').replace(/-+/g, '-').toLowerCase() || 'statblock';
     const filename = idToFilename(id);
     const filepath = path.join(DATA_DIR, filename);
     const payload = { id, ...body };
@@ -93,6 +95,23 @@ app.post('/api/statblocks', (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to save stat block' });
+  }
+});
+
+// DELETE /api/statblocks/:id — delete one
+app.delete('/api/statblocks/:id', (req, res) => {
+  try {
+    const id = req.params.id;
+    const filename = idToFilename(id);
+    const filepath = path.join(DATA_DIR, filename);
+    if (!fs.existsSync(filepath)) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    fs.unlinkSync(filepath);
+    res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to delete stat block' });
   }
 });
 
