@@ -1,0 +1,78 @@
+{
+  "id": "human-commoner",
+  "name": "Human Commoner",
+  "templateId": "skeleton-minion",
+  "randomiseCharacteristics": false,
+  "characteristics": {
+    "WS": {
+      "base": 35,
+      "advances": 5,
+      "addition": 10
+    },
+    "BS": {
+      "base": 30,
+      "advances": 0,
+      "addition": 10
+    },
+    "S": {
+      "base": 35,
+      "advances": 0,
+      "addition": 10
+    },
+    "T": {
+      "base": 35,
+      "advances": 0,
+      "addition": 10
+    },
+    "I": {
+      "base": 30,
+      "advances": 0,
+      "addition": 10
+    },
+    "Ag": {
+      "base": 30,
+      "advances": 0,
+      "addition": 10
+    },
+    "Dex": {
+      "base": 25,
+      "advances": 0,
+      "addition": 10
+    },
+    "Int": {
+      "base": 25,
+      "advances": 0,
+      "addition": 10
+    },
+    "WP": {
+      "base": 25,
+      "advances": 0,
+      "addition": 10
+    },
+    "Fel": {
+      "base": 10,
+      "advances": 0,
+      "addition": 10
+    }
+  },
+  "wounds": 10,
+  "movement": 4,
+  "skills": [
+    {
+      "name": "Stealth (Rural)",
+      "advances": 1
+    },
+    {
+      "name": "Melee (Cavalry)",
+      "advances": 5
+    }
+  ],
+  "talents": [
+    "Fearless"
+  ],
+  "traits": [
+    "Menacing"
+  ],
+  "armour": "None",
+  "weapons": "Rusty sword, crumbling shield"
+}

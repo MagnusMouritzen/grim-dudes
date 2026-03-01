@@ -1,5 +1,18 @@
 const CHAR_ORDER = ['WS', 'BS', 'S', 'T', 'I', 'Ag', 'Dex', 'Int', 'WP', 'Fel'];
 
+function getCharacteristicValue(block, key) {
+  const ch = block.characteristics || {};
+  const v = ch[key];
+  if (typeof v === 'number' && !Number.isNaN(v)) return v;
+  if (v && typeof v === 'object' && typeof v.base === 'number') {
+    const base = v.base;
+    const advances = typeof v.advances === 'number' ? v.advances : 0;
+    const addition = typeof v.addition === 'number' ? v.addition : 0;
+    return base + advances + addition;
+  }
+  return undefined;
+}
+
 function normaliseSkills(skills) {
   if (!Array.isArray(skills)) return [];
   return skills.map((s) => {
@@ -13,7 +26,6 @@ function normaliseSkills(skills) {
 }
 
 function buildSkillDisplay(block, skillsRef) {
-  const ch = block.characteristics || {};
   const refMap = new Map(
     (Array.isArray(skillsRef) ? skillsRef : []).map((s) => [s.name, s])
   );
@@ -24,8 +36,8 @@ function buildSkillDisplay(block, skillsRef) {
     .map((s) => {
       const ref = refMap.get(s.name);
       const charKey = ref?.characteristic;
-      const base = charKey && typeof ch[charKey] === 'number' ? ch[charKey] : 0;
-      const total = base + (Number.isFinite(s.advances) ? s.advances : 0);
+      const base = charKey ? getCharacteristicValue(block, charKey) : 0;
+      const total = (typeof base === 'number' ? base : 0) + (Number.isFinite(s.advances) ? s.advances : 0);
       return { ...s, characteristic: charKey, total };
     });
 
@@ -50,7 +62,6 @@ function buildTraitsDisplay(block, traitsRef) {
 
 export default function StatBlockCard({ block, compact = false, skillsRef, traitsRef }) {
   if (!block) return null;
-  const ch = block.characteristics || {};
   const talents = Array.isArray(block.talents) ? block.talents : [];
   const skillsWithTotals = buildSkillDisplay(block, skillsRef);
   const traits = buildTraitsDisplay(block, traitsRef);
@@ -63,7 +74,7 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
           {CHAR_ORDER.map((key) => (
             <div key={key} className="bg-ink/60 rounded px-2 py-1 text-center">
               <div className="text-blood/90 text-[0.6rem]">{key}</div>
-              <div className="text-parchment font-semibold text-xs">{ch[key] ?? '—'}</div>
+              <div className="text-parchment font-semibold text-xs">{getCharacteristicValue(block, key) ?? '—'}</div>
             </div>
           ))}
         </div>
@@ -83,7 +94,7 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
             {CHAR_ORDER.map((key) => (
               <div key={key} className="bg-ink/60 rounded px-2 py-1 text-center">
                 <div className="text-blood/90 text-xs">{key}</div>
-                <div className="text-parchment font-semibold">{ch[key] ?? '—'}</div>
+                <div className="text-parchment font-semibold">{getCharacteristicValue(block, key) ?? '—'}</div>
               </div>
             ))}
           </div>
