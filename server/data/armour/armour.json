@@ -1,0 +1,19 @@
+{
+  "categories": [
+    {
+      "name": "Mail",
+      "items": [
+        {
+          "name": "Mail Coat",
+          "locations": ["Arms", "Body"],
+          "aps": 2,
+          "qualitiesAndFlaws": ["Flexible"]
+        }
+      ]
+    },
+    {
+      "name": "Plate",
+      "items": []
+    }
+  ]
+}

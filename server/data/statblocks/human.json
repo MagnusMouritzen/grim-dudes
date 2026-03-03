@@ -1,0 +1,81 @@
+{
+  "id": "human",
+  "name": "Human",
+  "templateId": "human",
+  "randomiseCharacteristics": false,
+  "characteristics": {
+    "WS": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "BS": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "S": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "T": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "I": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Ag": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Dex": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Int": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "WP": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Fel": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    }
+  },
+  "size": "Average",
+  "wounds": 12,
+  "movement": 4,
+  "traits": [
+    {
+      "name": "Prejudice"
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Basic",
+        "name": "Sword"
+      }
+    ],
+    "ranged": []
+  },
+  "armour": [
+    {
+      "category": "Mail",
+      "name": "Mail Coat"
+    }
+  ]
+}

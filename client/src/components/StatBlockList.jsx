@@ -12,7 +12,7 @@ export default function StatBlockList() {
   useEffect(() => {
     fetch(`${API}/statblocks`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load'))))
-      .then(setBlocks)
+      .then((data) => setBlocks(Array.isArray(data) ? data : []))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
@@ -34,7 +34,7 @@ export default function StatBlockList() {
     <div>
       <h1 className="font-display text-3xl text-gold mb-6 tracking-wide">Bestiary</h1>
       <div className="grid gap-4">
-        {blocks.length === 0 ? (
+        {!Array.isArray(blocks) || blocks.length === 0 ? (
           <p className="text-parchment/80">No stat blocks yet. <Link to="/new" className="text-gold hover:underline">Create one</Link>.</p>
         ) : (
           blocks.map((block) => (

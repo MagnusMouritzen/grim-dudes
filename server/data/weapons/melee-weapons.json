@@ -1,0 +1,20 @@
+{
+  "categories": [
+    {
+      "name": "Basic",
+      "weapons": [
+        {
+          "name": "Sword",
+          "damage": 4,
+          "qualitiesAndFlaws": ["Unbalanced"],
+          "reach": "Average",
+          "sbDamage": true
+        }
+      ]
+    },
+    {
+      "name": "Brawling",
+      "weapons": []
+    }
+  ]
+}

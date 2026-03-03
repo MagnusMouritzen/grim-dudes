@@ -1,0 +1,6 @@
+{
+  "categories": [
+    { "name": "Bow", "ammunition": [] },
+    { "name": "Crossbow", "ammunition": [] }
+  ]
+}

@@ -8,6 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, 'data');
 const STATBLOCKS_DIR = path.join(DATA_DIR, 'statblocks');
 const TEMPLATES_DIR = path.join(DATA_DIR, 'templates');
+const WEAPONS_DIR = path.join(DATA_DIR, 'weapons');
+const ARMOUR_DIR = path.join(DATA_DIR, 'armour');
 const SKILLS_FILE = path.join(DATA_DIR, 'skills.json');
 const TRAITS_FILE = path.join(DATA_DIR, 'traits.json');
 
@@ -72,12 +74,18 @@ function idToFilename(id) {
 app.get('/api/statblocks', (req, res) => {
   try {
     const files = listStatBlockFiles();
-    const blocks = files.map((f) => {
-      const raw = fs.readFileSync(path.join(STATBLOCKS_DIR, f), 'utf8');
-      const data = JSON.parse(raw);
-      return { id: data.id || path.basename(f, '.json'), name: data.name || 'Unnamed', ...data };
-    });
-    res.json(blocks);
+    const blocks = [];
+    for (const f of files) {
+      try {
+        const raw = fs.readFileSync(path.join(STATBLOCKS_DIR, f), 'utf8');
+        if (!raw.trim()) continue;
+        const data = JSON.parse(raw);
+        blocks.push({ id: data.id || path.basename(f, '.json'), name: data.name || 'Unnamed', ...data });
+      } catch (err) {
+        console.error(`Skipping invalid statblock ${f}:`, err.message);
+      }
+    }
+    res.json(Array.isArray(blocks) ? blocks : []);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to list stat blocks' });
@@ -154,6 +162,17 @@ function loadJsonArray(filePath) {
   }
 }
 
+function loadJson(filePath, defaultValue = null) {
+  try {
+    if (!fs.existsSync(filePath)) return defaultValue;
+    const raw = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error(`Failed to load JSON from ${filePath}`, err);
+    return defaultValue;
+  }
+}
+
 // Reference data: skills
 app.get('/api/skills', (req, res) => {
   const skills = loadJsonArray(SKILLS_FILE);
@@ -164,6 +183,32 @@ app.get('/api/skills', (req, res) => {
 app.get('/api/traits', (req, res) => {
   const traits = loadJsonArray(TRAITS_FILE);
   res.json(traits);
+});
+
+// Weapons reference (qualities, melee, ranged, ammunition)
+app.get('/api/weapons', (req, res) => {
+  try {
+    const qualitiesAndFlaws = loadJsonArray(path.join(WEAPONS_DIR, 'qualities-and-flaws.json'));
+    const melee = loadJson(path.join(WEAPONS_DIR, 'melee-weapons.json'), { categories: [] });
+    const ranged = loadJson(path.join(WEAPONS_DIR, 'ranged-weapons.json'), { categories: [] });
+    const ammunition = loadJson(path.join(WEAPONS_DIR, 'ammunition.json'), { categories: [] });
+    res.json({ qualitiesAndFlaws, melee, ranged, ammunition });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load weapons' });
+  }
+});
+
+// Armour reference (qualities, armour by category)
+app.get('/api/armour', (req, res) => {
+  try {
+    const qualitiesAndFlaws = loadJsonArray(path.join(ARMOUR_DIR, 'qualities-and-flaws.json'));
+    const armour = loadJson(path.join(ARMOUR_DIR, 'armour.json'), { categories: [] });
+    res.json({ qualitiesAndFlaws, armour });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load armour' });
+  }
 });
 
 // Templates

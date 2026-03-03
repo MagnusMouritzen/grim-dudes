@@ -36,9 +36,12 @@ export default function StatBlockEditor() {
     size: DEFAULT_SIZE,
     movement: '',
     talents: '',
-    armour: '',
-    weapons: '',
   });
+  const [weaponsRef, setWeaponsRef] = useState({ qualitiesAndFlaws: [], melee: { categories: [] }, ranged: { categories: [] }, ammunition: { categories: [] } });
+  const [armourRef, setArmourRef] = useState({ qualitiesAndFlaws: [], armour: { categories: [] } });
+  const [selectedMeleeWeapons, setSelectedMeleeWeapons] = useState([]);
+  const [selectedRangedWeapons, setSelectedRangedWeapons] = useState([]);
+  const [selectedArmour, setSelectedArmour] = useState([]);
 
   const update = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -56,8 +59,10 @@ export default function StatBlockEditor() {
       fetch(`${API}/skills`).then((r) => (r.ok ? r.json() : [])),
       fetch(`${API}/traits`).then((r) => (r.ok ? r.json() : [])),
       fetch(`${API}/templates`).then((r) => (r.ok ? r.json() : [])),
+      fetch(`${API}/weapons`).then((r) => (r.ok ? r.json() : { qualitiesAndFlaws: [], melee: { categories: [] }, ranged: { categories: [] }, ammunition: { categories: [] } })),
+      fetch(`${API}/armour`).then((r) => (r.ok ? r.json() : { qualitiesAndFlaws: [], armour: { categories: [] } })),
     ])
-      .then(([skills, traits, templates]) => {
+      .then(([skills, traits, templates, weapons, armour]) => {
         const sortedSkills = Array.isArray(skills)
           ? [...skills].sort((a, b) => a.name.localeCompare(b.name))
           : [];
@@ -70,6 +75,8 @@ export default function StatBlockEditor() {
         setAllSkills(sortedSkills);
         setAllTraits(sortedTraits);
         setTemplatesList(sortedTemplates);
+        setWeaponsRef(weapons || { qualitiesAndFlaws: [], melee: { categories: [] }, ranged: { categories: [] }, ammunition: { categories: [] } });
+        setArmourRef(armour || { qualitiesAndFlaws: [], armour: { categories: [] } });
       })
       .catch(() => {
         // fail silently; editor will still work without reference data
@@ -114,9 +121,12 @@ export default function StatBlockEditor() {
           size: data.size || DEFAULT_SIZE,
           movement: data.movement != null ? String(data.movement) : '',
           talents: Array.isArray(data.talents) ? data.talents.join(', ') : '',
-          armour: data.armour || '',
-          weapons: data.weapons || '',
         }));
+        const melee = Array.isArray(data.weapons?.melee) ? data.weapons.melee : [];
+        const ranged = Array.isArray(data.weapons?.ranged) ? data.weapons.ranged : [];
+        setSelectedMeleeWeapons(melee.map((w) => ({ category: w.category || '', name: w.name || '' })).filter((w) => w.name));
+        setSelectedRangedWeapons(ranged.map((w) => ({ category: w.category || '', name: w.name || '', ammunition: w.ammunition || '' })).filter((w) => w.name));
+        setSelectedArmour(Array.isArray(data.armour) ? data.armour.map((a) => ({ category: a.category || '', name: a.name || '' })).filter((a) => a.name) : []);
         const normalisedSkills = (Array.isArray(data.skills) ? data.skills : []).map((s) => {
           if (typeof s === 'string') return { name: s, advances: 0 };
           const name = s.name || s.skill || '';
@@ -143,12 +153,13 @@ export default function StatBlockEditor() {
       size: tpl.size || DEFAULT_SIZE,
       movement: tpl.movement != null ? String(tpl.movement) : '',
       talents: Array.isArray(tpl.talents) ? tpl.talents.join(', ') : '',
-      armour: tpl.armour || '',
-      weapons: tpl.weapons || '',
     }));
     setCharacteristicAdvances({ ...zeroAdvances });
     setCharacteristicAdditions({ ...defaultAdditions });
     setRandomiseCharacteristics(false);
+    setSelectedMeleeWeapons([]);
+    setSelectedRangedWeapons([]);
+    setSelectedArmour([]);
     setSelectedTraits(Array.isArray(tpl.traits?.base)
       ? tpl.traits.base.map((t) => typeof t === 'string' ? { name: t, inputValue: '' } : { name: t.name || t.trait || '', inputValue: typeof t.inputValue === 'string' ? t.inputValue : '' }).filter((t) => t.name).sort((a, b) => a.name.localeCompare(b.name))
       : []);
@@ -281,8 +292,10 @@ export default function StatBlockEditor() {
         skills: selectedSkills.length ? selectedSkills : undefined,
         talents: talents.length ? talents : undefined,
         traits: traitsPayload.length ? traitsPayload : undefined,
-        armour: form.armour || undefined,
-        weapons: form.weapons || undefined,
+        weapons: (selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0)
+          ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
+          : undefined,
+        armour: selectedArmour.length > 0 ? selectedArmour : undefined,
       };
     }
     const characteristics = {};
@@ -298,11 +311,13 @@ export default function StatBlockEditor() {
       wounds: computedWounds,
       movement: num(form.movement),
       skills: selectedSkills.length ? selectedSkills : undefined,
-      talents: talents.length ? talents : undefined,
-      traits: traitsPayload.length ? traitsPayload : undefined,
-      armour: form.armour || undefined,
-      weapons: form.weapons || undefined,
-    };
+        talents: talents.length ? talents : undefined,
+        traits: traitsPayload.length ? traitsPayload : undefined,
+        weapons: (selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0)
+          ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
+          : undefined,
+        armour: selectedArmour.length > 0 ? selectedArmour : undefined,
+      };
   };
 
   const handleSave = () => {
@@ -504,26 +519,136 @@ export default function StatBlockEditor() {
               className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment placeholder-parchment/40 focus:border-gold/60 focus:outline-none"
             />
           </div>
-          <div>
-            <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Armour</label>
-            <input
-              type="text"
-              value={form.armour}
-              onChange={(e) => update('armour', e.target.value)}
-              placeholder="e.g. Leather jerkin"
-              className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment placeholder-parchment/40 focus:border-gold/60 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Weapons</label>
-            <input
-              type="text"
-              value={form.weapons}
-              onChange={(e) => update('weapons', e.target.value)}
-              placeholder="e.g. Sword, shield"
-              className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment placeholder-parchment/40 focus:border-gold/60 focus:outline-none"
-            />
-          </div>
+
+          <section>
+            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-3 font-semibold">Melee weapons</h3>
+            <div className="space-y-2">
+              <p className="text-parchment/80 text-xs mb-1">Selected</p>
+              {selectedMeleeWeapons.length === 0 ? (
+                <p className="text-parchment/60 text-xs italic">Add from categories below.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {selectedMeleeWeapons.map((w, i) => (
+                    <span key={`${w.category}-${w.name}-${i}`} className="inline-flex items-center gap-1 rounded-full border border-iron/70 bg-ink/80 px-2 py-1 text-xs text-parchment/95">
+                      {w.name} <span className="text-parchment/60">({w.category})</span>
+                      <button type="button" onClick={() => setSelectedMeleeWeapons((prev) => prev.filter((x, j) => j !== i))} className="text-blood hover:text-gold px-1" aria-label={`Remove ${w.name}`}>×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-4">
+                {(weaponsRef.melee?.categories || []).map((cat) => (
+                  <div key={cat.name}>
+                    <p className="text-parchment/70 text-xs mb-1">{cat.name}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {(cat.weapons || []).map((weapon) => (
+                        <button
+                          key={weapon.name}
+                          type="button"
+                          onClick={() => setSelectedMeleeWeapons((prev) => prev.some((x) => x.category === cat.name && x.name === weapon.name) ? prev : [...prev, { category: cat.name, name: weapon.name }])}
+                          className="px-2 py-1 text-xs rounded border border-iron/60 bg-ink/60 hover:border-gold/50 text-parchment/90"
+                        >
+                          {weapon.name}
+                        </button>
+                      ))}
+                      {(cat.weapons || []).length === 0 ? <span className="text-parchment/50 text-xs">—</span> : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-3 font-semibold">Ranged weapons</h3>
+            <div className="space-y-2">
+              <p className="text-parchment/80 text-xs mb-1">Selected</p>
+              {selectedRangedWeapons.length === 0 ? (
+                <p className="text-parchment/60 text-xs italic">Add from categories below; choose ammunition for each.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {selectedRangedWeapons.map((r, i) => {
+                    const ammoList = (weaponsRef.ammunition?.categories || []).find((c) => c.name === r.category)?.ammunition || [];
+                    return (
+                      <div key={`${r.category}-${r.name}-${i}`} className="inline-flex items-center gap-1 rounded border border-iron/70 bg-ink/80 px-2 py-1">
+                        <span className="text-parchment/95 text-xs">{r.name}</span>
+                        <select
+                          value={r.ammunition || ''}
+                          onChange={(e) => setSelectedRangedWeapons((prev) => prev.map((x, j) => j === i ? { ...x, ammunition: e.target.value } : x))}
+                          className="bg-ink border border-iron/60 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold/60 focus:outline-none"
+                        >
+                          <option value="">— Ammo —</option>
+                          {ammoList.map((a) => (
+                            <option key={a.name} value={a.name}>{a.name}</option>
+                          ))}
+                        </select>
+                        <button type="button" onClick={() => setSelectedRangedWeapons((prev) => prev.filter((_, j) => j !== i))} className="text-blood hover:text-gold px-1 text-xs" aria-label={`Remove ${r.name}`}>×</button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-4">
+                {(weaponsRef.ranged?.categories || []).map((cat) => (
+                  <div key={cat.name}>
+                    <p className="text-parchment/70 text-xs mb-1">{cat.name}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {(cat.weapons || []).map((weapon) => (
+                        <button
+                          key={weapon.name}
+                          type="button"
+                          onClick={() => setSelectedRangedWeapons((prev) => prev.some((x) => x.category === cat.name && x.name === weapon.name) ? prev : [...prev, { category: cat.name, name: weapon.name, ammunition: '' }])}
+                          className="px-2 py-1 text-xs rounded border border-iron/60 bg-ink/60 hover:border-gold/50 text-parchment/90"
+                        >
+                          {weapon.name}
+                        </button>
+                      ))}
+                      {(cat.weapons || []).length === 0 ? <span className="text-parchment/50 text-xs">—</span> : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-3 font-semibold">Armour</h3>
+            <div className="space-y-2">
+              <p className="text-parchment/80 text-xs mb-1">Selected</p>
+              {selectedArmour.length === 0 ? (
+                <p className="text-parchment/60 text-xs italic">Add from categories below.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {selectedArmour.map((a, i) => (
+                    <span key={`${a.category}-${a.name}-${i}`} className="inline-flex items-center gap-1 rounded-full border border-iron/70 bg-ink/80 px-2 py-1 text-xs text-parchment/95">
+                      {a.name} <span className="text-parchment/60">({a.category})</span>
+                      <button type="button" onClick={() => setSelectedArmour((prev) => prev.filter((_, j) => j !== i))} className="text-blood hover:text-gold px-1" aria-label={`Remove ${a.name}`}>×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-4">
+                {(armourRef.armour?.categories || []).map((cat) => (
+                  <div key={cat.name}>
+                    <p className="text-parchment/70 text-xs mb-1">{cat.name}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {(cat.items || []).map((item) => (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={() => setSelectedArmour((prev) => prev.some((x) => x.category === cat.name && x.name === item.name) ? prev : [...prev, { category: cat.name, name: item.name }])}
+                          className="px-2 py-1 text-xs rounded border border-iron/60 bg-ink/60 hover:border-gold/50 text-parchment/90"
+                        >
+                          {item.name}
+                        </button>
+                      ))}
+                      {(cat.items || []).length === 0 ? <span className="text-parchment/50 text-xs">—</span> : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
           <div className="pt-4 border-t border-iron/40">
             <button
