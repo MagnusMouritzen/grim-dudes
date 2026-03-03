@@ -237,7 +237,56 @@ function buildArmourListDisplay(block, armourRef) {
     }));
 }
 
-export default function StatBlockCard({ block, compact = false, skillsRef, traitsRef, weaponsRef, armourRef }) {
+function computeHighestStatus(block, careersRef) {
+  if (!careersRef || !Array.isArray(careersRef.classes) || !Array.isArray(block.careers)) {
+    return null;
+  }
+  const tierOrder = { Brass: 0, Silver: 1, Gold: 2 };
+  let best = null;
+  let bestScore = -1;
+  block.careers.forEach((c) => {
+    const className = c.className || c.class;
+    const careerName = c.careerName || c.career;
+    const level = c.level || 1;
+    const cls = careersRef.classes.find((cl) => cl.name === className);
+    if (!cls) return;
+    const career = Array.isArray(cls.careers) ? cls.careers.find((cr) => cr.name === careerName) : null;
+    if (!career || !Array.isArray(career.levels)) return;
+    const lvl = career.levels.find((lv) => lv.level === level) || career.levels[career.levels.length - 1];
+    if (!lvl || !lvl.status) return;
+    const [tier, numStr] = lvl.status.split(' ');
+    const tierRank = tierOrder[tier] ?? -1;
+    const num = Number(numStr) || 0;
+    const score = tierRank * 10 + num;
+    if (score > bestScore) {
+      bestScore = score;
+      best = lvl.status;
+    }
+  });
+  return best;
+}
+
+function buildCareerLevelLabels(block, careersRef) {
+  if (!careersRef || !Array.isArray(careersRef.classes) || !Array.isArray(block.careers)) {
+    return [];
+  }
+  const labels = [];
+  block.careers.forEach((c) => {
+    const className = c.className || c.class;
+    const careerName = c.careerName || c.career;
+    const level = c.level || 1;
+    const cls = careersRef.classes.find((cl) => cl.name === className);
+    if (!cls) return;
+    const career = Array.isArray(cls.careers) ? cls.careers.find((cr) => cr.name === careerName) : null;
+    if (!career || !Array.isArray(career.levels)) return;
+    const lvl = career.levels.find((lv) => lv.level === level) || career.levels[career.levels.length - 1];
+    if (!lvl) return;
+    labels.push(`${career.name}: ${lvl.name}`);
+  });
+  return labels;
+}
+
+export default function StatBlockCard({ block, compact = false, skillsRef, traitsRef, weaponsRef, armourRef, careersRef }) {
   if (!block) return null;
   const talents = Array.isArray(block.talents) ? block.talents : [];
   const { effectiveCh, effectiveMovement, effectiveWounds } = computeEffectiveStats(block, traitsRef);
@@ -251,6 +300,8 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
     : [];
   const hasStructuredWeapons = block.weapons && typeof block.weapons === 'object' && ((Array.isArray(block.weapons.melee) && block.weapons.melee.length > 0) || (Array.isArray(block.weapons.ranged) && block.weapons.ranged.length > 0));
   const weaponsDisplay = hasStructuredWeapons && weaponsRef ? buildWeaponsDisplay(block, weaponsRef, effectiveCh) : { melee: [], ranged: [] };
+  const highestStatus = computeHighestStatus(block, careersRef);
+  const careerLabels = buildCareerLevelLabels(block, careersRef);
 
   if (compact) {
     return (
@@ -272,8 +323,27 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
 
   return (
     <article className="relative rounded-lg border-2 border-iron/70 bg-[#0f0d0a] shadow-xl ring-1 ring-gold/20">
-      <div className="bg-blood/20 px-6 py-3 border-b border-gold/30">
+      <div className="bg-blood/20 px-6 py-3 border-b border-gold/30 flex items-baseline justify-between gap-4">
         <h2 className="font-display text-2xl text-gold tracking-wide">{block.name}</h2>
+        <div className="flex flex-col items-end gap-1">
+          {highestStatus && (
+            <span className="text-parchment/90 text-sm">
+              Status: <span className="text-gold font-semibold">{highestStatus}</span>
+            </span>
+          )}
+          {careerLabels.length > 0 && (
+            <div className="flex flex-wrap gap-1 justify-end">
+              {careerLabels.map((label) => (
+                <span
+                  key={label}
+                  className="rounded-full border border-iron/60 bg-ink/70 px-2 py-0.5 text-[0.7rem] text-parchment/90"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <div className="p-6 space-y-6">
         <section>

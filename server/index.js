@@ -12,6 +12,7 @@ const WEAPONS_DIR = path.join(DATA_DIR, 'weapons');
 const ARMOUR_DIR = path.join(DATA_DIR, 'armour');
 const SKILLS_FILE = path.join(DATA_DIR, 'skills.json');
 const TRAITS_FILE = path.join(DATA_DIR, 'traits.json');
+const CAREERS_FILE = path.join(DATA_DIR, 'careers.json');
 
 const app = express();
 app.use(cors());
@@ -42,7 +43,8 @@ try {
       (f) =>
         f.endsWith('.json') &&
         f !== path.basename(SKILLS_FILE) &&
-        f !== path.basename(TRAITS_FILE)
+        f !== path.basename(TRAITS_FILE) &&
+        f !== path.basename(CAREERS_FILE)
     );
   legacyFiles.forEach((f) => {
     const from = path.join(DATA_DIR, f);
@@ -208,6 +210,17 @@ app.get('/api/armour', (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to load armour' });
+  }
+});
+
+// Careers reference (classes, careers, levels)
+app.get('/api/careers', (req, res) => {
+  try {
+    const careers = loadJson(CAREERS_FILE, { classes: [] });
+    res.json(careers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load careers' });
   }
 });
 

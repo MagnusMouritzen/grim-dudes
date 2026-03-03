@@ -6,7 +6,7 @@
   "characteristics": {
     "WS": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "BS": {
@@ -21,7 +21,7 @@
     },
     "T": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "I": {
@@ -58,24 +58,50 @@
   "size": "Average",
   "wounds": 12,
   "movement": 4,
+  "skills": [
+    {
+      "name": "Consume Alcohol",
+      "advances": 5
+    },
+    {
+      "name": "Cool",
+      "advances": 5
+    },
+    {
+      "name": "Dodge",
+      "advances": 5
+    },
+    {
+      "name": "Endurance",
+      "advances": 5
+    },
+    {
+      "name": "Intimidate",
+      "advances": 5
+    },
+    {
+      "name": "Lore",
+      "advances": 5
+    },
+    {
+      "name": "Melee",
+      "advances": 5
+    },
+    {
+      "name": "Stealth",
+      "advances": 5
+    }
+  ],
   "traits": [
     {
       "name": "Prejudice"
     }
   ],
-  "weapons": {
-    "melee": [
-      {
-        "category": "Basic",
-        "name": "Sword"
-      }
-    ],
-    "ranged": []
-  },
-  "armour": [
+  "careers": [
     {
-      "category": "Mail",
-      "name": "Mail Coat"
+      "className": "Rogues",
+      "careerName": "Racketeer",
+      "level": 1
     }
   ]
 }

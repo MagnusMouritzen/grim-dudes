@@ -1,0 +1,81 @@
+{
+  "classes": [
+    {
+      "name": "Rogues",
+      "careers": [
+        {
+          "name": "Racketeer",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Thug",
+              "status": "Brass 3",
+              "skills": ["Consume Alcohol", "Cool", "Dodge", "Endurance", "Intimidate", "Lore", "Melee", "Stealth"],
+              "characteristics": ["WS", "S", "T"]
+            },
+            {
+              "level": 2,
+              "name": "Racketeer",
+              "status": "Brass 5",
+              "skills": ["Consume Alcohol", "Gamble", "Gossip", "Ranged", "Outdoor Survival"],
+              "characteristics": ["BS"]
+            },
+            {
+              "level": 3,
+              "name": "Sergeant",
+              "status": "Silver 5",
+              "skills": ["Heal", "Intuition", "Leadership", "Perception"],
+              "characteristics": ["I"]
+            },
+            {
+              "level": 4,
+              "name": "Officer",
+              "status": "Gold 1",
+              "skills": ["Lore", "Navigation"],
+              "characteristics": ["Fel"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Warriors",
+      "careers": [
+        {
+          "name": "Soldier",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Recruit",
+              "status": "Silver 1",
+              "skills": ["Athletics", "Climb", "Cool", "Dodge", "Endurance", "Language", "Melee", "Play"],
+              "characteristics": ["WS", "T", "WP"]
+            },
+            {
+              "level": 2,
+              "name": "Soldier",
+              "status": "Silver 3",
+              "skills": ["Consume Alcohol", "Gamble", "Gossip", "Ranged", "Outdoor Survival"],
+              "characteristics": ["BS"]
+            },
+            {
+              "level": 3,
+              "name": "Sergeant",
+              "status": "Silver 5",
+              "skills": ["Heal", "Intuition", "Leadership", "Perception"],
+              "characteristics": ["I"]
+            },
+            {
+              "level": 4,
+              "name": "Officer",
+              "status": "Gold 1",
+              "skills": ["Lore", "Navigation"],
+              "characteristics": ["Fel"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

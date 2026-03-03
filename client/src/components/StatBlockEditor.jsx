@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 
 const API = '/api';
@@ -14,6 +14,35 @@ const emptyCharacteristics = Object.fromEntries(CHAR_ORDER.map((k) => [k, '']));
 const zeroAdvances = Object.fromEntries(CHAR_ORDER.map((k) => [k, 0]));
 const defaultAdditions = Object.fromEntries(CHAR_ORDER.map((k) => [k, 10]));
 
+function computeCareerEffectsFrom(classes, careersArray) {
+  const careerSkillAdv = new Map();
+  const careerCharAdv = new Map();
+  (Array.isArray(careersArray) ? careersArray : []).forEach((sel) => {
+    const cls = (Array.isArray(classes) ? classes : []).find((c) => c.name === sel.className);
+    if (!cls) return;
+    const career = Array.isArray(cls.careers) ? cls.careers.find((c) => c.name === sel.careerName) : null;
+    if (!career || !Array.isArray(career.levels)) return;
+    const chosen = Math.max(1, Math.min(4, sel.level || 1));
+    career.levels.forEach((lvl) => {
+      const lvlIndex = lvl.level || 1;
+      if (lvlIndex > chosen) return;
+      const steps = chosen - lvlIndex + 1;
+      const bonus = 5 * steps;
+      (lvl.skills || []).forEach((skillName) => {
+        if (!skillName) return;
+        const prev = careerSkillAdv.get(skillName) || 0;
+        if (bonus > prev) careerSkillAdv.set(skillName, bonus);
+      });
+      (lvl.characteristics || []).forEach((charKey) => {
+        if (!charKey) return;
+        const prev = careerCharAdv.get(charKey) || 0;
+        if (bonus > prev) careerCharAdv.set(charKey, bonus);
+      });
+    });
+  });
+  return { careerSkillAdv, careerCharAdv };
+}
+
 export default function StatBlockEditor() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -21,9 +50,11 @@ export default function StatBlockEditor() {
   const [error, setError] = useState(null);
   const [allSkills, setAllSkills] = useState([]);
   const [allTraits, setAllTraits] = useState([]);
+  const [allCareers, setAllCareers] = useState({ classes: [] });
   const [templatesList, setTemplatesList] = useState([]);
   const [template, setTemplate] = useState(null);
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
+  const [careerModalOpen, setCareerModalOpen] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedTraits, setSelectedTraits] = useState([]);
   const [characteristicAdvances, setCharacteristicAdvances] = useState({ ...zeroAdvances });
@@ -42,6 +73,9 @@ export default function StatBlockEditor() {
   const [selectedMeleeWeapons, setSelectedMeleeWeapons] = useState([]);
   const [selectedRangedWeapons, setSelectedRangedWeapons] = useState([]);
   const [selectedArmour, setSelectedArmour] = useState([]);
+  const [selectedCareers, setSelectedCareers] = useState([]);
+  const baseCharacteristicRef = useRef({});
+  const userChangedCareersRef = useRef(false);
 
   const update = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -61,8 +95,9 @@ export default function StatBlockEditor() {
       fetch(`${API}/templates`).then((r) => (r.ok ? r.json() : [])),
       fetch(`${API}/weapons`).then((r) => (r.ok ? r.json() : { qualitiesAndFlaws: [], melee: { categories: [] }, ranged: { categories: [] }, ammunition: { categories: [] } })),
       fetch(`${API}/armour`).then((r) => (r.ok ? r.json() : { qualitiesAndFlaws: [], armour: { categories: [] } })),
+      fetch(`${API}/careers`).then((r) => (r.ok ? r.json() : { classes: [] })),
     ])
-      .then(([skills, traits, templates, weapons, armour]) => {
+      .then(([skills, traits, templates, weapons, armour, careers]) => {
         const sortedSkills = Array.isArray(skills)
           ? [...skills].sort((a, b) => a.name.localeCompare(b.name))
           : [];
@@ -77,14 +112,50 @@ export default function StatBlockEditor() {
         setTemplatesList(sortedTemplates);
         setWeaponsRef(weapons || { qualitiesAndFlaws: [], melee: { categories: [] }, ranged: { categories: [] }, ammunition: { categories: [] } });
         setArmourRef(armour || { qualitiesAndFlaws: [], armour: { categories: [] } });
+        setAllCareers(careers && typeof careers === 'object' ? careers : { classes: [] });
       })
       .catch(() => {
         // fail silently; editor will still work without reference data
       });
   }, []);
 
+  // When the user changes careers (add/remove/level), recalculate skills and characteristics from current careers only
   useEffect(() => {
-    if (!id) return;
+    if (!userChangedCareersRef.current) return;
+    userChangedCareersRef.current = false;
+    const classes = Array.isArray(allCareers.classes) ? allCareers.classes : [];
+    const { careerSkillAdv, careerCharAdv } = computeCareerEffectsFrom(classes, selectedCareers);
+
+    setSelectedSkills(
+      Array.from(careerSkillAdv.entries())
+        .map(([name, advances]) => ({ name, advances }))
+        .sort((a, b) => a.name.localeCompare(b.name))
+    );
+
+    if (template) {
+      setCharacteristicAdvances(
+        Object.fromEntries(CHAR_ORDER.map((k) => [k, careerCharAdv.get(k) ?? 0]))
+      );
+    } else {
+      const base = baseCharacteristicRef.current;
+      setForm((f) => {
+        const nextCh = { ...f.characteristics };
+        CHAR_ORDER.forEach((k) => {
+          const baseVal = base[k] ?? 0;
+          const careerVal = careerCharAdv.get(k) ?? 0;
+          const total = baseVal + careerVal;
+          nextCh[k] = total === 0 ? '' : String(total);
+        });
+        return { ...f, characteristics: nextCh };
+      });
+    }
+  }, [selectedCareers, allCareers, template]);
+
+  useEffect(() => {
+    if (!id) {
+      baseCharacteristicRef.current = {};
+      return;
+    }
     fetch(`${API}/statblocks/${encodeURIComponent(id)}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Not found'))))
       .then((data) => {
@@ -113,6 +184,20 @@ export default function StatBlockEditor() {
           setCharacteristicAdvances({ ...zeroAdvances });
           setCharacteristicAdditions({ ...defaultAdditions });
           setRandomiseCharacteristics(false);
+          const careersFromData = Array.isArray(data.careers)
+            ? data.careers.map((c) => ({
+                className: c.className || c.class || '',
+                careerName: c.careerName || c.career || '',
+                level: c.level || 1,
+              })).filter((c) => c.careerName)
+            : [];
+          const { careerCharAdv } = computeCareerEffectsFrom(allCareers.classes || [], careersFromData);
+          baseCharacteristicRef.current = CHAR_ORDER.reduce((acc, k) => {
+            const v = data.characteristics?.[k];
+            const num = typeof v === 'number' && Number.isFinite(v) ? v : 0;
+            acc[k] = num - (careerCharAdv.get(k) ?? 0);
+            return acc;
+          }, {});
         }
         setForm((prev) => ({
           ...prev,
@@ -127,6 +212,13 @@ export default function StatBlockEditor() {
         setSelectedMeleeWeapons(melee.map((w) => ({ category: w.category || '', name: w.name || '' })).filter((w) => w.name));
         setSelectedRangedWeapons(ranged.map((w) => ({ category: w.category || '', name: w.name || '', ammunition: w.ammunition || '' })).filter((w) => w.name));
         setSelectedArmour(Array.isArray(data.armour) ? data.armour.map((a) => ({ category: a.category || '', name: a.name || '' })).filter((a) => a.name) : []);
+        setSelectedCareers(Array.isArray(data.careers)
+          ? data.careers.map((c) => ({
+              className: c.className || c.class || '',
+              careerName: c.careerName || c.career || '',
+              level: c.level || 1,
+            })).filter((c) => c.careerName)
+          : []);
         const normalisedSkills = (Array.isArray(data.skills) ? data.skills : []).map((s) => {
           if (typeof s === 'string') return { name: s, advances: 0 };
           const name = s.name || s.skill || '';
@@ -160,6 +252,8 @@ export default function StatBlockEditor() {
     setSelectedMeleeWeapons([]);
     setSelectedRangedWeapons([]);
     setSelectedArmour([]);
+    setSelectedCareers([]);
+    userChangedCareersRef.current = true;
     setSelectedTraits(Array.isArray(tpl.traits?.base)
       ? tpl.traits.base.map((t) => typeof t === 'string' ? { name: t, inputValue: '' } : { name: t.name || t.trait || '', inputValue: typeof t.inputValue === 'string' ? t.inputValue : '' }).filter((t) => t.name).sort((a, b) => a.name.localeCompare(b.name))
       : []);
@@ -270,6 +364,17 @@ export default function StatBlockEditor() {
       const inputValue = typeof t === 'object' && t != null && typeof t.inputValue === 'string' ? t.inputValue : undefined;
       return inputValue ? { name, inputValue } : { name };
     });
+    const skillsPayload = selectedSkills
+      .filter((s) => s.name)
+      .map((s) => ({ name: s.name, advances: Number.isFinite(s.advances) ? s.advances : 0 }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    const careersPayload = selectedCareers.length
+      ? selectedCareers.map((c) => ({
+          className: c.className,
+          careerName: c.careerName,
+          level: c.level || 1,
+        }))
+      : undefined;
     if (template) {
       const characteristics = {};
       CHAR_ORDER.forEach((k) => {
@@ -289,9 +394,10 @@ export default function StatBlockEditor() {
         size: form.size || DEFAULT_SIZE,
         wounds: computedWounds,
         movement: num(form.movement),
-        skills: selectedSkills.length ? selectedSkills : undefined,
+        skills: skillsPayload.length ? skillsPayload : undefined,
         talents: talents.length ? talents : undefined,
         traits: traitsPayload.length ? traitsPayload : undefined,
+        careers: careersPayload,
         weapons: (selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0)
           ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
           : undefined,
@@ -301,7 +407,8 @@ export default function StatBlockEditor() {
     const characteristics = {};
     CHAR_ORDER.forEach((k) => {
       const v = form.characteristics[k];
-      if (v !== '' && v != null) characteristics[k] = num(v) ?? v;
+      const n = (v !== '' && v != null) ? num(v) : undefined;
+      if (n !== undefined && Number.isFinite(n)) characteristics[k] = n;
     });
     return {
       id: existingId || undefined,
@@ -310,14 +417,15 @@ export default function StatBlockEditor() {
       size: form.size || DEFAULT_SIZE,
       wounds: computedWounds,
       movement: num(form.movement),
-      skills: selectedSkills.length ? selectedSkills : undefined,
-        talents: talents.length ? talents : undefined,
-        traits: traitsPayload.length ? traitsPayload : undefined,
-        weapons: (selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0)
-          ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
-          : undefined,
-        armour: selectedArmour.length > 0 ? selectedArmour : undefined,
-      };
+      skills: skillsPayload.length ? skillsPayload : undefined,
+      talents: talents.length ? talents : undefined,
+      traits: traitsPayload.length ? traitsPayload : undefined,
+      careers: careersPayload,
+      weapons: (selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0)
+        ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
+        : undefined,
+      armour: selectedArmour.length > 0 ? selectedArmour : undefined,
+    };
   };
 
   const handleSave = () => {
@@ -374,6 +482,46 @@ export default function StatBlockEditor() {
           </div>
         </div>
       )}
+      {careerModalOpen && (
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/70 p-4" onClick={() => setCareerModalOpen(false)}>
+          <div className="rounded-lg border-2 border-iron/70 bg-[#0f0d0a] max-w-2xl w-full max-h-[80vh] overflow-hidden shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-blood/20 px-4 py-3 border-b border-gold/30 flex justify-between items-center">
+              <h2 className="font-display text-gold">Choose career</h2>
+              <button type="button" className="text-parchment hover:text-gold" onClick={() => setCareerModalOpen(false)} aria-label="Close">×</button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-[70vh] space-y-4">
+              {!(Array.isArray(allCareers.classes) && allCareers.classes.length) ? (
+                <p className="text-parchment/70 text-sm">No careers available.</p>
+              ) : (
+                allCareers.classes.map((cls) => (
+                  <div key={cls.name}>
+                    <h3 className="text-gold/90 text-xs uppercase tracking-wider mb-1">{cls.name}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {(cls.careers || []).map((career) => (
+                        <button
+                          key={career.name}
+                          type="button"
+                          onClick={() => {
+                            userChangedCareersRef.current = true;
+                            setSelectedCareers((prev) => {
+                              if (prev.some((c) => c.className === cls.name && c.careerName === career.name)) return prev;
+                              return [...prev, { className: cls.name, careerName: career.name, level: 1 }];
+                            });
+                            setCareerModalOpen(false);
+                          }}
+                          className="px-3 py-1 text-xs rounded border border-iron/60 bg-ink/70 hover:border-gold/50 text-parchment/90"
+                        >
+                          {career.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-lg border-2 border-iron/70 bg-[#0f0d0a] p-6 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)] lg:gap-8">
         <div className="space-y-6">
@@ -390,6 +538,13 @@ export default function StatBlockEditor() {
               className="px-3 py-1.5 text-sm uppercase tracking-wider rounded border border-gold/60 bg-gold/20 text-gold hover:bg-gold/30"
             >
               Choose template
+            </button>
+            <button
+              type="button"
+              onClick={() => setCareerModalOpen(true)}
+              className="px-3 py-1.5 text-sm uppercase tracking-wider rounded border border-iron/60 bg-ink/70 text-parchment hover:border-gold/50"
+            >
+              Careers
             </button>
             {template && (
               <span className="text-parchment/80 text-sm">
@@ -509,6 +664,52 @@ export default function StatBlockEditor() {
               />
             </div>
           </div>
+          {selectedCareers.length > 0 && (
+            <section>
+              <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">
+                Careers
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedCareers.map((c, idx) => (
+                  <div
+                    key={`${c.className}-${c.careerName}-${idx}`}
+                    className="inline-flex items-center gap-1 rounded-full border border-iron/70 bg-ink/80 px-2 py-1 text-xs"
+                  >
+                    <span className="text-parchment/95">
+                      {c.careerName}
+                    </span>
+                    <select
+                      value={c.level || 1}
+                      onChange={(e) => {
+                        userChangedCareersRef.current = true;
+                        const lvl = Number(e.target.value) || 1;
+                        setSelectedCareers((prev) =>
+                          prev.map((item, i) =>
+                            i === idx ? { ...item, level: lvl } : item
+                          )
+                        );
+                      }}
+                      className="bg-ink border border-iron/60 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold/60 focus:outline-none"
+                    >
+                      {[1, 2, 3, 4].map((l) => (
+                        <option key={l} value={l}>Level {l}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        userChangedCareersRef.current = true;
+                        setSelectedCareers((prev) => prev.filter((_, i) => i !== idx));
+                      }}
+                      className="text-blood hover:text-gold px-1"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
           <div>
             <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Talents (comma-separated)</label>
             <input

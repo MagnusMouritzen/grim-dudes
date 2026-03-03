@@ -12,6 +12,7 @@ export default function StatBlockView() {
   const [traitsRef, setTraitsRef] = useState([]);
   const [weaponsRef, setWeaponsRef] = useState(null);
   const [armourRef, setArmourRef] = useState(null);
+  const [careersRef, setCareersRef] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,14 +32,16 @@ export default function StatBlockView() {
     );
     const fetchWeapons = fetch(`${API}/weapons`).then((r) => (r.ok ? r.json() : null));
     const fetchArmour = fetch(`${API}/armour`).then((r) => (r.ok ? r.json() : null));
+    const fetchCareers = fetch(`${API}/careers`).then((r) => (r.ok ? r.json() : null));
 
-    Promise.all([fetchBlock, fetchSkills, fetchTraits, fetchWeapons, fetchArmour])
-      .then(([blockData, skillsData, traitsData, weaponsData, armourData]) => {
+    Promise.all([fetchBlock, fetchSkills, fetchTraits, fetchWeapons, fetchArmour, fetchCareers])
+      .then(([blockData, skillsData, traitsData, weaponsData, armourData, careersData]) => {
         setBlock(blockData);
         setSkillsRef(Array.isArray(skillsData) ? skillsData : []);
         setTraitsRef(Array.isArray(traitsData) ? traitsData : []);
         setWeaponsRef(weaponsData || null);
         setArmourRef(armourData || null);
+        setCareersRef(careersData || null);
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -89,7 +92,14 @@ export default function StatBlockView() {
           </button>
         </div>
       </div>
-      <StatBlockCard block={block} skillsRef={skillsRef} traitsRef={traitsRef} weaponsRef={weaponsRef} armourRef={armourRef} />
+      <StatBlockCard
+        block={block}
+        skillsRef={skillsRef}
+        traitsRef={traitsRef}
+        weaponsRef={weaponsRef}
+        armourRef={armourRef}
+        careersRef={careersRef}
+      />
     </div>
   );
 }
