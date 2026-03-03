@@ -389,9 +389,9 @@ export default function StatBlockEditor() {
                           {total}
                         </div>
                         <input
-                          type="number"
-                          min="0"
-                          value={characteristicAdvances[key] ?? 0}
+                          type="text"
+                          inputMode="numeric"
+                          value={characteristicAdvances[key]}
                           onChange={(e) => updateCharAdvance(key, e.target.value)}
                           placeholder="Adv"
                           className="w-full bg-ink border border-iron/60 rounded px-2 py-0.5 text-parchment text-center text-xs focus:border-gold/60 focus:outline-none"
@@ -511,11 +511,11 @@ export default function StatBlockEditor() {
                         >
                           <span className="text-parchment/95 text-xs">{skill.name}</span>
                           <input
-                            type="number"
-                            min="0"
+                            type="text"
+                            inputMode="numeric"
                             value={skill.advances}
                             onChange={(e) => updateSkillAdvances(skill.name, e.target.value)}
-                            className="w-12 bg-ink border border-iron/70 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold/60 focus:outline-none"
+                            className="w-7 bg-ink border border-iron/70 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold/60 focus:outline-none"
                           />
                           <button
                             type="button"

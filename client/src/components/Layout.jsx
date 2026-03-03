@@ -18,7 +18,7 @@ export default function Layout({ children }) {
           </nav>
         </div>
       </header>
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
         {children}
       </main>
       <footer className="border-t border-iron/50 py-4 text-center text-parchment/60 text-sm">
