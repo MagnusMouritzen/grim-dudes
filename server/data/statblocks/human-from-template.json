@@ -1,78 +1,79 @@
 {
-  "id": "human-commoner",
-  "name": "Human Commoner",
-  "templateId": "skeleton-minion",
+  "id": "human-from-template",
+  "name": "Human From Template",
+  "templateId": "human",
   "randomiseCharacteristics": false,
   "characteristics": {
     "WS": {
-      "base": 35,
+      "base": 20,
       "advances": 5,
       "addition": 10
     },
     "BS": {
-      "base": 30,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "S": {
-      "base": 35,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "T": {
-      "base": 35,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "I": {
-      "base": 30,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "Ag": {
-      "base": 30,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "Dex": {
-      "base": 25,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "Int": {
-      "base": 25,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "WP": {
-      "base": 25,
+      "base": 20,
       "advances": 0,
       "addition": 10
     },
     "Fel": {
-      "base": 10,
+      "base": 20,
       "advances": 0,
       "addition": 10
     }
   },
-  "wounds": 10,
+  "wounds": 11,
   "movement": 4,
   "skills": [
     {
-      "name": "Stealth (Rural)",
-      "advances": 1
+      "name": "Animal Care",
+      "advances": 0
     },
     {
-      "name": "Melee (Cavalry)",
+      "name": "Animal Training",
       "advances": 5
     }
   ],
   "talents": [
-    "Fearless"
+    "Taletn"
   ],
   "traits": [
-    "Menacing"
+    "Amphibious",
+    "Big"
   ],
-  "armour": "None",
-  "weapons": "Rusty sword, crumbling shield"
+  "armour": "Armour ",
+  "weapons": "Weapon"
 }

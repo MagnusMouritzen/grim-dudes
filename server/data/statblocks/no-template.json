@@ -1,0 +1,37 @@
+{
+  "id": "no-template",
+  "name": "No Template",
+  "characteristics": {
+    "WS": 15,
+    "BS": 15,
+    "S": 15,
+    "T": 15,
+    "I": 15,
+    "Ag": 15,
+    "Dex": 15,
+    "Int": 15,
+    "WP": 15,
+    "Fel": 15
+  },
+  "wounds": 15,
+  "movement": 15,
+  "skills": [
+    {
+      "name": "Animal Care",
+      "advances": 0
+    },
+    {
+      "name": "Animal Training",
+      "advances": 5
+    }
+  ],
+  "talents": [
+    "Talent 1"
+  ],
+  "traits": [
+    "Afraid",
+    "Amphibious"
+  ],
+  "armour": "Armour",
+  "weapons": "Weapons"
+}
