@@ -87,7 +87,11 @@
   {
     "name": "Brute",
     "description": "The creature is heavy and brutish. It receives –1 Movement, –10 Agility, and +10 Strength and Toughness.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "movement": -1,
+      "characteristics": { "Ag": -10, "S": 10, "T": 10 }
+    }
   },
   {
     "name": "Capricious",
@@ -238,7 +242,10 @@
   {
     "name": "Hardy",
     "description": "Increase Wounds by Toughness Bonus (before Size modifiers).",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "wounds": { "addBonus": "T" }
+    }
   },
   {
     "name": "Hatred",
@@ -351,12 +358,6 @@
     "name": "Regenerate",
     "description": "At start of each round, regenerates 1d10 Wounds if above 0. At 0 Wounds, regains 1 Wound on 8+. Fire Damage cannot be regenerated.",
     "generic": false
-  },
-  {
-    "name": "Size",
-    "description": "Represents creatures whose size differs from human standard. Size ranges from Tiny to Monstrous and affects Damage, Wounds, Fear/Terror, movement, and Opposed Strength interactions as detailed in the Size rules.",
-    "generic": false,
-    "input": "Various"
   },
   {
     "name": "Skittish",

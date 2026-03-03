@@ -13,12 +13,12 @@
     "WP": 20,
     "Fel": 20
   },
-  "wounds": 11,
+  "size": "Average",
   "movement": 4,
   "talents": [],
   "traits": {
-    "base": [],
-    "optional": ["Rover"]
+    "base": ["Prejudice"],
+    "optional": []
   },
   "armour": "",
   "weapons": ""

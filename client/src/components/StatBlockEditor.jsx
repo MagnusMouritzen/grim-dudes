@@ -4,6 +4,8 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 const API = '/api';
 const CHAR_ORDER = ['WS', 'BS', 'S', 'T', 'I', 'Ag', 'Dex', 'Int', 'WP', 'Fel'];
 
+import { woundsFromSize, SIZES, DEFAULT_SIZE } from '../lib/statblockUtils';
+
 function roll2d10() {
   return (1 + Math.floor(Math.random() * 10)) + (1 + Math.floor(Math.random() * 10));
 }
@@ -31,7 +33,7 @@ export default function StatBlockEditor() {
   const [form, setForm] = useState({
     name: '',
     characteristics: { ...emptyCharacteristics },
-    wounds: '',
+    size: DEFAULT_SIZE,
     movement: '',
     talents: '',
     armour: '',
@@ -109,7 +111,7 @@ export default function StatBlockEditor() {
           ...prev,
           name: data.name || '',
           characteristics: { ...emptyCharacteristics, ...(typeof data.characteristics?.WS === 'number' ? data.characteristics : {}) },
-          wounds: data.wounds != null ? String(data.wounds) : '',
+          size: data.size || DEFAULT_SIZE,
           movement: data.movement != null ? String(data.movement) : '',
           talents: Array.isArray(data.talents) ? data.talents.join(', ') : '',
           armour: data.armour || '',
@@ -122,11 +124,12 @@ export default function StatBlockEditor() {
           return { name, advances };
         });
         setSelectedSkills(normalisedSkills);
-        setSelectedTraits(
-          Array.isArray(data.traits)
-            ? data.traits.slice().sort((a, b) => a.localeCompare(b))
-            : []
-        );
+        const rawTraits = Array.isArray(data.traits) ? data.traits : [];
+        const normalisedTraits = rawTraits.map((t) => {
+          if (typeof t === 'string') return { name: t, inputValue: '' };
+          return { name: t.name || t.trait || '', inputValue: typeof t.inputValue === 'string' ? t.inputValue : '' };
+        }).filter((t) => t.name);
+        setSelectedTraits(normalisedTraits);
       })
       .catch((e) => setError(e.message));
   }, [id]);
@@ -137,7 +140,7 @@ export default function StatBlockEditor() {
     setForm((prev) => ({
       ...prev,
       name: prev.name || tpl.name || '',
-      wounds: tpl.wounds != null ? String(tpl.wounds) : '',
+      size: tpl.size || DEFAULT_SIZE,
       movement: tpl.movement != null ? String(tpl.movement) : '',
       talents: Array.isArray(tpl.talents) ? tpl.talents.join(', ') : '',
       armour: tpl.armour || '',
@@ -146,7 +149,9 @@ export default function StatBlockEditor() {
     setCharacteristicAdvances({ ...zeroAdvances });
     setCharacteristicAdditions({ ...defaultAdditions });
     setRandomiseCharacteristics(false);
-    setSelectedTraits(Array.isArray(tpl.traits?.base) ? [...tpl.traits.base].sort((a, b) => a.localeCompare(b)) : []);
+    setSelectedTraits(Array.isArray(tpl.traits?.base)
+      ? tpl.traits.base.map((t) => typeof t === 'string' ? { name: t, inputValue: '' } : { name: t.name || t.trait || '', inputValue: typeof t.inputValue === 'string' ? t.inputValue : '' }).filter((t) => t.name).sort((a, b) => a.name.localeCompare(b.name))
+      : []);
     setSelectedSkills([]);
   };
 
@@ -201,24 +206,59 @@ export default function StatBlockEditor() {
     );
   };
 
-  const addTrait = (name) => {
+  const addTrait = (name, defaultInputValue = '') => {
     setSelectedTraits((prev) => {
-      if (prev.includes(name)) return prev;
-      return [...prev, name].sort((a, b) => a.localeCompare(b));
+      if (prev.some((t) => (typeof t === 'string' ? t : t.name) === name)) return prev;
+      return [...prev, { name, inputValue: defaultInputValue }].sort((a, b) => (a.name || a).localeCompare(b.name || b));
     });
   };
 
   const toggleTraitOnBlock = (name) => {
     setSelectedTraits((prev) =>
-      prev.includes(name) ? prev.filter((t) => t !== name) : [...prev, name].sort((a, b) => a.localeCompare(b))
+      prev.filter((t) => (typeof t === 'string' ? t : t.name) !== name)
     );
   };
+
+  const updateTraitInputValue = (name, value) => {
+    setSelectedTraits((prev) =>
+      prev.map((t) => {
+        const n = typeof t === 'string' ? t : t.name;
+        if (n !== name) return t;
+        return typeof t === 'object' ? { ...t, inputValue: value } : { name: t, inputValue: value };
+      })
+    );
+  };
+
+  const getSelectedTraitEntry = (name) => {
+    const t = selectedTraits.find((x) => (typeof x === 'string' ? x : x.name) === name);
+    if (typeof t === 'string') return { name: t, inputValue: '' };
+    return t || { name, inputValue: '' };
+  };
+
+  const getCharForWounds = (key) => {
+    if (template) {
+      const base = typeof template.characteristics?.[key] === 'number' ? template.characteristics[key] : 0;
+      const advances = characteristicAdvances[key] ?? 0;
+      const addition = characteristicAdditions[key] ?? 10;
+      return base + advances + addition;
+    }
+    const v = form.characteristics[key];
+    const n = Number(v);
+    return v !== '' && v != null && Number.isFinite(n) ? n : 0;
+  };
+
+  const computedWounds = woundsFromSize(form.size, getCharForWounds);
 
   const toPayload = () => {
     const num = (v) => (v === '' || v == null ? undefined : Number(v));
     const talents = form.talents
       ? form.talents.split(',').map((s) => s.trim()).filter(Boolean)
       : [];
+    const traitsPayload = selectedTraits.map((t) => {
+      const name = typeof t === 'string' ? t : t.name;
+      const inputValue = typeof t === 'object' && t != null && typeof t.inputValue === 'string' ? t.inputValue : undefined;
+      return inputValue ? { name, inputValue } : { name };
+    });
     if (template) {
       const characteristics = {};
       CHAR_ORDER.forEach((k) => {
@@ -235,11 +275,12 @@ export default function StatBlockEditor() {
         templateId: template.id,
         randomiseCharacteristics: randomiseCharacteristics,
         characteristics,
-        wounds: num(form.wounds),
+        size: form.size || DEFAULT_SIZE,
+        wounds: computedWounds,
         movement: num(form.movement),
         skills: selectedSkills.length ? selectedSkills : undefined,
         talents: talents.length ? talents : undefined,
-        traits: selectedTraits.length ? selectedTraits : undefined,
+        traits: traitsPayload.length ? traitsPayload : undefined,
         armour: form.armour || undefined,
         weapons: form.weapons || undefined,
       };
@@ -253,11 +294,12 @@ export default function StatBlockEditor() {
       id: existingId || undefined,
       name: form.name || 'Unnamed',
       characteristics: Object.keys(characteristics).length ? characteristics : undefined,
-      wounds: num(form.wounds),
+      size: form.size || DEFAULT_SIZE,
+      wounds: computedWounds,
       movement: num(form.movement),
       skills: selectedSkills.length ? selectedSkills : undefined,
       talents: talents.length ? talents : undefined,
-      traits: selectedTraits.length ? selectedTraits : undefined,
+      traits: traitsPayload.length ? traitsPayload : undefined,
       armour: form.armour || undefined,
       weapons: form.weapons || undefined,
     };
@@ -420,17 +462,25 @@ export default function StatBlockEditor() {
             )}
           </section>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Size</label>
+              <select
+                value={form.size || DEFAULT_SIZE}
+                onChange={(e) => update('size', e.target.value)}
+                className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment focus:border-gold/60 focus:outline-none"
+              >
+                {SIZES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
             <div>
               <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Wounds</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={form.wounds}
-                onChange={(e) => update('wounds', e.target.value)}
-                placeholder="—"
-                className="w-full bg-ink border border-iron/60 rounded px-3 py-2 text-parchment focus:border-gold/60 focus:outline-none"
-              />
+              <div className="w-full bg-ink/60 border border-iron/60 rounded px-3 py-2 text-parchment">
+                {computedWounds}
+              </div>
+              <p className="text-parchment/50 text-xs mt-0.5">Calculated from Size and characteristics</p>
             </div>
             <div>
               <label className="block text-gold/90 text-sm uppercase tracking-wider mb-1">Movement</label>
@@ -561,60 +611,112 @@ export default function StatBlockEditor() {
                 <p className="text-parchment/80 text-xs mb-1">Selected</p>
                 {selectedTraits.length === 0 ? (
                   <p className="text-parchment/60 text-xs italic">
-                    {template ? 'Add from Optional, Generic or Other below.' : 'Click a trait below to add it.'}
+                    {template ? 'Add from Base, Optional, Generic or Other below.' : 'Click a trait below to add it.'}
                   </p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
-                    {selectedTraits.map((name) => (
-                      <button
-                        type="button"
-                        key={name}
-                        onClick={() => toggleTraitOnBlock(name)}
-                        className="inline-flex items-center gap-1 rounded-full border border-iron/70 bg-ink/80 px-2 py-1 text-xs text-parchment/95 hover:border-blood/70"
-                        title="Click to remove"
-                      >
-                        <span>{name}</span>
-                        <span className="text-blood text-xs">×</span>
-                      </button>
-                    ))}
+                    {selectedTraits.map((t) => {
+                      const name = typeof t === 'string' ? t : t.name;
+                      const entry = getSelectedTraitEntry(name);
+                      const ref = allTraits.find((tr) => tr.name === name);
+                      const hasInput = ref && (ref.input === true || (typeof ref.input === 'string' && ref.input));
+                      return (
+                        <div
+                          key={name}
+                          className="inline-flex items-center gap-1 rounded-full border border-iron/70 bg-ink/80 px-2 py-1"
+                        >
+                          <span className="text-parchment/95 text-xs">{name}</span>
+                          {hasInput ? (
+                            <input
+                              type="text"
+                              value={entry.inputValue || ''}
+                              onChange={(e) => updateTraitInputValue(name, e.target.value)}
+                              placeholder={typeof ref.input === 'string' ? ref.input : ''}
+                              className="w-20 bg-ink border border-iron/70 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold/60 focus:outline-none"
+                            />
+                          ) : null}
+                          <button
+                            type="button"
+                            onClick={() => toggleTraitOnBlock(name)}
+                            className="text-blood text-xs hover:text-gold px-1"
+                            aria-label={`Remove ${name}`}
+                            title="Click to remove"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
               {template && (
                 <>
-                  {Array.isArray(template.traits?.base) && template.traits.base.length > 0 && (
-                    <div>
-                      <p className="text-gold/80 text-xs mb-1">Base (from template)</p>
-                      <div className="flex flex-wrap gap-2">
-                        {template.traits.base.map((name) => (
-                          <span key={name} className="inline-flex rounded-full border border-iron/50 bg-ink/40 px-2 py-0.5 text-xs text-parchment/80">
-                            {name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {Array.isArray(template.traits?.optional) && template.traits.optional.length > 0 && (
-                    <div>
-                      <p className="text-parchment/80 text-xs mb-1">Optional (from template)</p>
-                      <div className="max-h-32 overflow-y-auto rounded border border-iron/60 bg-ink/60 p-2 space-y-1">
-                        {template.traits.optional.map((name) => (
-                          <button
-                            type="button"
-                            key={name}
-                            onClick={() => addTrait(name)}
-                            className="w-full text-left text-xs px-2 py-1 rounded hover:bg-blood/20 text-parchment/90"
-                          >
-                            {name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                   {(() => {
-                    const optionalSet = new Set(Array.isArray(template.traits?.optional) ? template.traits.optional : []);
-                    const generic = allTraits.filter((t) => t.generic && !optionalSet.has(t.name));
-                    const other = allTraits.filter((t) => !t.generic && !optionalSet.has(t.name));
+                    const selectedNames = new Set(selectedTraits.map((t) => (typeof t === 'string' ? t : t.name)));
+                    const baseEntries = (Array.isArray(template.traits?.base) ? template.traits.base : [])
+                      .map((entry) => {
+                        const name = typeof entry === 'string' ? entry : (entry.name || entry.trait || '');
+                        const defaultInput = typeof entry === 'object' && entry != null && typeof entry.inputValue === 'string' ? entry.inputValue : '';
+                        return { name, defaultInput };
+                      })
+                      .filter((e) => e.name && !selectedNames.has(e.name));
+                    return baseEntries.length > 0 ? (
+                      <div>
+                        <p className="text-gold/80 text-xs mb-1">Base (from template)</p>
+                        <div className="max-h-32 overflow-y-auto rounded border border-iron/60 bg-ink/60 p-2 space-y-1">
+                          {baseEntries.map(({ name, defaultInput }) => (
+                            <button
+                              type="button"
+                              key={name}
+                              onClick={() => addTrait(name, defaultInput)}
+                              className="w-full text-left text-xs px-2 py-1 rounded hover:bg-blood/20 text-parchment/90"
+                            >
+                              {name}
+                              {defaultInput ? ` (${defaultInput})` : ''}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+                  {(() => {
+                    const selectedNames = new Set(selectedTraits.map((t) => (typeof t === 'string' ? t : t.name)));
+                    const optionalEntries = (Array.isArray(template.traits?.optional) ? template.traits.optional : [])
+                      .map((entry) => {
+                        const name = typeof entry === 'string' ? entry : (entry.name || entry.trait || '');
+                        const defaultInput = typeof entry === 'object' && entry != null && typeof entry.inputValue === 'string' ? entry.inputValue : '';
+                        return { name, defaultInput };
+                      })
+                      .filter((e) => e.name && !selectedNames.has(e.name));
+                    return optionalEntries.length > 0 ? (
+                      <div>
+                        <p className="text-parchment/80 text-xs mb-1">Optional (from template)</p>
+                        <div className="max-h-32 overflow-y-auto rounded border border-iron/60 bg-ink/60 p-2 space-y-1">
+                          {optionalEntries.map(({ name, defaultInput }) => (
+                            <button
+                              type="button"
+                              key={name}
+                              onClick={() => addTrait(name, defaultInput)}
+                              className="w-full text-left text-xs px-2 py-1 rounded hover:bg-blood/20 text-parchment/90"
+                            >
+                              {name}
+                              {defaultInput ? ` (${defaultInput})` : ''}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+                  {(() => {
+                    const selectedNames = new Set(selectedTraits.map((t) => (typeof t === 'string' ? t : t.name)));
+                    const optionalNames = new Set(
+                      (Array.isArray(template.traits?.optional) ? template.traits.optional : [])
+                        .map((e) => (typeof e === 'string' ? e : e.name || e.trait))
+                        .filter(Boolean)
+                    );
+                    const generic = allTraits.filter((t) => t.generic && !optionalNames.has(t.name) && !selectedNames.has(t.name));
+                    const other = allTraits.filter((t) => !t.generic && !optionalNames.has(t.name) && !selectedNames.has(t.name));
                     return (
                       <>
                         {generic.length > 0 && (
@@ -660,20 +762,24 @@ export default function StatBlockEditor() {
                 <div>
                   <p className="text-parchment/80 text-xs mb-1">Available</p>
                   <div className="max-h-64 overflow-y-auto rounded border border-iron/60 bg-ink/60 p-2 space-y-1">
-                    {allTraits.length === 0 ? (
-                      <p className="text-parchment/60 text-xs">No traits loaded.</p>
-                    ) : (
-                      allTraits.map((trait) => (
-                        <button
-                          type="button"
-                          key={trait.name}
-                          onClick={() => addTrait(trait.name)}
-                          className="w-full text-left text-xs px-2 py-1 rounded hover:bg-blood/20 text-parchment/90"
-                        >
-                          {trait.name}
-                        </button>
-                      ))
-                    )}
+                    {(() => {
+                      const selectedNames = new Set(selectedTraits.map((t) => (typeof t === 'string' ? t : t.name)));
+                      const available = allTraits.filter((t) => !selectedNames.has(t.name));
+                      return available.length === 0 ? (
+                        <p className="text-parchment/60 text-xs">No more traits to add.</p>
+                      ) : (
+                        available.map((trait) => (
+                          <button
+                            type="button"
+                            key={trait.name}
+                            onClick={() => addTrait(trait.name)}
+                            className="w-full text-left text-xs px-2 py-1 rounded hover:bg-blood/20 text-parchment/90"
+                          >
+                            {trait.name}
+                          </button>
+                        ))
+                      );
+                    })()}
                   </div>
                 </div>
               )}
