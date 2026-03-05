@@ -6,27 +6,27 @@
   "characteristics": {
     "WS": {
       "base": 20,
-      "advances": 5,
+      "advances": 20,
       "addition": 10
     },
     "BS": {
       "base": 20,
-      "advances": 0,
+      "advances": 15,
       "addition": 10
     },
     "S": {
       "base": 20,
-      "advances": 0,
+      "advances": 20,
       "addition": 10
     },
     "T": {
       "base": 20,
-      "advances": 5,
+      "advances": 20,
       "addition": 10
     },
     "I": {
       "base": 20,
-      "advances": 0,
+      "advances": 10,
       "addition": 10
     },
     "Ag": {
@@ -51,45 +51,93 @@
     },
     "Fel": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     }
   },
   "size": "Average",
-  "wounds": 12,
+  "wounds": 18,
   "movement": 4,
   "skills": [
     {
       "name": "Consume Alcohol",
-      "advances": 5
+      "advances": 20
     },
     {
       "name": "Cool",
-      "advances": 5
+      "advances": 20
     },
     {
       "name": "Dodge",
-      "advances": 5
+      "advances": 20
     },
     {
       "name": "Endurance",
-      "advances": 5
+      "advances": 20
+    },
+    {
+      "name": "Gamble",
+      "advances": 15
+    },
+    {
+      "name": "Gossip",
+      "advances": 15
+    },
+    {
+      "name": "Heal",
+      "advances": 10
     },
     {
       "name": "Intimidate",
+      "advances": 20
+    },
+    {
+      "name": "Intuition",
+      "advances": 10
+    },
+    {
+      "name": "Leadership",
+      "advances": 10
+    },
+    {
+      "name": "Lore (Law)",
       "advances": 5
     },
     {
-      "name": "Lore",
+      "name": "Lore (Local)",
+      "advances": 20
+    },
+    {
+      "name": "Lore (Politics)",
       "advances": 5
     },
     {
-      "name": "Melee",
+      "name": "Melee (Basic)",
+      "advances": 15
+    },
+    {
+      "name": "Melee (Brawling)",
+      "advances": 20
+    },
+    {
+      "name": "Navigation",
       "advances": 5
     },
     {
-      "name": "Stealth",
-      "advances": 5
+      "name": "Outdoor Survival",
+      "advances": 15
+    },
+    {
+      "name": "Perception",
+      "advances": 10
+    },
+    {
+      "name": "Ranged (Crossbow)",
+      "advances": 10
+    },
+    {
+      "name": "Stealth (Urban)",
+      "advances": 20
     }
   ],
   "traits": [
@@ -101,7 +149,7 @@
     {
       "className": "Rogues",
       "careerName": "Racketeer",
-      "level": 1
+      "level": 4
     }
   ]
 }

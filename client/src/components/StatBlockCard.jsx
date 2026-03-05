@@ -83,6 +83,13 @@ function normaliseSkills(skills) {
   });
 }
 
+/** Base skill name for characteristic lookup: "Melee (Cavalry)" -> "Melee" */
+function baseSkillNameForLookup(name) {
+  if (typeof name !== 'string') return name;
+  const idx = name.indexOf(' (');
+  return idx >= 0 ? name.slice(0, idx).trim() : name;
+}
+
 function buildSkillDisplay(block, skillsRef, effectiveCh = null) {
   const refMap = new Map(
     (Array.isArray(skillsRef) ? skillsRef : []).map((s) => [s.name, s])
@@ -95,7 +102,8 @@ function buildSkillDisplay(block, skillsRef, effectiveCh = null) {
   const withTotals = normalised
     .filter((s) => s.name)
     .map((s) => {
-      const ref = refMap.get(s.name);
+      const lookupName = baseSkillNameForLookup(s.name);
+      const ref = refMap.get(lookupName) ?? refMap.get(s.name);
       const charKey = ref?.characteristic;
       const base = charKey ? getBase(charKey) : 0;
       const total = (typeof base === 'number' ? base : 0) + (Number.isFinite(s.advances) ? s.advances : 0);
