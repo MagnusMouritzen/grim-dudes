@@ -8,6 +8,22 @@ export function characteristicBonus(characteristicValue) {
   return Math.floor(n / 10);
 }
 
+/**
+ * Resolve ranged weapon range in yards.
+ * If weapon has rangeSbMultiplier (e.g. 2 for SB×2), returns strengthBonus × multiplier.
+ * Otherwise returns weapon.range (fixed yards).
+ * Use this before adding any range from ammunition.
+ */
+export function weaponRangeYards(weapon, strengthBonus) {
+  const sb = Number(strengthBonus);
+  const mult = weapon?.rangeSbMultiplier;
+  if (Number.isFinite(mult) && mult >= 0) {
+    return (Number.isFinite(sb) ? sb : 0) * mult;
+  }
+  const fixed = Number(weapon?.range);
+  return Number.isFinite(fixed) ? fixed : 0;
+}
+
 export const SIZES = [
   'Tiny',
   'Little',

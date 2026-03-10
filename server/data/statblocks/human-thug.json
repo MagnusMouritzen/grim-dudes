@@ -1,6 +1,6 @@
 {
-  "id": "human-from-template",
-  "name": "Human From Template",
+  "id": "human-thug",
+  "name": "Human Thug",
   "templateId": "human",
   "randomiseCharacteristics": false,
   "characteristics": {
@@ -16,12 +16,12 @@
     },
     "S": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "T": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "I": {
@@ -55,25 +55,68 @@
       "addition": 10
     }
   },
-  "wounds": 11,
+  "size": "Average",
+  "wounds": 12,
   "movement": 4,
   "skills": [
     {
-      "name": "Animal Care",
-      "advances": 0
+      "name": "Consume Alcohol",
+      "advances": 5
     },
     {
-      "name": "Animal Training",
+      "name": "Cool",
+      "advances": 5
+    },
+    {
+      "name": "Dodge",
+      "advances": 5
+    },
+    {
+      "name": "Endurance",
+      "advances": 5
+    },
+    {
+      "name": "Intimidate",
+      "advances": 5
+    },
+    {
+      "name": "Lore (Local)",
+      "advances": 5
+    },
+    {
+      "name": "Melee (Brawling)",
+      "advances": 5
+    },
+    {
+      "name": "Stealth (Urban)",
       "advances": 5
     }
   ],
-  "talents": [
-    "Taletn"
-  ],
   "traits": [
-    "Amphibious",
-    "Big"
+    {
+      "name": "Prejudice"
+    }
   ],
-  "armour": "Armour ",
-  "weapons": "Weapon"
+  "careers": [
+    {
+      "className": "Rogues",
+      "careerName": "Racketeer",
+      "level": 1
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Basic",
+        "name": "Dagger"
+      }
+    ],
+    "ranged": []
+  },
+  "armour": [
+    {
+      "category": "Leather",
+      "name": "Leather Jack"
+    }
+  ]
 }

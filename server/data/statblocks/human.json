@@ -11,7 +11,7 @@
     },
     "BS": {
       "base": 20,
-      "advances": 15,
+      "advances": 0,
       "addition": 10
     },
     "S": {
@@ -26,12 +26,12 @@
     },
     "I": {
       "base": 20,
-      "advances": 10,
+      "advances": 15,
       "addition": 10
     },
     "Ag": {
       "base": 20,
-      "advances": 0,
+      "advances": 10,
       "addition": 10
     },
     "Dex": {
@@ -60,8 +60,16 @@
   "movement": 4,
   "skills": [
     {
-      "name": "Consume Alcohol",
+      "name": "Athletics",
       "advances": 20
+    },
+    {
+      "name": "Charm",
+      "advances": 5
+    },
+    {
+      "name": "Consume Alcohol",
+      "advances": 10
     },
     {
       "name": "Cool",
@@ -77,15 +85,15 @@
     },
     {
       "name": "Gamble",
-      "advances": 15
+      "advances": 20
     },
     {
       "name": "Gossip",
-      "advances": 15
+      "advances": 10
     },
     {
-      "name": "Heal",
-      "advances": 10
+      "name": "Haggle",
+      "advances": 15
     },
     {
       "name": "Intimidate",
@@ -93,23 +101,15 @@
     },
     {
       "name": "Intuition",
+      "advances": 15
+    },
+    {
+      "name": "Lore (Anatomy)",
       "advances": 10
     },
     {
-      "name": "Leadership",
-      "advances": 10
-    },
-    {
-      "name": "Lore (Law)",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Local)",
+      "name": "Melee (Any)",
       "advances": 20
-    },
-    {
-      "name": "Lore (Politics)",
-      "advances": 5
     },
     {
       "name": "Melee (Basic)",
@@ -120,24 +120,24 @@
       "advances": 20
     },
     {
-      "name": "Navigation",
-      "advances": 5
-    },
-    {
-      "name": "Outdoor Survival",
+      "name": "Melee (Flail or Two-handed)",
       "advances": 15
     },
     {
       "name": "Perception",
+      "advances": 15
+    },
+    {
+      "name": "Perform (Fight)",
       "advances": 10
     },
     {
-      "name": "Ranged (Crossbow)",
-      "advances": 10
+      "name": "Ranged (Any)",
+      "advances": 5
     },
     {
-      "name": "Stealth (Urban)",
-      "advances": 20
+      "name": "Ranged (Entangling)",
+      "advances": 15
     }
   ],
   "traits": [
@@ -147,9 +147,64 @@
   ],
   "careers": [
     {
-      "className": "Rogues",
-      "careerName": "Racketeer",
+      "className": "Warriors",
+      "careerName": "Pit Fighter",
       "level": 4
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Basic",
+        "name": "Shield (Large)"
+      },
+      {
+        "category": "Basic",
+        "name": "Ballock Knife"
+      }
+    ],
+    "ranged": []
+  },
+  "armour": [
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jack"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Leggings"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Skullcap"
+    },
+    {
+      "category": "Mail",
+      "name": "Mail Chausses"
+    },
+    {
+      "category": "Mail",
+      "name": "Mail Coat"
+    },
+    {
+      "category": "Mail",
+      "name": "Mail Coif"
+    },
+    {
+      "category": "Plate",
+      "name": "Breastplate"
+    },
+    {
+      "category": "Plate",
+      "name": "Open Helm"
+    },
+    {
+      "category": "Plate",
+      "name": "Bracers"
+    },
+    {
+      "category": "Plate",
+      "name": "Plate Leggings"
     }
   ]
 }

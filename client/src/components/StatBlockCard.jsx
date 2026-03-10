@@ -1,4 +1,4 @@
-import { characteristicBonus, woundsFromSize, DEFAULT_SIZE } from '../lib/statblockUtils';
+import { characteristicBonus, weaponRangeYards, woundsFromSize, DEFAULT_SIZE } from '../lib/statblockUtils';
 
 const CHAR_ORDER = ['WS', 'BS', 'S', 'T', 'I', 'Ag', 'Dex', 'Int', 'WP', 'Fel'];
 
@@ -214,11 +214,14 @@ function buildWeaponsDisplay(block, weaponsRef, effectiveCh) {
     const w = rangedByKey.get(`${sel.category}:${sel.name}`);
     const ammo = sel.ammunition ? ammoByKey.get(`${sel.category}:${sel.ammunition}`) : null;
     if (!w) return null;
-    let totalDamage = (w.damage || 0) + (w.sbDamage ? getSB() : 0);
+    const sb = getSB();
+    const weaponRange = weaponRangeYards(w, sb);
+    const totalRange = ammo != null ? weaponRange + (Number(ammo.range) || 0) : weaponRange;
+    let totalDamage = (w.damage || 0) + (w.sbDamage ? sb : 0);
     if (ammo) totalDamage += ammo.damage || 0;
     const qNames = [...new Set([...(w.qualitiesAndFlaws || []), ...(ammo?.qualitiesAndFlaws || [])])];
     const qualities = qNames.map((name) => ({ name, description: qfMap.get(name) || '' }));
-    const rangeText = ammo ? `${w.range ?? '—'} / ${ammo.range ?? '—'}` : String(w.range ?? '—');
+    const rangeText = ammo != null ? `${weaponRange} + ${ammo.range ?? 0} = ${totalRange}` : String(weaponRange);
     return { name: w.name, ammunition: ammo?.name, totalDamage, range: rangeText, qualities };
   }).filter(Boolean);
 

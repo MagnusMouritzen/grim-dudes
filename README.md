@@ -43,6 +43,14 @@ No database: stat blocks are stored as JSON files in `server/data/`.
 
 2. Open **http://localhost:3000** (or your Pi’s IP). The server serves the built frontend and the API.
 
+To allow access from another PC on your network:
+
+- Find this machine’s IP (e.g. `ip addr` or `hostname -I` on Linux, or your router’s DHCP list).
+- On the other PC, open `http://<this-machine-ip>:3000` (e.g. `http://192.168.1.10:3000`).
+- If your firewall blocks port 3000, allow it (e.g. `sudo ufw allow 3000` on Linux).
+
+For development (`npm run dev`), use **http://\<this-machine-ip\>:5173** from another PC; the dev server is bound to all interfaces.
+
 To use a different port:
 
 ```bash

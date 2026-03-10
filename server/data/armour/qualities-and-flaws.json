@@ -1,3 +1,6 @@
 [
-  { "name": "Flexible", "description": "Armour that gives and bends, reducing impact." }
+  { "name": "Flexible", "description": "Can be worn under non-flexible armour." },
+  { "name": "Impenetrable", "description": "Critical Wounds caused by odd number to hit are ignored." },
+  { "name": "Partial", "description": "Even numbers to hit and Critical Hits ignore AP." },
+  { "name": "Weakpoints", "description": "Critical Hits from Impale weapons ignore AP." }
 ]

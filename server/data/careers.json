@@ -183,6 +183,47 @@
       "name": "Warriors",
       "careers": [
         {
+          "name": "Guard",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Sentry",
+              "status": "Silver 1",
+              "skills": ["Consume Alcohol", "Endurance", "Entertain (Storytelling)", "Gamble", "Gossip", "Intuition", "Melee (Basic)", "Perception"],
+              "characteristics": ["WS", "T", "Ag"],
+              "talents": ["Diceman", "Etiquette (Servants)", "Strike to Stun", "Tenacious"],
+              "trappings": ["Buckler", "Leather Jerkin", "Storm Lantern with Oil"]
+            },
+            {
+              "level": 2,
+              "name": "Guard",
+              "status": "Silver 2",
+              "skills": ["Athletics", "Cool", "Dodge", "Intimidate", "Melee (Polearm)", "Ranged (Bow)"],
+              "characteristics": ["I"],
+              "talents": ["Relentless", "Reversal", "Shieldsman", "Strike Mighty Blow"],
+              "trappings": ["Bow with 10 Arrows", "Sleeved Mail Shirt", "Shield", "Spear"]
+            },
+            {
+              "level": 3,
+              "name": "Honour Guard",
+              "status": "Silver 3",
+              "skills": ["Heal", "Lore (Etiquette)", "Melee (Two-handed)"],
+              "characteristics": ["S"],
+              "talents": ["Fearless (Intruders)", "Jump Up", "Stout-hearted", "Unshakeable"],
+              "trappings": ["Great Weapon or Halberd", "Helmet", "Uniform"]
+            },
+            {
+              "level": 4,
+              "name": "Guard Officer",
+              "status": "Silver 5",
+              "skills": ["Leadership", "Lore (Warfare)"],
+              "characteristics": ["Int"],
+              "talents": ["Combat Master", "Furious Assault", "Iron Will", "Robust"],
+              "trappings": ["Breastplate"]
+            }
+          ]
+        },
+        {
           "name": "Knight",
           "levels": [
             {
