@@ -107,15 +107,19 @@
   "weapons": {
     "melee": [
       {
-        "category": "Basic",
-        "name": "Dagger"
+        "category": "Brawling",
+        "name": "Unarmed"
+      },
+      {
+        "category": "Brawling",
+        "name": "Knuckledusters"
       }
     ],
     "ranged": []
   },
   "armour": [
     {
-      "category": "Leather",
+      "category": "Soft Leather",
       "name": "Leather Jack"
     }
   ]

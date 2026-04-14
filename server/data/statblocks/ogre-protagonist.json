@@ -110,10 +110,6 @@
     {
       "name": "Perception",
       "advances": 5
-    },
-    {
-      "name": "Ride (Horse)",
-      "advances": 5
     }
   ],
   "traits": [
@@ -137,16 +133,12 @@
   "weapons": {
     "melee": [
       {
-        "category": "Basic",
-        "name": "Hand Weapon"
+        "category": "Flail",
+        "name": "Military Flail"
       },
       {
         "category": "Two-handed",
         "name": "Great Axe"
-      },
-      {
-        "category": "Flail",
-        "name": "Military Flail"
       }
     ],
     "ranged": []

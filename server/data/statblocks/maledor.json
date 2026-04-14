@@ -1,6 +1,6 @@
 {
-  "id": "human",
-  "name": "Gregory",
+  "id": "maledor",
+  "name": "Maledor",
   "templateId": "human",
   "randomiseCharacteristics": false,
   "characteristics": {
@@ -11,7 +11,7 @@
     },
     "BS": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "S": {
@@ -26,12 +26,12 @@
     },
     "I": {
       "base": 20,
-      "advances": 0,
+      "advances": 10,
       "addition": 10
     },
     "Ag": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "Dex": {
@@ -41,35 +41,35 @@
     },
     "Int": {
       "base": 20,
-      "advances": 5,
+      "advances": 0,
       "addition": 10
     },
     "WP": {
       "base": 20,
-      "advances": 5,
+      "advances": 10,
       "addition": 10
     },
     "Fel": {
       "base": 20,
-      "advances": 10,
+      "advances": 0,
       "addition": 10
     }
   },
   "size": "Average",
-  "wounds": 15,
+  "wounds": 16,
   "movement": 4,
   "skills": [
     {
-      "name": "Bribery",
-      "advances": 10
+      "name": "Athletics",
+      "advances": 15
     },
     {
-      "name": "Charm",
+      "name": "Climb",
       "advances": 10
     },
     {
       "name": "Consume Alcohol",
-      "advances": 15
+      "advances": 5
     },
     {
       "name": "Cool",
@@ -84,24 +84,16 @@
       "advances": 15
     },
     {
-      "name": "Entertain (Storytelling)",
-      "advances": 5
-    },
-    {
-      "name": "Evaluate",
-      "advances": 10
-    },
-    {
       "name": "Gamble",
-      "advances": 5
+      "advances": 15
     },
     {
       "name": "Gossip",
-      "advances": 10
+      "advances": 5
     },
     {
       "name": "Haggle",
-      "advances": 5
+      "advances": 10
     },
     {
       "name": "Intimidate",
@@ -109,22 +101,14 @@
     },
     {
       "name": "Intuition",
+      "advances": 10
+    },
+    {
+      "name": "Lore (Anatomy)",
       "advances": 5
     },
     {
-      "name": "Language (Classical)",
-      "advances": 5
-    },
-    {
-      "name": "Leadership",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Any)",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Local)",
+      "name": "Melee (Any)",
       "advances": 15
     },
     {
@@ -136,55 +120,66 @@
       "advances": 15
     },
     {
+      "name": "Melee (Flail or Two-handed)",
+      "advances": 10
+    },
+    {
+      "name": "Outdoor Survival",
+      "advances": 5
+    },
+    {
       "name": "Perception",
+      "advances": 10
+    },
+    {
+      "name": "Perform (Fight)",
       "advances": 5
     },
     {
-      "name": "Ranged (Crossbow)",
+      "name": "Play (Drum or Fife)",
+      "advances": 10
+    },
+    {
+      "name": "Ranged (Any)",
       "advances": 5
     },
     {
-      "name": "Research",
-      "advances": 5
-    },
-    {
-      "name": "Stealth (Urban)",
-      "advances": 15
+      "name": "Ranged (Entangling)",
+      "advances": 10
     }
   ],
   "talents": [
-    "Read/Write"
+    "Dual wielder"
+  ],
+  "traits": [
+    {
+      "name": "Hardy"
+    }
   ],
   "careers": [
     {
-      "className": "Academics",
-      "careerName": "Scholar",
-      "level": 1
+      "className": "Warriors",
+      "careerName": "Pit Fighter",
+      "level": 3
     },
     {
-      "className": "Rogues",
-      "careerName": "Racketeer",
-      "level": 3
+      "className": "Warriors",
+      "careerName": "Soldier",
+      "level": 2
     }
   ],
   "weapons": {
     "melee": [
       {
         "category": "Basic",
-        "name": "Sword"
+        "name": "Axe"
       },
       {
-        "category": "Basic",
-        "name": "Dagger"
+        "category": "Parry",
+        "name": "Main Gauche"
       }
     ],
-    "ranged": [
-      {
-        "category": "Crossbow",
-        "name": "Crossbow Pistol",
-        "ammunition": "Bolt"
-      }
-    ]
+    "ranged": []
   },
   "armour": [
     {
@@ -194,6 +189,18 @@
     {
       "category": "Soft Leather",
       "name": "Leather Leggings"
+    },
+    {
+      "category": "Mail",
+      "name": "Mail Chausses"
+    },
+    {
+      "category": "Mail",
+      "name": "Mail Coat"
+    },
+    {
+      "category": "Plate",
+      "name": "Breastplate"
     }
   ]
 }

@@ -74,6 +74,13 @@
         { "name": "Warhammer Maul", "damage": 6, "qualitiesAndFlaws": ["Damaging", "Pummel", "Slow"], "reach": "Average", "sbDamage": true },
         { "name": "Zweihänder", "damage": 5, "qualitiesAndFlaws": ["Damaging", "Hack"], "reach": "Long", "sbDamage": true }
       ]
+    },
+    {
+      "name": "Lizardmen",
+      "weapons": [
+        { "name": "Obsinite Club", "damage": 3, "qualitiesAndFlaws": ["Penetrating"], "reach": "Short", "sbDamage": true },
+        { "name": "Obsinite Spiked Maul", "damage": 4, "qualitiesAndFlaws": ["Penetrating", "Pummel"], "reach": "Average", "sbDamage": true }
+      ]
     }
   ]
 }

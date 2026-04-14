@@ -1,0 +1,26 @@
+{
+  "id": "dog",
+  "name": "Dog",
+  "characteristics": {
+    "WS": 25,
+    "BS": 0,
+    "S": 20,
+    "T": 20,
+    "I": 35,
+    "Ag": 30,
+    "Dex": 0,
+    "Int": 15,
+    "WP": 10,
+    "Fel": 15
+  },
+  "size": "Small",
+  "movement": 4,
+  "talents": [],
+  "traits": {
+    "base": ["Bestial", "Night Vision", "Skittish", "Stride"],
+    "optional": ["Frenzy", "Infected", "Territorial", "Tracker", "Trained"]
+  },
+  "armour": "",
+  "weapons": ""
+}
+

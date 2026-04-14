@@ -1,0 +1,140 @@
+{
+  "id": "skink-warrior",
+  "name": "Skink Warrior",
+  "templateId": "skink",
+  "randomiseCharacteristics": false,
+  "characteristics": {
+    "WS": {
+      "base": 10,
+      "advances": 0,
+      "addition": 10
+    },
+    "BS": {
+      "base": 25,
+      "advances": 5,
+      "addition": 10
+    },
+    "S": {
+      "base": 20,
+      "advances": 5,
+      "addition": 10
+    },
+    "T": {
+      "base": 15,
+      "advances": 0,
+      "addition": 10
+    },
+    "I": {
+      "base": 30,
+      "advances": 10,
+      "addition": 10
+    },
+    "Ag": {
+      "base": 30,
+      "advances": 10,
+      "addition": 10
+    },
+    "Dex": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Int": {
+      "base": 30,
+      "advances": 0,
+      "addition": 10
+    },
+    "WP": {
+      "base": 15,
+      "advances": 5,
+      "addition": 10
+    },
+    "Fel": {
+      "base": 15,
+      "advances": 0,
+      "addition": 10
+    }
+  },
+  "size": "Small",
+  "wounds": 7,
+  "movement": 6,
+  "skills": [
+    {
+      "name": "Dodge",
+      "advances": 10
+    },
+    {
+      "name": "Melee",
+      "advances": 15
+    },
+    {
+      "name": "Perception",
+      "advances": 10
+    },
+    {
+      "name": "Ranged",
+      "advances": 20
+    },
+    {
+      "name": "Stealth",
+      "advances": 10
+    }
+  ],
+  "traits": [
+    {
+      "name": "Amphibious"
+    },
+    {
+      "name": "Arboreal"
+    },
+    {
+      "name": "Cold Blood"
+    },
+    {
+      "name": "Night Vision"
+    },
+    {
+      "name": "Stealthy"
+    },
+    {
+      "name": "Tracker"
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Basic",
+        "name": "Sword"
+      },
+      {
+        "category": "Lizardmen",
+        "name": "Obsinite Club"
+      }
+    ],
+    "ranged": [
+      {
+        "category": "Throwing",
+        "name": "Javelin",
+        "ammunition": ""
+      }
+    ]
+  },
+  "armour": [
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jack"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jerkin"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Leggings"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Skullcap"
+    }
+  ]
+}

@@ -92,14 +92,17 @@ export default function StatBlockView() {
           </button>
         </div>
       </div>
-      <StatBlockCard
-        block={block}
-        skillsRef={skillsRef}
-        traitsRef={traitsRef}
-        weaponsRef={weaponsRef}
-        armourRef={armourRef}
-        careersRef={careersRef}
-      />
+      <div className="max-w-xl lg:max-w-md xl:max-w-lg mx-auto">
+        <StatBlockCard
+          block={block}
+          dense
+          skillsRef={skillsRef}
+          traitsRef={traitsRef}
+          weaponsRef={weaponsRef}
+          armourRef={armourRef}
+          careersRef={careersRef}
+        />
+      </div>
     </div>
   );
 }

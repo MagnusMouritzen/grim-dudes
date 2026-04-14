@@ -35,6 +35,12 @@
         { "name": "Lead Bullet", "damage": 1, "qualitiesAndFlaws": ["Pummel"], "range": -10 },
         { "name": "Stone Bullet", "damage": 0, "qualitiesAndFlaws": ["Pummel"], "range": 0 }
       ]
+    },
+    {
+      "name": "Lizardmen",
+      "ammunition": [
+        { "name": "Blowpipe Dart", "damage": 1, "qualitiesAndFlaws": [], "range": 0 }
+      ]
     }
   ]
 }

@@ -1,6 +1,52 @@
 {
   "classes": [
     {
+      "name": "Academics",
+      "careers": [
+        {
+          "name": "Scholar",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Student",
+              "status": "Brass 3",
+              "skills": ["Consume Alcohol", "Entertain (Storytelling)", "Gamble", "Gossip", "Haggle", "Language (Classical)", "Lore (Any)", "Research"],
+              "characteristics": ["T", "Int", "WP"],
+              "talents": ["Carouser", "Read/Write", "Savvy", "Super Numerate"],
+              "trappings": ["Alcohol", "Book", "Opinions", "Writing Kit"]
+            },
+            {
+              "level": 2,
+              "name": "Scholar",
+              "status": "Silver 2",
+              "skills": ["Art (Writing)", "Intuition", "Language (Any)", "Lore (Any)", "Perception", "Trade (Any)"],
+              "characteristics": ["I"],
+              "talents": ["Bookish", "Etiquette (Scholars)", "Speedreader", "Suave"],
+              "trappings": ["Access to a Library", "Degree"]
+            },
+            {
+              "level": 3,
+              "name": "Fellow",
+              "status": "Silver 5",
+              "skills": ["Entertain (Lecture)", "Intimidate", "Language (Any)", "Lore (Any)"],
+              "characteristics": ["Fel"],
+              "talents": ["Linguistics", "Public Speaker", "Savant (Any)", "Tower of Memories"],
+              "trappings": ["Mortarboard", "Robes"]
+            },
+            {
+              "level": 4,
+              "name": "Professor",
+              "status": "Gold 1",
+              "skills": ["Entertain (Rhetoric)", "Lore (Any)"],
+              "characteristics": ["Dex"],
+              "talents": ["Magnum Opus", "Master Orator", "Savant (Any)", "Sharp"],
+              "trappings": ["Study"]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Burghers",
       "careers": [
         {
@@ -89,6 +135,47 @@
               "trappings": ["2 Quality Weapons"]
             }
           ]
+        },
+        {
+          "name": "Noble",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Scion",
+              "status": "Gold 1",
+              "skills": ["Bribery", "Consume Alcohol", "Gamble", "Intimidate", "Leadership", "Lore (Heraldry)", "Melee (Fencing)", "Play (Any)"],
+              "characteristics": ["WS", "I", "Dex"],
+              "talents": ["Etiquette (Nobles)", "Luck", "Noble Blood", "Read/Write"],
+              "trappings": ["Courtly Garb", "Foil or Hand Mirror", "Jewellery worth 3d10 GC", "Personal Servant"]
+            },
+            {
+              "level": 2,
+              "name": "Noble",
+              "status": "Gold 3",
+              "skills": ["Charm", "Gossip", "Language (Classical)", "Lore (Local)", "Ride (Horse)", "Melee (Parry)"],
+              "characteristics": ["Fel"],
+              "talents": ["Attractive", "Briber", "Carouser", "Suave"],
+              "trappings": ["4 Household Servants", "Quality Courtly Garb", "Courtly Garb", "Riding Horse with Saddle and Harness or Coach", "Main Gauche or Quality Cloak", "Jewellery worth 50 GC"]
+            },
+            {
+              "level": 3,
+              "name": "Magnate",
+              "status": "Gold 5",
+              "skills": ["Language (Any)", "Intuition", "Lore (Politics)", "Perception"],
+              "characteristics": ["Int"],
+              "talents": ["Coolheaded", "Dealmaker", "Public Speaker", "Schemer"],
+              "trappings": ["2 Sets of Quality Courtly Garb", "200 GC", "Fiefdom", "Jewellery worth 200 GC", "Signet Ring"]
+            },
+            {
+              "level": 4,
+              "name": "Noble Lord",
+              "status": "Gold 7",
+              "skills": ["Lore (Any)", "Track"],
+              "characteristics": ["WP"],
+              "talents": ["Commanding Presence", "Iron Will", "Warleader", "Wealthy"],
+              "trappings": ["4 Sets of Best Quality Courtly Garb", "Quality Foil or Hand Mirror", "500 GC", "Jewellery worth 500 GC", "Province"]
+            }
+          ]
         }
       ]
     },
@@ -133,6 +220,88 @@
               "characteristics": ["Fel"],
               "talents": ["Commanding Presence", "Kingpin", "Frightening", "Wealthy"],
               "trappings": ["Network of Informers", "Quality Clothing", "Hat", "Subordinate Gang Bosses"]
+            }
+          ]
+        },
+        {
+          "name": "Bawd",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Hustler",
+              "status": "Brass 1",
+              "skills": ["Bribery", "Charm", "Consume Alcohol", "Entertain (Any)", "Gamble", "Gossip", "Haggle", "Intimidate"],
+              "characteristics": ["Fel", "Ag", "Dex"],
+              "talents": ["Attractive", "Alley Cat", "Blather", "Gregarious"],
+              "trappings": ["Flask of Spirits"]
+            },
+            {
+              "level": 2,
+              "name": "Bawd",
+              "status": "Brass 3",
+              "skills": ["Dodge", "Endurance", "Intuition", "Lore (Local)", "Melee (Basic)", "Perception"],
+              "characteristics": ["I"],
+              "talents": ["Ambidextrous", "Carouser", "Criminal", "Resistant (Disease)"],
+              "trappings": ["Dose of Weirdroot", "Quality Clothing"]
+            },
+            {
+              "level": 3,
+              "name": "Procurer",
+              "status": "Silver 1",
+              "skills": ["Cool", "Evaluate", "Language (Any)", "Lore (Law)"],
+              "characteristics": ["WP"],
+              "talents": ["Dealmaker", "Embezzle", "Etiquette (Any)", "Suave"],
+              "trappings": ["A Ring of Hustlers"]
+            },
+            {
+              "level": 4,
+              "name": "Ringleader",
+              "status": "Silver 3",
+              "skills": ["Leadership", "Lore (Heraldry)"],
+              "characteristics": ["Int"],
+              "talents": ["Briber", "Kingpin", "Numismatics", "Savvy"],
+              "trappings": ["Townhouse with Discreet Back Entrance", "A Ring of Bawds"]
+            }
+          ]
+        },
+        {
+          "name": "Charlatan",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Swindler",
+              "status": "Brass 3",
+              "skills": ["Bribery", "Consume Alcohol", "Charm", "Entertain (Storytelling)", "Gamble", "Gossip", "Haggle", "Sleight of Hand"],
+              "characteristics": ["I", "Dex", "Fel"],
+              "talents": ["Cardsharp", "Diceman", "Etiquette (Any)", "Luck"],
+              "trappings": ["Backpack", "2 Sets of Clothing", "Deck of Cards", "Dice"]
+            },
+            {
+              "level": 2,
+              "name": "Charlatan",
+              "status": "Brass 5",
+              "skills": ["Cool", "Dodge", "Entertain (Acting)", "Evaluate", "Intuition", "Perception"],
+              "characteristics": ["WP"],
+              "talents": ["Blather", "Criminal", "Fast Hands", "Secret Identity"],
+              "trappings": ["1 Forged Document", "2 Sets of Quality Clothing", "Selection of Coloured Powders and Water", "Selection of Trinkets and Charms"]
+            },
+            {
+              "level": 3,
+              "name": "Con Artist",
+              "status": "Silver 2",
+              "skills": ["Language (Thief)", "Lore (Heraldry)", "Pick Lock", "Secret Signs (Thief)"],
+              "characteristics": ["Ag"],
+              "talents": ["Attractive", "Cat-tongued", "Dealmaker", "Read/Write"],
+              "trappings": ["Disguise Kit", "Lock Picks", "Multiple Forged Documents"]
+            },
+            {
+              "level": 4,
+              "name": "Scoundrel",
+              "status": "Silver 4",
+              "skills": ["Lore (Genealogy)", "Research"],
+              "characteristics": ["Int"],
+              "talents": ["Gregarious", "Master of Disguise", "Nose for Trouble", "Suave"],
+              "trappings": ["Forged Seal", "Writing Kit"]
             }
           ]
         },

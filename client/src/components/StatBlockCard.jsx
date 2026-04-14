@@ -297,7 +297,7 @@ function buildCareerLevelLabels(block, careersRef) {
   return labels;
 }
 
-export default function StatBlockCard({ block, compact = false, skillsRef, traitsRef, weaponsRef, armourRef, careersRef }) {
+export default function StatBlockCard({ block, compact = false, dense = false, skillsRef, traitsRef, weaponsRef, armourRef, careersRef }) {
   if (!block) return null;
   const talents = Array.isArray(block.talents) ? block.talents : [];
   const { effectiveCh, effectiveMovement, effectiveWounds } = computeEffectiveStats(block, traitsRef);
@@ -331,23 +331,44 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
   }
 
   const sizeLabel = block.size || DEFAULT_SIZE;
+  const d = dense;
+  const tipW = d ? 'w-48' : 'w-64';
+  const tipWQ = d ? 'w-48' : 'w-56';
 
   return (
-    <article className="relative rounded-lg border-2 border-iron/70 bg-[#0f0d0a] shadow-xl ring-1 ring-gold/20">
-      <div className="bg-blood/20 px-6 py-3 border-b border-gold/30 flex items-baseline justify-between gap-4">
-        <h2 className="font-display text-2xl text-gold tracking-wide">{block.name}</h2>
-        <div className="flex flex-col items-end gap-1">
+    <article
+      className={
+        d
+          ? 'relative min-w-0 rounded-lg border border-iron/70 bg-[#0f0d0a] shadow-md ring-1 ring-gold/15 text-[0.8125rem] leading-snug'
+          : 'relative rounded-lg border-2 border-iron/70 bg-[#0f0d0a] shadow-xl ring-1 ring-gold/20'
+      }
+    >
+      <div
+        className={
+          d
+            ? 'bg-blood/20 px-3 py-2 border-b border-gold/30 flex items-baseline justify-between gap-2'
+            : 'bg-blood/20 px-6 py-3 border-b border-gold/30 flex items-baseline justify-between gap-4'
+        }
+      >
+        <h2 className={d ? 'font-display text-lg text-gold tracking-wide' : 'font-display text-2xl text-gold tracking-wide'}>
+          {block.name}
+        </h2>
+        <div className="flex flex-col items-end gap-0.5 min-w-0">
           {highestStatus && (
-            <span className="text-parchment/90 text-sm">
+            <span className={d ? 'text-parchment/90 text-[0.7rem]' : 'text-parchment/90 text-sm'}>
               Status: <span className="text-gold font-semibold">{highestStatus}</span>
             </span>
           )}
           {careerLabels.length > 0 && (
-            <div className="flex flex-wrap gap-1 justify-end">
+            <div className="flex flex-wrap gap-0.5 justify-end">
               {careerLabels.map((label) => (
                 <span
                   key={label}
-                  className="rounded-full border border-iron/60 bg-ink/70 px-2 py-0.5 text-[0.7rem] text-parchment/90"
+                  className={
+                    d
+                      ? 'rounded-full border border-iron/60 bg-ink/70 px-1.5 py-0.5 text-[0.6rem] text-parchment/90'
+                      : 'rounded-full border border-iron/60 bg-ink/70 px-2 py-0.5 text-[0.7rem] text-parchment/90'
+                  }
                 >
                   {label}
                 </span>
@@ -356,45 +377,47 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
           )}
         </div>
       </div>
-      <div className="p-6 space-y-6">
+      <div className={d ? 'p-3 space-y-3' : 'p-6 space-y-6'}>
         <section>
-          <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">Characteristics</h3>
-          <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+          <h3 className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider mb-1.5 font-semibold' : 'text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold'}>
+            Characteristics
+          </h3>
+          <div className={d ? 'grid grid-cols-5 sm:grid-cols-10 gap-1' : 'grid grid-cols-5 sm:grid-cols-10 gap-2'}>
             {CHAR_ORDER.map((key) => (
-              <div key={key} className="bg-ink/60 rounded px-2 py-1 text-center">
-                <div className="text-blood/90 text-xs">{key}</div>
-                <div className="text-parchment font-semibold">{effectiveCh[key] ?? '—'}</div>
+              <div key={key} className={d ? 'bg-ink/60 rounded px-1 py-0.5 text-center' : 'bg-ink/60 rounded px-2 py-1 text-center'}>
+                <div className={d ? 'text-blood/90 text-[0.55rem]' : 'text-blood/90 text-xs'}>{key}</div>
+                <div className={d ? 'text-parchment font-semibold text-xs' : 'text-parchment font-semibold'}>{effectiveCh[key] ?? '—'}</div>
               </div>
             ))}
           </div>
         </section>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className={d ? 'grid grid-cols-3 gap-2' : 'grid sm:grid-cols-3 gap-4'}>
           <div>
-            <span className="text-gold/90 text-sm uppercase tracking-wider">Size</span>
-            <p className="text-parchment font-semibold">{sizeLabel}</p>
+            <span className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider' : 'text-gold/90 text-sm uppercase tracking-wider'}>Size</span>
+            <p className={d ? 'text-parchment font-semibold text-sm' : 'text-parchment font-semibold'}>{sizeLabel}</p>
           </div>
           <div>
-            <span className="text-gold/90 text-sm uppercase tracking-wider">Wounds</span>
-            <p className="text-parchment font-semibold">{effectiveWounds}</p>
+            <span className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider' : 'text-gold/90 text-sm uppercase tracking-wider'}>Wounds</span>
+            <p className={d ? 'text-parchment font-semibold text-sm' : 'text-parchment font-semibold'}>{effectiveWounds}</p>
           </div>
           <div>
-            <span className="text-gold/90 text-sm uppercase tracking-wider">Movement</span>
-            <p className="text-parchment font-semibold">{effectiveMovement}</p>
+            <span className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider' : 'text-gold/90 text-sm uppercase tracking-wider'}>Movement</span>
+            <p className={d ? 'text-parchment font-semibold text-sm' : 'text-parchment font-semibold'}>{effectiveMovement}</p>
           </div>
         </div>
         {skillsWithTotals.length > 0 && (
           <section>
-            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">
+            <h3 className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider mb-1.5 font-semibold' : 'text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold'}>
               Skills
             </h3>
-            <div className="flex flex-wrap gap-2 text-sm">
+            <div className={d ? 'flex flex-wrap gap-1 text-xs' : 'flex flex-wrap gap-2 text-sm'}>
               {skillsWithTotals.map((skill) => (
                 <span
                   key={skill.name}
-                  className="inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5"
+                  className={d ? 'inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-1.5 py-0.5' : 'inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5'}
                 >
-                  <span className="text-parchment/95 mr-1">{skill.name}</span>
-                  <span className="text-gold font-semibold text-xs">
+                  <span className="text-parchment/95 mr-0.5">{skill.name}</span>
+                  <span className={d ? 'text-gold font-semibold text-[0.65rem]' : 'text-gold font-semibold text-xs'}>
                     {skill.total}
                   </span>
                 </span>
@@ -404,21 +427,27 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
         )}
         {traits.length > 0 && (
           <section>
-            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">
+            <h3 className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider mb-1.5 font-semibold' : 'text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold'}>
               Traits
             </h3>
-            <div className="flex flex-wrap gap-2 text-sm">
+            <div className={d ? 'flex flex-wrap gap-1 text-xs' : 'flex flex-wrap gap-2 text-sm'}>
               {traits.map((trait) => (
                 <span
                   key={trait.name + (trait.inputValue || '')}
-                  className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5 cursor-help"
+                  className={
+                    d
+                      ? 'relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-1.5 py-0.5 cursor-help'
+                      : 'relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5 cursor-help'
+                  }
                 >
                   <span className="text-parchment/95">{trait.name}</span>
                   {trait.inputValue ? (
-                    <span className="ml-1 text-gold font-semibold text-xs">{trait.inputValue}</span>
+                    <span className={d ? 'ml-0.5 text-gold font-semibold text-[0.65rem]' : 'ml-1 text-gold font-semibold text-xs'}>{trait.inputValue}</span>
                   ) : null}
                   {trait.description ? (
-                    <span className="pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 w-64 rounded border border-gold/40 bg-[#15110c] px-3 py-2 text-xs text-parchment shadow-lg shadow-black/60 whitespace-pre-line">
+                    <span
+                      className={`pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 ${tipW} rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg shadow-black/60 whitespace-pre-line`}
+                    >
                       <span className="block text-gold/80 font-semibold mb-1">
                         {trait.name}
                       </span>
@@ -432,27 +461,27 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
         )}
         {talents.length > 0 && (
           <section>
-            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">Talents</h3>
-            <p className="text-parchment/95">{talents.join(', ')}</p>
+            <h3 className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider mb-1.5 font-semibold' : 'text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold'}>Talents</h3>
+            <p className={d ? 'text-parchment/95 text-xs' : 'text-parchment/95'}>{talents.join(', ')}</p>
           </section>
         )}
         {(weaponsDisplay.melee.length > 0 || weaponsDisplay.ranged.length > 0) && (
           <section>
-            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">Weapons</h3>
-            <div className="space-y-3">
+            <h3 className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider mb-1.5 font-semibold' : 'text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold'}>Weapons</h3>
+            <div className={d ? 'space-y-2' : 'space-y-3'}>
               {weaponsDisplay.melee.map((w, i) => (
-                <div key={`melee-${i}`} className="rounded border border-iron/60 bg-ink/60 p-3">
-                  <div className="font-semibold text-parchment">{w.name}</div>
-                  <div className="text-sm text-parchment/90 mt-1">
+                <div key={`melee-${i}`} className={d ? 'rounded border border-iron/60 bg-ink/60 p-2' : 'rounded border border-iron/60 bg-ink/60 p-3'}>
+                  <div className={d ? 'font-semibold text-parchment text-sm' : 'font-semibold text-parchment'}>{w.name}</div>
+                  <div className={d ? 'text-xs text-parchment/90 mt-0.5' : 'text-sm text-parchment/90 mt-1'}>
                     Damage {w.totalDamage} · Reach {w.reach ?? '—'}
                   </div>
                   {w.qualities.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className={d ? 'flex flex-wrap gap-0.5 mt-1' : 'flex flex-wrap gap-1 mt-2'}>
                       {w.qualities.map((q) => (
-                        <span key={q.name} className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5 text-xs cursor-help">
+                        <span key={q.name} className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-1.5 py-0.5 text-[0.65rem] cursor-help">
                           {q.name}
                           {q.description ? (
-                            <span className="pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 w-56 rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg whitespace-pre-line">
+                            <span className={`pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 ${tipWQ} rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg whitespace-pre-line`}>
                               <span className="block text-gold/80 font-semibold">{q.name}</span>
                               {q.description}
                             </span>
@@ -464,18 +493,20 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
                 </div>
               ))}
               {weaponsDisplay.ranged.map((w, i) => (
-                <div key={`ranged-${i}`} className="rounded border border-iron/60 bg-ink/60 p-3">
-                  <div className="font-semibold text-parchment">{w.name}{w.ammunition ? ` (${w.ammunition})` : ''}</div>
-                  <div className="text-sm text-parchment/90 mt-1">
+                <div key={`ranged-${i}`} className={d ? 'rounded border border-iron/60 bg-ink/60 p-2' : 'rounded border border-iron/60 bg-ink/60 p-3'}>
+                  <div className={d ? 'font-semibold text-parchment text-sm' : 'font-semibold text-parchment'}>
+                    {w.name}{w.ammunition ? ` (${w.ammunition})` : ''}
+                  </div>
+                  <div className={d ? 'text-xs text-parchment/90 mt-0.5' : 'text-sm text-parchment/90 mt-1'}>
                     Damage {w.totalDamage} · Range {w.range}
                   </div>
                   {w.qualities.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className={d ? 'flex flex-wrap gap-0.5 mt-1' : 'flex flex-wrap gap-1 mt-2'}>
                       {w.qualities.map((q) => (
-                        <span key={q.name} className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5 text-xs cursor-help">
+                        <span key={q.name} className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-1.5 py-0.5 text-[0.65rem] cursor-help">
                           {q.name}
                           {q.description ? (
-                            <span className="pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 w-56 rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg whitespace-pre-line">
+                            <span className={`pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 ${tipWQ} rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg whitespace-pre-line`}>
                               <span className="block text-gold/80 font-semibold">{q.name}</span>
                               {q.description}
                             </span>
@@ -491,25 +522,25 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
         )}
         {(armourTable.length > 0 || armourListDisplay.length > 0) && (
           <section>
-            <h3 className="text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold">Armour</h3>
+            <h3 className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider mb-1.5 font-semibold' : 'text-gold/90 text-sm uppercase tracking-wider mb-2 font-semibold'}>Armour</h3>
             {armourTable.length > 0 && (
-              <table className="w-full text-sm border-collapse mb-4">
+              <table className={d ? 'w-full text-xs border-collapse mb-2' : 'w-full text-sm border-collapse mb-4'}>
                 <thead>
                   <tr className="border-b border-iron/60">
-                    <th className="text-left text-gold/90 py-1 pr-2">Roll</th>
-                    <th className="text-left text-gold/90 py-1 pr-2">Location</th>
-                    <th className="text-left text-gold/90 py-1">Protection</th>
+                    <th className="text-left text-gold/90 py-0.5 pr-1">Roll</th>
+                    <th className="text-left text-gold/90 py-0.5 pr-1">Location</th>
+                    <th className="text-left text-gold/90 py-0.5">Protection</th>
                   </tr>
                 </thead>
                 <tbody>
                   {armourTable.map((row) => (
                     <tr key={row.location} className="border-b border-iron/40">
-                      <td className="text-parchment/90 py-1 pr-2">{row.roll}</td>
-                      <td className="text-parchment/90 py-1 pr-2">{row.location}</td>
+                      <td className="text-parchment/90 py-0.5 pr-1">{row.roll}</td>
+                      <td className="text-parchment/90 py-0.5 pr-1">{row.location}</td>
                       <td className="text-parchment">
                         <span className="font-semibold">{row.protection}</span>
                         {row.breakdown != null && (
-                          <span className="text-parchment/80 text-sm ml-1">
+                          <span className={d ? 'text-parchment/80 text-xs ml-0.5' : 'text-parchment/80 text-sm ml-1'}>
                             : {row.breakdown}
                           </span>
                         )}
@@ -520,18 +551,18 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
               </table>
             )}
             {armourListDisplay.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+              <div className={d ? 'flex flex-wrap gap-1' : 'flex flex-wrap gap-2'}>
                 {armourListDisplay.map((a) => (
-                  <div key={a.name} className="rounded border border-iron/60 bg-ink/60 px-3 py-2">
-                    <span className="text-parchment font-semibold">{a.name}</span>
-                    <span className="text-parchment/70 text-sm ml-1">({a.aps} AP)</span>
+                  <div key={a.name} className={d ? 'rounded border border-iron/60 bg-ink/60 px-2 py-1.5' : 'rounded border border-iron/60 bg-ink/60 px-3 py-2'}>
+                    <span className={d ? 'text-parchment font-semibold text-sm' : 'text-parchment font-semibold'}>{a.name}</span>
+                    <span className={d ? 'text-parchment/70 text-xs ml-0.5' : 'text-parchment/70 text-sm ml-1'}>({a.aps} AP)</span>
                     {a.qualities.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-1">
+                      <div className={d ? 'flex flex-wrap gap-0.5 mt-0.5' : 'flex flex-wrap gap-1 mt-1'}>
                         {a.qualities.map((q) => (
-                          <span key={q.name} className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-2 py-0.5 text-xs cursor-help">
+                          <span key={q.name} className="relative group inline-flex items-center rounded-full border border-iron/70 bg-ink/70 px-1.5 py-0.5 text-[0.65rem] cursor-help">
                             {q.name}
                             {q.description ? (
-                              <span className="pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 w-56 rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg whitespace-pre-line">
+                              <span className={`pointer-events-none invisible group-hover:visible absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 ${tipWQ} rounded border border-gold/40 bg-[#15110c] px-2 py-1.5 text-xs text-parchment shadow-lg whitespace-pre-line`}>
                                 <span className="block text-gold/80 font-semibold">{q.name}</span>
                                 {q.description}
                               </span>
@@ -547,17 +578,17 @@ export default function StatBlockCard({ block, compact = false, skillsRef, trait
           </section>
         )}
         {((typeof block.weapons === 'string' && block.weapons) || (typeof block.armour === 'string' && block.armour)) ? (
-          <div className="grid sm:grid-cols-2 gap-4 pt-2 border-t border-iron/40">
+          <div className={d ? 'grid sm:grid-cols-2 gap-2 pt-2 border-t border-iron/40' : 'grid sm:grid-cols-2 gap-4 pt-2 border-t border-iron/40'}>
             {typeof block.armour === 'string' && block.armour && (
               <div>
-                <span className="text-gold/90 text-sm uppercase tracking-wider">Armour</span>
-                <p className="text-parchment/95">{block.armour}</p>
+                <span className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider' : 'text-gold/90 text-sm uppercase tracking-wider'}>Armour</span>
+                <p className={d ? 'text-parchment/95 text-xs' : 'text-parchment/95'}>{block.armour}</p>
               </div>
             )}
             {typeof block.weapons === 'string' && block.weapons && (
               <div>
-                <span className="text-gold/90 text-sm uppercase tracking-wider">Weapons</span>
-                <p className="text-parchment/95">{block.weapons}</p>
+                <span className={d ? 'text-gold/90 text-[0.65rem] uppercase tracking-wider' : 'text-gold/90 text-sm uppercase tracking-wider'}>Weapons</span>
+                <p className={d ? 'text-parchment/95 text-xs' : 'text-parchment/95'}>{block.weapons}</p>
               </div>
             )}
           </div>

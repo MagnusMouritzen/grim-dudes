@@ -1,12 +1,12 @@
 {
-  "id": "human",
-  "name": "Gregory",
+  "id": "human-guard",
+  "name": "Human Guard",
   "templateId": "human",
   "randomiseCharacteristics": false,
   "characteristics": {
     "WS": {
       "base": 20,
-      "advances": 15,
+      "advances": 10,
       "addition": 10
     },
     "BS": {
@@ -16,22 +16,22 @@
     },
     "S": {
       "base": 20,
-      "advances": 15,
+      "advances": 0,
       "addition": 10
     },
     "T": {
       "base": 20,
-      "advances": 15,
+      "advances": 10,
       "addition": 10
     },
     "I": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "Ag": {
       "base": 20,
-      "advances": 0,
+      "advances": 10,
       "addition": 10
     },
     "Dex": {
@@ -41,137 +41,93 @@
     },
     "Int": {
       "base": 20,
-      "advances": 5,
+      "advances": 0,
       "addition": 10
     },
     "WP": {
       "base": 20,
-      "advances": 5,
+      "advances": 0,
       "addition": 10
     },
     "Fel": {
       "base": 20,
-      "advances": 10,
+      "advances": 0,
       "addition": 10
     }
   },
   "size": "Average",
-  "wounds": 15,
+  "wounds": 14,
   "movement": 4,
   "skills": [
     {
-      "name": "Bribery",
-      "advances": 10
-    },
-    {
-      "name": "Charm",
-      "advances": 10
-    },
-    {
-      "name": "Consume Alcohol",
-      "advances": 15
-    },
-    {
-      "name": "Cool",
-      "advances": 15
-    },
-    {
-      "name": "Dodge",
-      "advances": 15
-    },
-    {
-      "name": "Endurance",
-      "advances": 15
-    },
-    {
-      "name": "Entertain (Storytelling)",
+      "name": "Athletics",
       "advances": 5
     },
     {
-      "name": "Evaluate",
+      "name": "Consume Alcohol",
+      "advances": 10
+    },
+    {
+      "name": "Cool",
+      "advances": 5
+    },
+    {
+      "name": "Dodge",
+      "advances": 5
+    },
+    {
+      "name": "Endurance",
+      "advances": 10
+    },
+    {
+      "name": "Entertain (Storytelling)",
       "advances": 10
     },
     {
       "name": "Gamble",
-      "advances": 5
+      "advances": 10
     },
     {
       "name": "Gossip",
       "advances": 10
     },
     {
-      "name": "Haggle",
-      "advances": 5
-    },
-    {
       "name": "Intimidate",
-      "advances": 15
+      "advances": 5
     },
     {
       "name": "Intuition",
-      "advances": 5
-    },
-    {
-      "name": "Language (Classical)",
-      "advances": 5
-    },
-    {
-      "name": "Leadership",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Any)",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Local)",
-      "advances": 15
+      "advances": 10
     },
     {
       "name": "Melee (Basic)",
       "advances": 10
     },
     {
-      "name": "Melee (Brawling)",
-      "advances": 15
+      "name": "Melee (Polearm)",
+      "advances": 5
     },
     {
       "name": "Perception",
-      "advances": 5
+      "advances": 10
     },
     {
-      "name": "Ranged (Crossbow)",
+      "name": "Ranged (Bow)",
       "advances": 5
-    },
-    {
-      "name": "Research",
-      "advances": 5
-    },
-    {
-      "name": "Stealth (Urban)",
-      "advances": 15
     }
-  ],
-  "talents": [
-    "Read/Write"
   ],
   "careers": [
     {
-      "className": "Academics",
-      "careerName": "Scholar",
-      "level": 1
-    },
-    {
-      "className": "Rogues",
-      "careerName": "Racketeer",
-      "level": 3
+      "className": "Warriors",
+      "careerName": "Guard",
+      "level": 2
     }
   ],
   "weapons": {
     "melee": [
       {
-        "category": "Basic",
-        "name": "Sword"
+        "category": "Polearm",
+        "name": "Spear"
       },
       {
         "category": "Basic",
@@ -180,20 +136,28 @@
     ],
     "ranged": [
       {
-        "category": "Crossbow",
-        "name": "Crossbow Pistol",
-        "ammunition": "Bolt"
+        "category": "Bow",
+        "name": "Shortbow",
+        "ammunition": "Arrow"
       }
     ]
   },
   "armour": [
     {
       "category": "Soft Leather",
-      "name": "Leather Jack"
+      "name": "Leather Jerkin"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Skullcap"
     },
     {
       "category": "Soft Leather",
       "name": "Leather Leggings"
+    },
+    {
+      "category": "Plate",
+      "name": "Open Helm"
     }
   ]
 }
