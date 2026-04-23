@@ -64,6 +64,12 @@
         { "name": "Throwing Axe", "damage": 3, "qualitiesAndFlaws": ["Hack"], "rangeSbMultiplier": 2, "sbDamage": true },
         { "name": "Throwing Knife", "damage": 2, "qualitiesAndFlaws": [], "rangeSbMultiplier": 2, "sbDamage": true }
       ]
+    },
+    {
+      "name": "Lizardmen",
+      "weapons": [
+        { "name": "Blowpipe", "damage": 0,"qualitiesAndFlaws": ["Reload 1"], "range": 20, "sbDamage": false }
+      ]
     }
   ]
 }

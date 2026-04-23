@@ -1,6 +1,6 @@
 {
-  "id": "human",
-  "name": "Gregory",
+  "id": "altdorf-watchman",
+  "name": "Altdorf Watchman",
   "templateId": "human",
   "randomiseCharacteristics": false,
   "characteristics": {
@@ -11,17 +11,17 @@
     },
     "BS": {
       "base": 20,
-      "advances": 0,
+      "advances": 5,
       "addition": 10
     },
     "S": {
       "base": 20,
-      "advances": 15,
+      "advances": 5,
       "addition": 10
     },
     "T": {
       "base": 20,
-      "advances": 15,
+      "advances": 10,
       "addition": 10
     },
     "I": {
@@ -41,17 +41,17 @@
     },
     "Int": {
       "base": 20,
-      "advances": 5,
+      "advances": 0,
       "addition": 10
     },
     "WP": {
       "base": 20,
-      "advances": 5,
+      "advances": 10,
       "addition": 10
     },
     "Fel": {
       "base": 20,
-      "advances": 10,
+      "advances": 5,
       "addition": 10
     }
   },
@@ -60,35 +60,27 @@
   "movement": 4,
   "skills": [
     {
-      "name": "Bribery",
+      "name": "Athletics",
       "advances": 10
     },
     {
-      "name": "Charm",
+      "name": "Climb",
       "advances": 10
     },
     {
       "name": "Consume Alcohol",
-      "advances": 15
-    },
-    {
-      "name": "Cool",
-      "advances": 15
-    },
-    {
-      "name": "Dodge",
-      "advances": 15
-    },
-    {
-      "name": "Endurance",
-      "advances": 15
-    },
-    {
-      "name": "Entertain (Storytelling)",
       "advances": 5
     },
     {
-      "name": "Evaluate",
+      "name": "Cool",
+      "advances": 10
+    },
+    {
+      "name": "Dodge",
+      "advances": 10
+    },
+    {
+      "name": "Endurance",
       "advances": 10
     },
     {
@@ -97,81 +89,54 @@
     },
     {
       "name": "Gossip",
-      "advances": 10
-    },
-    {
-      "name": "Haggle",
       "advances": 5
     },
     {
-      "name": "Intimidate",
-      "advances": 15
-    },
-    {
-      "name": "Intuition",
+      "name": "Melee (Any)",
       "advances": 5
-    },
-    {
-      "name": "Language (Classical)",
-      "advances": 5
-    },
-    {
-      "name": "Leadership",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Any)",
-      "advances": 5
-    },
-    {
-      "name": "Lore (Local)",
-      "advances": 15
     },
     {
       "name": "Melee (Basic)",
       "advances": 10
     },
     {
-      "name": "Melee (Brawling)",
-      "advances": 15
+      "name": "Outdoor Survival",
+      "advances": 5
     },
     {
       "name": "Perception",
       "advances": 5
     },
     {
-      "name": "Ranged (Crossbow)",
-      "advances": 5
+      "name": "Play (Drum or Fife)",
+      "advances": 10
     },
     {
-      "name": "Research",
+      "name": "Ranged (Any)",
       "advances": 5
-    },
-    {
-      "name": "Stealth (Urban)",
-      "advances": 15
     }
-  ],
-  "talents": [
-    "Read/Write"
   ],
   "careers": [
     {
-      "className": "Academics",
-      "careerName": "Scholar",
+      "className": "Burghers",
+      "careerName": "Watchman",
       "level": 1
     },
     {
-      "className": "Rogues",
-      "careerName": "Racketeer",
-      "level": 3
+      "className": "Warriors",
+      "careerName": "Soldier",
+      "level": 2
     }
   ],
   "weapons": {
     "melee": [
       {
         "category": "Basic",
-        "name": "Sword"
+        "name": "Mace"
+      },
+      {
+        "category": "Polearm",
+        "name": "Halberd"
       },
       {
         "category": "Basic",
@@ -181,7 +146,7 @@
     "ranged": [
       {
         "category": "Crossbow",
-        "name": "Crossbow Pistol",
+        "name": "Crossbow",
         "ammunition": "Bolt"
       }
     ]
@@ -194,6 +159,14 @@
     {
       "category": "Soft Leather",
       "name": "Leather Leggings"
+    },
+    {
+      "category": "Plate",
+      "name": "Breastplate"
+    },
+    {
+      "category": "Plate",
+      "name": "Open Helm"
     }
   ]
 }

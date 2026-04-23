@@ -1,0 +1,201 @@
+{
+  "id": "captain-pfeffer",
+  "name": "Captain Pfeffer",
+  "templateId": "human",
+  "randomiseCharacteristics": true,
+  "characteristics": {
+    "WS": {
+      "base": 20,
+      "advances": 20,
+      "addition": 14
+    },
+    "BS": {
+      "base": 20,
+      "advances": 15,
+      "addition": 12
+    },
+    "S": {
+      "base": 20,
+      "advances": 20,
+      "addition": 13
+    },
+    "T": {
+      "base": 20,
+      "advances": 20,
+      "addition": 13
+    },
+    "I": {
+      "base": 20,
+      "advances": 10,
+      "addition": 7
+    },
+    "Ag": {
+      "base": 20,
+      "advances": 0,
+      "addition": 4
+    },
+    "Dex": {
+      "base": 20,
+      "advances": 0,
+      "addition": 12
+    },
+    "Int": {
+      "base": 20,
+      "advances": 5,
+      "addition": 16
+    },
+    "WP": {
+      "base": 20,
+      "advances": 20,
+      "addition": 13
+    },
+    "Fel": {
+      "base": 20,
+      "advances": 20,
+      "addition": 11
+    }
+  },
+  "size": "Average",
+  "wounds": 20,
+  "movement": 4,
+  "skills": [
+    {
+      "name": "Athletics",
+      "advances": 20
+    },
+    {
+      "name": "Charm",
+      "advances": 15
+    },
+    {
+      "name": "Climb",
+      "advances": 20
+    },
+    {
+      "name": "Consume Alcohol",
+      "advances": 10
+    },
+    {
+      "name": "Cool",
+      "advances": 20
+    },
+    {
+      "name": "Dodge",
+      "advances": 20
+    },
+    {
+      "name": "Endurance",
+      "advances": 20
+    },
+    {
+      "name": "Entertain (Storytelling)",
+      "advances": 10
+    },
+    {
+      "name": "Haggle",
+      "advances": 10
+    },
+    {
+      "name": "Heal",
+      "advances": 10
+    },
+    {
+      "name": "Intimidate",
+      "advances": 15
+    },
+    {
+      "name": "Intuition",
+      "advances": 15
+    },
+    {
+      "name": "Leadership",
+      "advances": 10
+    },
+    {
+      "name": "Lore (Law)",
+      "advances": 10
+    },
+    {
+      "name": "Lore (Local)",
+      "advances": 5
+    },
+    {
+      "name": "Lore (Politics)",
+      "advances": 20
+    },
+    {
+      "name": "Lore (Warfare)",
+      "advances": 5
+    },
+    {
+      "name": "Melee (Any)",
+      "advances": 20
+    },
+    {
+      "name": "Melee (Basic)",
+      "advances": 20
+    },
+    {
+      "name": "Perception",
+      "advances": 20
+    },
+    {
+      "name": "Ranged (Any)",
+      "advances": 20
+    },
+    {
+      "name": "Ride (Horse)",
+      "advances": 20
+    }
+  ],
+  "traits": [
+    {
+      "name": "Leader"
+    }
+  ],
+  "careers": [
+    {
+      "className": "Burghers",
+      "careerName": "Watchman",
+      "level": 4
+    },
+    {
+      "className": "Warriors",
+      "careerName": "Soldier",
+      "level": 4
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Fencing",
+        "name": "Rapier"
+      },
+      {
+        "category": "Basic",
+        "name": "Dagger"
+      }
+    ],
+    "ranged": [
+      {
+        "category": "Engineering",
+        "name": "Repeater Pistol",
+        "ammunition": "Bullet"
+      }
+    ]
+  },
+  "armour": [
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jack"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Leggings"
+    },
+    {
+      "category": "Plate",
+      "name": "Breastplate"
+    }
+  ]
+}
