@@ -127,13 +127,14 @@ npm run build && npm start   # production build locally
 | `npm run migrate:statblocks -- --prune` | Also delete Redis entries missing from disk |
 | `npm run migrate:statblocks -- --dry-run` | Report only |
 | `npm run cleanup:orphans` | Remove phantom index entries |
+| `npm run normalise:statblocks` | Rewrite string-shaped `weapons` / `armour` in Redis to structured forms ([`scripts/normalise-statblocks.ts`](scripts/normalise-statblocks.ts); requires Upstash env; use `--dry-run` to report only) |
 
 ## API shape
 
 - `GET /api/statblocks` - full list (array)
 - `GET /api/statblocks?cursor=0&limit=100` - paginated (`{ items, nextCursor }`)
 - `POST /api/statblocks` - create/overwrite (session auth when configured + rate-limited when Upstash is set)
-- `GET /api/statblocks/:id` - one by id (404 on miss; `?legacy=1` triggers a legacy fallback scan)
+- `GET /api/statblocks/:id` - one by **canonical slug** (404 on miss); the `:id` segment is normalised with the same rules as Redis keys ([`slugifyStatblockId`](src/lib/statblockKeys.ts))
 - `PUT /api/statblocks/:id` - update at canonical slug (session auth when configured + rate-limited)
 - `DELETE /api/statblocks/:id` - delete (session auth when configured + rate-limited)
 - `GET /api/skills | traits | weapons | armour | careers | templates[/:id]` - bundled reference data

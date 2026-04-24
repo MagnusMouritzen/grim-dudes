@@ -1,4 +1,7 @@
-/** Match Express slug logic in server/index.js */
+/**
+ * Canonical id for URLs and Redis: lowercase, non-alphanumerics (except `-` `_`)
+ * become `-`, runs of `-` collapse. Empty result becomes `statblock`.
+ */
 export function slugifyStatblockId(baseId: string): string {
   return (
     String(baseId)
