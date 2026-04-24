@@ -12,14 +12,7 @@ import {
 } from '@/lib/statblockRedis';
 import { slugifyStatblockId } from '@/lib/statblockKeys';
 import { validateStatblockPayload } from '@/lib/validateStatblock';
-import { isValidWriteToken } from '@/lib/writeAuth';
-
-const WRITE_TOKEN_COOKIE = 'grim_write_token';
-
-async function getToken(): Promise<string | null> {
-  const store = await cookies();
-  return store.get(WRITE_TOKEN_COOKIE)?.value ?? null;
-}
+import { isCookieAuthenticated } from '@/lib/session';
 
 async function clientIp(): Promise<string> {
   const h = await headers();
@@ -57,8 +50,8 @@ export type SaveResult =
 export async function saveStatblockAction(
   raw: unknown
 ): Promise<SaveResult> {
-  if (!isValidWriteToken(await getToken())) {
-    return { ok: false, error: 'Not authorised - open /admin to set a write token.' };
+  if (!(await isCookieAuthenticated(await cookies()))) {
+    return { ok: false, error: 'Not authorised — sign in at /login.' };
   }
   if (!(await checkLimit())) {
     return { ok: false, error: 'Rate limit exceeded. Try again shortly.' };
@@ -83,8 +76,8 @@ export async function saveStatblockAction(
 }
 
 export async function deleteStatblockAction(id: string): Promise<SaveResult> {
-  if (!isValidWriteToken(await getToken())) {
-    return { ok: false, error: 'Not authorised - open /admin to set a write token.' };
+  if (!(await isCookieAuthenticated(await cookies()))) {
+    return { ok: false, error: 'Not authorised — sign in at /login.' };
   }
   if (!(await checkLimit())) {
     return { ok: false, error: 'Rate limit exceeded. Try again shortly.' };
@@ -99,33 +92,6 @@ export async function deleteStatblockAction(id: string): Promise<SaveResult> {
   }
   revalidatePath('/');
   return { ok: true, id: slug };
-}
-
-/**
- * Used by the `/admin` page to set the write token cookie so Server Actions
- * can authenticate without the client passing headers.
- */
-export async function setWriteTokenCookieAction(
-  token: string
-): Promise<{ ok: boolean }> {
-  const store = await cookies();
-  if (!token) {
-    store.delete(WRITE_TOKEN_COOKIE);
-    return { ok: true };
-  }
-  store.set(WRITE_TOKEN_COOKIE, token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 90,
-  });
-  return { ok: true };
-}
-
-export async function clearWriteTokenCookieAction(): Promise<void> {
-  const store = await cookies();
-  store.delete(WRITE_TOKEN_COOKIE);
 }
 
 /** Convenience for navigation after a successful save from a Server Action. */

@@ -47,7 +47,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const authError = requireWriteAuth(req);
+  const authError = await requireWriteAuth(req);
   if (authError) return authError;
   const limit = await limitWrite(req);
   if (!limit.ok) {

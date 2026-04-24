@@ -7,37 +7,111 @@ Built as a **Next.js 15** App Router app (TypeScript + Tailwind), deployable on 
 ## Requirements
 
 - **Node.js 20+** ([nodejs.org](https://nodejs.org))
-- **Upstash Redis** REST URL and token (for stat block CRUD - local and production)
+- **Upstash Redis** — REST URL and token are required to **list, save, or delete** stat blocks (local and production). Reference data (skills, traits, etc.) is bundled under `data/` and does not need Redis to read.
 
-Bundled reference data (skills, traits, weapons, armour, careers, templates) lives under `data/` at the repo root.
+## Quick start (local)
 
-## Environment
+1. Clone the repo and install dependencies: `npm install`
+2. Create a (free) **Upstash Redis** database and copy [.env.example](.env.example) to `.env.local`
+3. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in `.env.local` (never commit this file)
+4. Optional: seed Redis from bundled JSON — `npm run migrate:statblocks` (see [Migrating JSON to Redis](#migrating-json-to-redis))
+5. Start the app: `npm run dev` → [http://localhost:3000](http://localhost:3000)
 
-Copy `.env.example` to `.env.local` and fill in:
+Optional: run a production build locally — `npm run build && npm start`.
+
+## Authentication
+
+### What is public vs protected?
+
+- **Public:** Home/bestiary, read-only stat block pages, bundled reference APIs, and **`GET`** statblock endpoints. Anyone can browse and read.
+- **Protected when auth is “on”:**
+  - **UI:** [`/login`](app/login/page.tsx) is the sign-in page. [`middleware.ts`](middleware.ts) requires a session for `/admin`, `/new`, and `/statblock/[id]/edit`.
+  - **Writes:** `POST` / `PUT` / `DELETE` on [`/api/statblocks`](app/api/statblocks/route.ts) and server actions in [`src/app-actions/statblocks.ts`](src/app-actions/statblocks.ts) require a valid session cookie.
+
+### When is auth enforced?
+
+Auth is **on** only if **all** of the following hold:
+
+- `AUTH_SECRET` is set
+- **and** either `AUTH_PASSWORD` or `AUTH_PASSWORD_HASH` is set  
+  (`AUTH_SECRET` alone does **not** enable login.)
+- **and** `AUTH_DISABLED` is not `1` or `true`
+
+Otherwise **writes are open** (useful for local dev), same spirit as the old optional write token.
+
+Do not use **`AUTH_DISABLED=1` in production**; it is only for local convenience when you already have auth vars in `.env.local` but want to skip sign-in.
+
+### Sign-in flow
+
+1. Open `/login` and submit the password (and username if you configure `AUTH_USER`).
+2. The app sets an **httpOnly** cookie `grim_session` (JWT). Sessions last **14 days** from last sign-in ([`SESSION_MAX_AGE_SEC`](src/lib/session.ts)); sign in again to refresh.
+3. **Sign out:** use **Sign out** on [`/admin`](app/admin/page.tsx) or `POST /api/auth/logout`.
+
+In **development**, the session cookie is not `Secure`, so **http://localhost** works. **Production** (e.g. Vercel) uses `Secure` cookies.
+
+### Generating secrets and passwords
+
+- **`AUTH_SECRET`:** use a long random value, e.g. `openssl rand -base64 32`
+- **Plain password (convenient for local):** set `AUTH_PASSWORD`
+- **Bcrypt hash (recommended for production):** set `AUTH_PASSWORD_HASH` instead of `AUTH_PASSWORD`. After `npm install`, you can generate a hash with bcrypt cost `10`:
+
+```bash
+node -e "require('bcryptjs').hash(process.argv[1], 10).then(console.log)" 'your-password-here'
+```
+
+### Optional `AUTH_USER`
+
+If set, the username field on `/login` must match exactly (in addition to the password).
+
+### Rate limits
+
+**Write** and **login** rate limits use Upstash when `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` are set. Without Redis, those limiters are disabled (typical local setup).
+
+### Previews and production
+
+For **Vercel Preview** deployments, copy the same `AUTH_*` variables into the Preview environment if you need to edit from preview URLs.
+
+### Health check
+
+`GET /api/healthz` returns `authConfigured`, `authDisabled`, and `writesProtected` among other fields ([`app/api/healthz/route.ts`](app/api/healthz/route.ts)).
+
+## Deploying to Vercel
+
+1. Import the Git repo into Vercel and use the default Next.js settings.
+2. In **Project → Settings → Environment Variables**, add the variables from the [table below](#environment-variables) for **Production**, **Preview**, and/or **Development** as needed.
+3. **Isolate Redis data:** use a **separate Upstash database** or set **`REDIS_KEY_PREFIX`** (e.g. `preview:` vs `prod:`) so Preview and Production do not share stat blocks.
+4. Optional: set **`NEXT_PUBLIC_SITE_URL`** to your canonical site URL (e.g. `https://example.com`) so [`app/robots.ts`](app/robots.ts) / sitemap use the right base.
+5. **Scheduled cleanup:** [`vercel.json`](vercel.json) runs `GET /api/admin/cleanup-orphans` daily. Vercel Cron is authenticated via the `x-vercel-cron` header. If you set **`CRON_SECRET`**, that value is **only** required for **manual** HTTP calls to the same route (use `Authorization: Bearer <CRON_SECRET>`); it does **not** replace Vercel’s cron header.
+
+## Environment variables
+
+Full reference for every supported key:
+
+Copy [.env.example](.env.example) to `.env.local` for local development. On Vercel, set the same keys under **Project → Settings → Environment Variables**.
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `UPSTASH_REDIS_REST_URL` | yes | Upstash REST endpoint |
-| `UPSTASH_REDIS_REST_TOKEN` | yes | Upstash REST token |
-| `REDIS_KEY_PREFIX` | no | e.g. `preview:` to isolate environments |
-| `WRITE_TOKEN` | optional | Shared secret for create/update/delete. If unset, writes are open (dev default) |
-| `RATE_LIMIT_WRITES_PER_MIN` | no | Override the 30/min default |
+| `UPSTASH_REDIS_REST_URL` | yes* | Upstash REST endpoint |
+| `UPSTASH_REDIS_REST_TOKEN` | yes* | Upstash REST token |
+| `REDIS_KEY_PREFIX` | no | Prefix all Redis keys (isolate Preview vs Production) |
+| `NEXT_PUBLIC_SITE_URL` | no | Canonical site URL for robots/sitemap ([`app/robots.ts`](app/robots.ts)) |
+| `AUTH_SECRET` | optional | Secret for signing session cookies (long random string) |
+| `AUTH_PASSWORD` | optional** | Plain password for the single admin user (dev / simple setups) |
+| `AUTH_PASSWORD_HASH` | optional** | Bcrypt hash of the admin password (production) |
+| `AUTH_USER` | no | If set, login username must match exactly |
+| `AUTH_DISABLED` | no | `1` or `true` skips auth and keeps writes open (use **locally** only) |
+| `CRON_SECRET` | no | If set, manual calls to `/api/admin/cleanup-orphans` need `Authorization: Bearer …`; Vercel Cron still uses `x-vercel-cron` |
+| `RATE_LIMIT_WRITES_PER_MIN` | no | Override default **30**/min for writes (requires Upstash) |
+| `RATE_LIMIT_LOGIN_PER_MIN` | no | Override default **15**/min for `/api/auth/login` (requires Upstash) |
 
-On Vercel, add the same vars in **Project -> Settings -> Environment Variables**, one set per environment (Production / Preview / Development).
+\*Required for stat block CRUD. \*\*Use **either** `AUTH_PASSWORD` **or** `AUTH_PASSWORD_HASH` together with `AUTH_SECRET` to require sign-in at `/login`. If that trio is incomplete, writes stay open; `AUTH_DISABLED=1` forces open writes even when a password is configured (see [Authentication](#authentication)).
 
-When `WRITE_TOKEN` is set, the editor UI reads the token from browser `localStorage`. Open `/admin`, paste the token, and save. It is sent as `x-write-token` on write requests.
-
-## Run
+## Run and build
 
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-```
-
-Production build locally:
-
-```bash
-npm run build && npm start
+npm run build && npm start   # production build locally
 ```
 
 ## Scripts
@@ -58,14 +132,14 @@ npm run build && npm start
 
 - `GET /api/statblocks` - full list (array)
 - `GET /api/statblocks?cursor=0&limit=100` - paginated (`{ items, nextCursor }`)
-- `POST /api/statblocks` - create/overwrite (write-auth + rate-limited)
+- `POST /api/statblocks` - create/overwrite (session auth when configured + rate-limited when Upstash is set)
 - `GET /api/statblocks/:id` - one by id (404 on miss; `?legacy=1` triggers a legacy fallback scan)
-- `PUT /api/statblocks/:id` - update at canonical slug
-- `DELETE /api/statblocks/:id` - delete (write-auth + rate-limited)
+- `PUT /api/statblocks/:id` - update at canonical slug (session auth when configured + rate-limited)
+- `DELETE /api/statblocks/:id` - delete (session auth when configured + rate-limited)
 - `GET /api/skills | traits | weapons | armour | careers | templates[/:id]` - bundled reference data
 - `POST /api/sharepacks` (body: `{ ids: string[] }`) - creates a short id so long selections can be shared via `/view?pack=<id>`
 - `GET /api/sharepacks/:id` - resolve back to `{ ids }`
-- `GET /api/healthz` - `{ ok, redis, writeAuth, region, env }` for uptime checks
+- `GET /api/healthz` - `{ ok, redis, authConfigured, authDisabled, writesProtected, region, env }` for uptime checks
 
 ## Migrating JSON to Redis
 
@@ -83,17 +157,17 @@ npm run migrate:statblocks -- --prune
 
 ## Troubleshooting
 
-- **503 on list/save** with `Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN`: set them in `.env.local` (local) or Project Settings (Vercel).
-- **Editor shows "Not authorised - set a write token in /admin"**: `WRITE_TOKEN` is set on the deploy. Open `/admin` and paste the token.
-- **Bestiary shows a phantom entry**: run `npm run cleanup:orphans`.
-- **Reset Redis completely**: from your Upstash dashboard use the "flush database" action, then `npm run migrate:statblocks`. Alternatively, target a prefix by running a small script that `SREM`s every member of `<prefix>statblock:index` and `DEL`s the matching `<prefix>statblock:<id>` keys.
+- **503 on list/save** with missing Upstash env: set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in `.env.local` or Vercel.
+- **“Not authorised — sign in at /login”** in the editor: configure `AUTH_SECRET` and a password (or hash), then open `/login`. For open writes locally, omit those vars or set `AUTH_DISABLED=1`.
+- **Bestiary shows a phantom entry:** run `npm run cleanup:orphans`.
+- **Reset Redis completely:** from the Upstash dashboard use “flush database”, then `npm run migrate:statblocks`. Alternatively, delete keys under your `REDIS_KEY_PREFIX` if you use one.
 
 ## Project layout
 
 ```
 app/                 Next.js App Router routes and route handlers
   api/*              JSON endpoints
-  admin/             Token entry for write-auth
+  admin/             Admin dashboard; /login for session sign-in
 src/components/      Client UI (ported from the Vite app)
 src/lib/             Redis access, Zod validation, domain types, motion helpers
 data/                Bundled JSON reference + sample stat blocks
@@ -120,9 +194,9 @@ Reference data: `data/skills.json`, `data/traits.json`. Example stat blocks: `da
 
 ## Contributing
 
-- Lint, tests, and build all run on PRs via `.github/workflows/ci.yml`.
+- Lint, tests, and build run on PRs via `.github/workflows/ci.yml`. Before opening a PR, run `npm run lint` and `npm test` locally.
 - Keep components strict-TS - no `@ts-nocheck`.
 - Validate new payloads with Zod at both ends (server via `validateStatblockPayload`, client via the schemas in `src/lib/apiSchemas.ts`).
-- Rate limit and write-auth are additive: leave them disabled in dev (env unset) unless you are testing those paths.
+- Session auth is optional for local work: omit `AUTH_SECRET` / password for open writes, or set `AUTH_DISABLED=1` if you configure auth but want to bypass checks locally.
 
 _Migrated from the original Vite + Express prototype. See git history prior to the Next.js migration for the legacy stack._

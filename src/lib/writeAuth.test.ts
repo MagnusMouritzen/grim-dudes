@@ -1,13 +1,28 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { requireWriteAuth, writeAuthRequired } from './writeAuth';
+import { SESSION_COOKIE, signSessionToken } from './session';
 
-const origToken = process.env.WRITE_TOKEN;
+const origSecret = process.env.AUTH_SECRET;
+const origPwd = process.env.AUTH_PASSWORD;
+const origHash = process.env.AUTH_PASSWORD_HASH;
+const origDisabled = process.env.AUTH_DISABLED;
+
 beforeEach(() => {
-  delete process.env.WRITE_TOKEN;
+  delete process.env.AUTH_SECRET;
+  delete process.env.AUTH_PASSWORD;
+  delete process.env.AUTH_PASSWORD_HASH;
+  delete process.env.AUTH_DISABLED;
 });
+
 afterEach(() => {
-  if (origToken == null) delete process.env.WRITE_TOKEN;
-  else process.env.WRITE_TOKEN = origToken;
+  if (origSecret == null) delete process.env.AUTH_SECRET;
+  else process.env.AUTH_SECRET = origSecret;
+  if (origPwd == null) delete process.env.AUTH_PASSWORD;
+  else process.env.AUTH_PASSWORD = origPwd;
+  if (origHash == null) delete process.env.AUTH_PASSWORD_HASH;
+  else process.env.AUTH_PASSWORD_HASH = origHash;
+  if (origDisabled == null) delete process.env.AUTH_DISABLED;
+  else process.env.AUTH_DISABLED = origDisabled;
 });
 
 function req(headers: Record<string, string> = {}): Request {
@@ -17,39 +32,44 @@ function req(headers: Record<string, string> = {}): Request {
   });
 }
 
-describe('writeAuth', () => {
-  it('allows when WRITE_TOKEN is unset (dev default)', () => {
+describe('requireWriteAuth', () => {
+  it('allows when auth is not configured (open writes)', async () => {
     expect(writeAuthRequired()).toBe(false);
-    expect(requireWriteAuth(req())).toBeNull();
+    expect(await requireWriteAuth(req())).toBeNull();
   });
 
-  it('rejects when token is required and missing', async () => {
-    process.env.WRITE_TOKEN = 'secret';
-    const res = requireWriteAuth(req());
+  it('allows when AUTH_DISABLED is set', async () => {
+    process.env.AUTH_SECRET = 'secret-secret-secret-secret-secret';
+    process.env.AUTH_PASSWORD = 'x';
+    process.env.AUTH_DISABLED = '1';
+    expect(writeAuthRequired()).toBe(false);
+    expect(await requireWriteAuth(req())).toBeNull();
+  });
+
+  it('rejects when session required and cookie missing', async () => {
+    process.env.AUTH_SECRET = 'secret-secret-secret-secret-secret';
+    process.env.AUTH_PASSWORD = 'x';
+    const res = await requireWriteAuth(req());
     expect(res).not.toBeNull();
     expect(res?.status).toBe(401);
+    expect(writeAuthRequired()).toBe(true);
   });
 
-  it('accepts Authorization: Bearer <token>', () => {
-    process.env.WRITE_TOKEN = 'secret';
-    expect(requireWriteAuth(req({ authorization: 'Bearer secret' }))).toBeNull();
-  });
-
-  it('accepts x-write-token header', () => {
-    process.env.WRITE_TOKEN = 'secret';
-    expect(requireWriteAuth(req({ 'x-write-token': 'secret' }))).toBeNull();
-  });
-
-  it('accepts grim_write_token cookie', () => {
-    process.env.WRITE_TOKEN = 'secret';
+  it('accepts grim_session cookie with valid JWT', async () => {
+    process.env.AUTH_SECRET = 'secret-secret-secret-secret-secret';
+    process.env.AUTH_PASSWORD = 'x';
+    const token = await signSessionToken();
     expect(
-      requireWriteAuth(req({ cookie: 'foo=bar; grim_write_token=secret; baz=qux' }))
+      await requireWriteAuth(req({ cookie: `foo=bar; ${SESSION_COOKIE}=${token}; baz=qux` }))
     ).toBeNull();
   });
 
-  it('rejects wrong token', () => {
-    process.env.WRITE_TOKEN = 'secret';
-    const res = requireWriteAuth(req({ 'x-write-token': 'wrong' }));
+  it('rejects invalid session token', async () => {
+    process.env.AUTH_SECRET = 'secret-secret-secret-secret-secret';
+    process.env.AUTH_PASSWORD = 'x';
+    const res = await requireWriteAuth(
+      req({ cookie: `${SESSION_COOKIE}=not-a-valid-jwt` })
+    );
     expect(res?.status).toBe(401);
   });
 });

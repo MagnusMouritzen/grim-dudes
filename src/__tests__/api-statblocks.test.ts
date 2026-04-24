@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeRedis } from './fakeRedis';
+import { SESSION_COOKIE } from '@/lib/session';
 
 vi.mock('@/lib/redis', () => ({
   getRedis: () => fakeRedis,
@@ -37,13 +38,20 @@ vi.mock('@/lib/redis', () => ({
 // Disable rate limiting in the tests by pretending Upstash env is missing.
 const origUrl = process.env.UPSTASH_REDIS_REST_URL;
 const origTok = process.env.UPSTASH_REDIS_REST_TOKEN;
-const origWrite = process.env.WRITE_TOKEN;
+const origAuthSecret = process.env.AUTH_SECRET;
+const origAuthPassword = process.env.AUTH_PASSWORD;
+const origAuthHash = process.env.AUTH_PASSWORD_HASH;
+const origAuthDisabled = process.env.AUTH_DISABLED;
 
 beforeEach(() => {
   fakeRedis.reset();
   // Force the rate limiter to no-op by hiding upstash env.
   delete process.env.UPSTASH_REDIS_REST_URL;
   delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  delete process.env.AUTH_SECRET;
+  delete process.env.AUTH_PASSWORD;
+  delete process.env.AUTH_PASSWORD_HASH;
+  delete process.env.AUTH_DISABLED;
 });
 
 afterEach(() => {
@@ -51,8 +59,14 @@ afterEach(() => {
   else process.env.UPSTASH_REDIS_REST_URL = origUrl;
   if (origTok == null) delete process.env.UPSTASH_REDIS_REST_TOKEN;
   else process.env.UPSTASH_REDIS_REST_TOKEN = origTok;
-  if (origWrite == null) delete process.env.WRITE_TOKEN;
-  else process.env.WRITE_TOKEN = origWrite;
+  if (origAuthSecret == null) delete process.env.AUTH_SECRET;
+  else process.env.AUTH_SECRET = origAuthSecret;
+  if (origAuthPassword == null) delete process.env.AUTH_PASSWORD;
+  else process.env.AUTH_PASSWORD = origAuthPassword;
+  if (origAuthHash == null) delete process.env.AUTH_PASSWORD_HASH;
+  else process.env.AUTH_PASSWORD_HASH = origAuthHash;
+  if (origAuthDisabled == null) delete process.env.AUTH_DISABLED;
+  else process.env.AUTH_DISABLED = origAuthDisabled;
 });
 
 async function POSTstatblocks(body: unknown, headers: Record<string, string> = {}) {
@@ -109,11 +123,17 @@ describe('POST /api/statblocks', () => {
     expect(res.status).toBe(400);
   });
 
-  it('requires auth when WRITE_TOKEN is set', async () => {
-    process.env.WRITE_TOKEN = 'secret';
+  it('requires session when auth is configured', async () => {
+    process.env.AUTH_SECRET = 'secret-secret-secret-secret-secret';
+    process.env.AUTH_PASSWORD = 'testpass';
     const bad = await POSTstatblocks({ name: 'X' });
     expect(bad.status).toBe(401);
-    const ok = await POSTstatblocks({ name: 'X' }, { 'x-write-token': 'secret' });
+    const { signSessionToken } = await import('@/lib/session');
+    const token = await signSessionToken();
+    const ok = await POSTstatblocks(
+      { name: 'X' },
+      { cookie: `${SESSION_COOKIE}=${token}` }
+    );
     expect(ok.status).toBe(201);
   });
 });
@@ -146,12 +166,15 @@ describe('GET / DELETE /api/statblocks/[id]', () => {
     expect(miss.status).toBe(404);
   });
 
-  it('DELETE requires auth when WRITE_TOKEN is set', async () => {
+  it('DELETE requires session when auth is configured', async () => {
     await POSTstatblocks({ name: 'Dog' });
-    process.env.WRITE_TOKEN = 'secret';
+    process.env.AUTH_SECRET = 'secret-secret-secret-secret-secret';
+    process.env.AUTH_PASSWORD = 'testpass';
     const bad = await DELETEstatblockById('dog');
     expect(bad.status).toBe(401);
-    const ok = await DELETEstatblockById('dog', { 'x-write-token': 'secret' });
+    const { signSessionToken } = await import('@/lib/session');
+    const token = await signSessionToken();
+    const ok = await DELETEstatblockById('dog', { cookie: `${SESSION_COOKIE}=${token}` });
     expect(ok.status).toBe(204);
     const miss = await GETstatblockById('dog');
     expect(miss.status).toBe(404);

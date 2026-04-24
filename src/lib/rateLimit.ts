@@ -44,3 +44,36 @@ export async function limitWrite(req: Request): Promise<LimitResult> {
   const res = await limiter.limit(ip);
   return { ok: res.success, limit: res.limit, remaining: res.remaining, reset: res.reset };
 }
+
+let loginLimiter: Ratelimit | null = null;
+
+function getLoginLimiter(): Ratelimit | null {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  if (!loginLimiter) {
+    loginLimiter = new Ratelimit({
+      redis: getRedis(),
+      limiter: Ratelimit.slidingWindow(
+        Number(process.env.RATE_LIMIT_LOGIN_PER_MIN || '15'),
+        '60 s'
+      ),
+      prefix: `${process.env.REDIS_KEY_PREFIX || ''}ratelimit:login`,
+      analytics: false,
+    });
+  }
+  return loginLimiter;
+}
+
+export async function limitLogin(req: Request): Promise<LimitResult> {
+  const limiter = getLoginLimiter();
+  if (!limiter) {
+    return { ok: true, limit: 0, remaining: 0, reset: 0 };
+  }
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip') ||
+    'anon';
+  const res = await limiter.limit(ip);
+  return { ok: res.success, limit: res.limit, remaining: res.remaining, reset: res.reset };
+}

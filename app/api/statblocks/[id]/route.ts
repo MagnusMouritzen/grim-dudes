@@ -42,7 +42,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
 /** PUT alias for updating an existing stat block at its canonical slug. */
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const authError = requireWriteAuth(req);
+  const authError = await requireWriteAuth(req);
   if (authError) return authError;
   const limit = await limitWrite(req);
   if (!limit.ok) {
@@ -76,7 +76,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const authError = requireWriteAuth(req);
+  const authError = await requireWriteAuth(req);
   if (authError) return authError;
   const limit = await limitWrite(req);
   if (!limit.ok) {
