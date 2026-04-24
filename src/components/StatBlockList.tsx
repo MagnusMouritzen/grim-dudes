@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useDeferredValue, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -8,6 +8,8 @@ import StatBlockCard from './StatBlockCard';
 import { computeEffectiveStats } from '@/lib/statblockDerived';
 import type { Statblock, TraitRef } from '@/lib/types';
 import { useGrimMotion } from '@/lib/useMotion';
+import { safeParse, statblockArraySchema, traitRefSchema } from '@/lib/apiSchemas';
+import { z } from 'zod';
 import {
   CheckIcon,
   CloseIcon,
@@ -22,29 +24,82 @@ const API = '/api';
 
 type SortKey = 'name' | 'wounds' | 'movement';
 
-export default function StatBlockList() {
+type StatBlockListProps = {
+  /**
+   * When supplied (via SSR), the list uses this as its initial state and skips
+   * the client-side fetch for statblocks.
+   */
+  initialBlocks?: Statblock[];
+  initialTraits?: TraitRef[];
+};
+
+export default function StatBlockList({
+  initialBlocks,
+  initialTraits,
+}: StatBlockListProps = {}) {
   const router = useRouter();
-  const [blocks, setBlocks] = useState<Statblock[]>([]);
-  const [traitsRef, setTraitsRef] = useState<TraitRef[]>([]);
-  const [loading, setLoading] = useState(true);
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  const hasInitial = Array.isArray(initialBlocks);
+  const [blocks, setBlocks] = useState<Statblock[]>(initialBlocks ?? []);
+  const [traitsRef, setTraitsRef] = useState<TraitRef[]>(initialTraits ?? []);
+  const [loading, setLoading] = useState(!hasInitial);
   const [error, setError] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
+  const deferredSearch = useDeferredValue(search);
   const [sortBy, setSortBy] = useState<SortKey>('name');
   const [tagFilter, setTagFilter] = useState('');
+  const deferredTag = useDeferredValue(tagFilter);
+  const [packBusy, setPackBusy] = useState(false);
   const { ease } = useGrimMotion();
 
   const toggleSelected = (id: string) => {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
-  const viewTogether = () => {
+  const viewTogether = async () => {
     if (selectedIds.length === 0) return;
-    const q = selectedIds.map(encodeURIComponent).join(',');
-    router.push(`/view?ids=${q}`);
+    // Short selections fit comfortably in the URL; for larger ones use a sharepack.
+    if (selectedIds.length <= 5) {
+      const q = selectedIds.map(encodeURIComponent).join(',');
+      router.push(`/view?ids=${q}`);
+      return;
+    }
+    setPackBusy(true);
+    try {
+      const res = await fetch(`${API}/sharepacks`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (res.ok) {
+        const body = (await res.json()) as { id: string };
+        router.push(`/view?pack=${encodeURIComponent(body.id)}`);
+      } else {
+        // Fall back to long URL if pack creation fails.
+        const q = selectedIds.map(encodeURIComponent).join(',');
+        router.push(`/view?ids=${q}`);
+      }
+    } finally {
+      setPackBusy(false);
+    }
   };
 
+  // Keyboard: "/" focuses the search box.
   useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== '/') return;
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      e.preventDefault();
+      searchRef.current?.focus();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  useEffect(() => {
+    if (hasInitial) return;
     setLoading(true);
     setError(null);
     Promise.all([
@@ -54,16 +109,18 @@ export default function StatBlockList() {
       fetch(`${API}/traits`).then((r) => (r.ok ? r.json() : [])),
     ])
       .then(([data, traits]) => {
-        setBlocks(Array.isArray(data) ? (data as Statblock[]) : []);
-        setTraitsRef(Array.isArray(traits) ? (traits as TraitRef[]) : []);
+        const parsedBlocks = safeParse(statblockArraySchema, data);
+        setBlocks((parsedBlocks as Statblock[] | null) ?? []);
+        const parsedTraits = safeParse(z.array(traitRefSchema), traits);
+        setTraitsRef((parsedTraits as TraitRef[] | null) ?? []);
       })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
+      .catch(() => setError('Could not load stat blocks'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [hasInitial]);
 
   const filteredSorted = useMemo(() => {
     let list = blocks;
-    const q = search.trim().toLowerCase();
+    const q = deferredSearch.trim().toLowerCase();
     if (q) {
       list = list.filter(
         (b) =>
@@ -71,7 +128,7 @@ export default function StatBlockList() {
           String(b.id || '').toLowerCase().includes(q)
       );
     }
-    const tf = tagFilter.trim().toLowerCase();
+    const tf = deferredTag.trim().toLowerCase();
     if (tf) {
       list = list.filter(
         (b) => Array.isArray(b.tags) && b.tags.some((t) => String(t).toLowerCase().includes(tf))
@@ -96,7 +153,7 @@ export default function StatBlockList() {
       return 0;
     });
     return decorated;
-  }, [blocks, search, sortBy, tagFilter, traitsRef]);
+  }, [blocks, deferredSearch, sortBy, deferredTag, traitsRef]);
 
   const totalCount = blocks.length;
   const filteredCount = filteredSorted.length;
@@ -148,13 +205,14 @@ export default function StatBlockList() {
                 key="view-together"
                 type="button"
                 onClick={viewTogether}
+                disabled={packBusy}
                 initial={{ opacity: 0, x: 8 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 8 }}
                 transition={{ duration: 0.18, ease }}
                 className="grim-btn-primary"
               >
-                View together
+                {packBusy ? 'Preparing…' : 'View together'}
                 <span className="font-mono tabular-nums text-[0.7rem] opacity-80">
                   ({selectedIds.length})
                 </span>
@@ -192,10 +250,18 @@ export default function StatBlockList() {
         <div className="grim-card p-3 sm:p-4">
           <div className="flex flex-col sm:flex-row sm:items-end gap-3">
             <div className="flex-1 min-w-[12rem]">
-              <label className="grim-label flex items-center gap-1.5">
+              <label
+                htmlFor="bestiary-search"
+                className="grim-label flex items-center gap-1.5"
+              >
                 <SearchIcon className="w-3 h-3" /> Search
+                <span className="hidden sm:inline ml-auto text-[0.6rem] text-parchment/40">
+                  press /
+                </span>
               </label>
               <input
+                id="bestiary-search"
+                ref={searchRef}
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -204,10 +270,14 @@ export default function StatBlockList() {
               />
             </div>
             <div className="w-full sm:w-44">
-              <label className="grim-label flex items-center gap-1.5">
+              <label
+                htmlFor="bestiary-sort"
+                className="grim-label flex items-center gap-1.5"
+              >
                 <SortIcon className="w-3 h-3" /> Sort
               </label>
               <select
+                id="bestiary-sort"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortKey)}
                 className="grim-input"
@@ -218,8 +288,11 @@ export default function StatBlockList() {
               </select>
             </div>
             <div className="flex-1 min-w-[10rem]">
-              <label className="grim-label">Tag contains</label>
+              <label htmlFor="bestiary-tag" className="grim-label">
+                Tag contains
+              </label>
               <input
+                id="bestiary-tag"
                 type="search"
                 value={tagFilter}
                 onChange={(e) => setTagFilter(e.target.value)}
@@ -338,7 +411,8 @@ export default function StatBlockList() {
                   </button>
                   <Link
                     href={`/statblock/${blockId}`}
-                    className="block focus:outline-none"
+                    aria-label={`Open ${block.name || blockId}`}
+                    className="block rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900"
                   >
                     <StatBlockCard block={block} compact traitsRef={traitsRef} />
                   </Link>

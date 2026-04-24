@@ -501,13 +501,22 @@ export default function StatBlockCard({
                 >
                   <thead>
                     <tr className="bg-ink-900/60 text-gold-400/90">
-                      <th className="text-left font-display uppercase tracking-wider py-1 px-2 text-[0.65rem]">
+                      <th
+                        scope="col"
+                        className="text-left font-display uppercase tracking-wider py-1 px-2 text-[0.65rem]"
+                      >
                         Roll
                       </th>
-                      <th className="text-left font-display uppercase tracking-wider py-1 px-2 text-[0.65rem]">
+                      <th
+                        scope="col"
+                        className="text-left font-display uppercase tracking-wider py-1 px-2 text-[0.65rem]"
+                      >
                         Location
                       </th>
-                      <th className="text-left font-display uppercase tracking-wider py-1 px-2 text-[0.65rem]">
+                      <th
+                        scope="col"
+                        className="text-left font-display uppercase tracking-wider py-1 px-2 text-[0.65rem]"
+                      >
                         Protection
                       </th>
                     </tr>
@@ -599,30 +608,17 @@ export default function StatBlockCard({
           </section>
         )}
 
-        {(typeof block.weapons === 'string' && block.weapons) ||
-        (typeof block.armour === 'string' && block.armour) ? (
-          <div
-            className={`${
-              d ? 'grid sm:grid-cols-2 gap-2' : 'grid sm:grid-cols-2 gap-4'
-            } pt-3 border-t border-iron-700/50`}
-          >
-            {typeof block.armour === 'string' && block.armour && (
-              <div>
-                <span className="grim-label">Armour</span>
-                <p className={d ? 'text-parchment/95 text-xs' : 'text-parchment/95'}>
-                  {block.armour}
-                </p>
-              </div>
-            )}
-            {typeof block.weapons === 'string' && block.weapons && (
-              <div>
-                <span className="grim-label">Weapons</span>
-                <p className={d ? 'text-parchment/95 text-xs' : 'text-parchment/95'}>
-                  {block.weapons}
-                </p>
-              </div>
-            )}
-          </div>
+        {typeof block.notes === 'string' && block.notes.trim() ? (
+          <section className="pt-3 border-t border-iron-700/50">
+            <SectionHeading dense={d}>Notes</SectionHeading>
+            <p
+              className={`whitespace-pre-line ${
+                d ? 'text-parchment/95 text-xs' : 'text-parchment/95 text-sm'
+              }`}
+            >
+              {block.notes}
+            </p>
+          </section>
         ) : null}
       </div>
     </article>

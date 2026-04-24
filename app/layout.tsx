@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Cinzel, Crimson_Text, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 import Layout from '@/components/Layout';
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         <Layout>{children}</Layout>
+        <Analytics />
       </body>
     </html>
   );

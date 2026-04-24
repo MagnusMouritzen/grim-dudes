@@ -1,46 +1,90 @@
 import { NextResponse } from 'next/server';
-import { deleteStatblock, getStatblockById, listStatblocks } from '@/lib/statblockRedis';
+import {
+  deleteStatblock,
+  getStatblockById,
+  saveStatblock,
+} from '@/lib/statblockRedis';
 import { slugifyStatblockId } from '@/lib/statblockKeys';
+import { validateStatblockPayload } from '@/lib/validateStatblock';
+import { requireWriteAuth } from '@/lib/writeAuth';
+import { limitWrite } from '@/lib/rateLimit';
+import { logError, requestId } from '@/lib/logger';
+import type { StatblockRecord } from '@/lib/statblockRedis';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id: raw } = await params;
-  let decoded = raw;
+const MAX_BODY = 256 * 1024;
+
+function decode(raw: string): string {
   try {
-    decoded = decodeURIComponent(raw);
+    return decodeURIComponent(raw);
   } catch {
-    decoded = raw;
+    return raw;
   }
-  const slug = slugifyStatblockId(decoded);
+}
+
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id: raw } = await params;
+  const slug = slugifyStatblockId(decode(raw));
   try {
-    let block = await getStatblockById(slug);
-    if (!block) {
-      const all = await listStatblocks();
-      block = all.find((b) => String(b.id) === decoded || String(b.id) === slug) ?? null;
-    }
+    const block = await getStatblockById(slug);
     if (!block) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
     return NextResponse.json(block);
   } catch (e) {
-    console.error(e);
-    const msg = e instanceof Error ? e.message : 'Failed to load stat block';
-    return NextResponse.json({ error: msg }, { status: 503 });
+    logError('api.statblocks.get.failed', e, { rid: requestId(req), slug });
+    return NextResponse.json({ error: 'Failed to load stat block' }, { status: 503 });
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id: raw } = await params;
-  let decoded = raw;
-  try {
-    decoded = decodeURIComponent(raw);
-  } catch {
-    decoded = raw;
+/** PUT alias for updating an existing stat block at its canonical slug. */
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const authError = requireWriteAuth(req);
+  if (authError) return authError;
+  const limit = await limitWrite(req);
+  if (!limit.ok) {
+    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
   }
-  const slug = slugifyStatblockId(decoded);
+
+  const { id: raw } = await params;
+  const slug = slugifyStatblockId(decode(raw));
+  try {
+    const text = await req.text();
+    if (text.length > MAX_BODY) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+    }
+    let body: unknown;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    }
+    const validated = validateStatblockPayload(body);
+    if (!validated.ok) {
+      return NextResponse.json({ error: validated.error }, { status: 400 });
+    }
+    const payload = { ...validated.data, id: slug } as StatblockRecord;
+    await saveStatblock(payload);
+    return NextResponse.json(payload, { status: 200 });
+  } catch (e) {
+    logError('api.statblocks.put.failed', e, { rid: requestId(req), slug });
+    return NextResponse.json({ error: 'Failed to save stat block' }, { status: 503 });
+  }
+}
+
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const authError = requireWriteAuth(req);
+  if (authError) return authError;
+  const limit = await limitWrite(req);
+  if (!limit.ok) {
+    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+  }
+
+  const { id: raw } = await params;
+  const slug = slugifyStatblockId(decode(raw));
   try {
     const ok = await deleteStatblock(slug);
     if (!ok) {
@@ -48,8 +92,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     }
     return new NextResponse(null, { status: 204 });
   } catch (e) {
-    console.error(e);
-    const msg = e instanceof Error ? e.message : 'Failed to delete stat block';
-    return NextResponse.json({ error: msg }, { status: 503 });
+    logError('api.statblocks.delete.failed', e, { rid: requestId(req), slug });
+    return NextResponse.json({ error: 'Failed to delete stat block' }, { status: 503 });
   }
 }

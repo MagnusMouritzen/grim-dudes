@@ -449,7 +449,7 @@ export function computeHighestStatus(
       career.levels[career.levels.length - 1];
     if (!lvl || !lvl.status) return;
     const [tier, numStr] = lvl.status.split(' ');
-    const tierRank = tierOrder[tier] ?? -1;
+    const tierRank = tier ? (tierOrder[tier] ?? -1) : -1;
     const num = Number(numStr) || 0;
     const score = tierRank * 10 + num;
     if (score > bestScore) {

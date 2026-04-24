@@ -14,6 +14,16 @@ import type {
   WeaponsRef,
 } from '@/lib/types';
 import { useGrimMotion } from '@/lib/useMotion';
+import {
+  armourRefSchema,
+  careersRefSchema,
+  safeParse,
+  skillRefSchema,
+  traitRefSchema,
+  weaponsRefSchema,
+} from '@/lib/apiSchemas';
+import { statblockBodySchema } from '@/lib/validateStatblock';
+import { z } from 'zod';
 import { ChevronIcon, EditIcon, PrinterIcon, ScrollIcon, SkullIcon } from './icons';
 
 const API = '/api';
@@ -28,9 +38,12 @@ function parseIds(raw: string | null): string[] {
 
 export default function StatBlockMultiView() {
   const searchParams = useSearchParams();
+  const packParam = searchParams.get('pack');
   const idsParam = searchParams.get('ids');
-  const ids = useMemo(() => parseIds(idsParam), [idsParam]);
-  const idsKey = ids.join(',');
+  const idsFromQuery = useMemo(() => parseIds(idsParam), [idsParam]);
+  const [resolvedIds, setResolvedIds] = useState<string[] | null>(
+    packParam ? null : idsFromQuery
+  );
   const { ease } = useGrimMotion();
 
   const [blocks, setBlocks] = useState<Statblock[]>([]);
@@ -42,7 +55,31 @@ export default function StatBlockMultiView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Resolve `?pack=<id>` into a list of ids once per pack.
   useEffect(() => {
+    if (!packParam) {
+      setResolvedIds(idsFromQuery);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    fetch(`${API}/sharepacks/${encodeURIComponent(packParam)}`)
+      .then((r) => {
+        if (r.status === 404) throw new Error('Share link not found or expired');
+        if (!r.ok) throw new Error('Could not load share link');
+        return r.json();
+      })
+      .then((data: { ids?: string[] }) => {
+        setResolvedIds(Array.isArray(data.ids) ? data.ids : []);
+      })
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : 'Share link failed'));
+  }, [packParam, idsFromQuery]);
+
+  const ids = resolvedIds ?? [];
+  const idsKey = ids.join(',');
+
+  useEffect(() => {
+    if (resolvedIds === null) return;
     if (ids.length === 0) {
       setBlocks([]);
       setLoading(false);
@@ -74,19 +111,28 @@ export default function StatBlockMultiView() {
 
     Promise.all([fetchBlocks, fetchSkills, fetchTraits, fetchWeapons, fetchArmour, fetchCareers])
       .then(([blockList, skillsData, traitsData, weaponsData, armourData, careersData]) => {
-        setBlocks(blockList as Statblock[]);
-        setSkillsRef(Array.isArray(skillsData) ? (skillsData as SkillRef[]) : []);
-        setTraitsRef(Array.isArray(traitsData) ? (traitsData as TraitRef[]) : []);
-        setWeaponsRef((weaponsData as WeaponsRef | null) || null);
-        setArmourRef((armourData as ArmourRef | null) || null);
-        setCareersRef((careersData as CareersRef | null) || null);
+        const parsedBlocks = Array.isArray(blockList)
+          ? blockList
+              .map((b) => safeParse(statblockBodySchema.passthrough(), b))
+              .filter((b): b is NonNullable<typeof b> => b !== null)
+          : [];
+        setBlocks(parsedBlocks as Statblock[]);
+        setSkillsRef(
+          (safeParse(z.array(skillRefSchema), skillsData) as SkillRef[] | null) ?? []
+        );
+        setTraitsRef(
+          (safeParse(z.array(traitRefSchema), traitsData) as TraitRef[] | null) ?? []
+        );
+        setWeaponsRef((safeParse(weaponsRefSchema, weaponsData) as WeaponsRef | null) ?? null);
+        setArmourRef((safeParse(armourRefSchema, armourData) as ArmourRef | null) ?? null);
+        setCareersRef((safeParse(careersRefSchema, careersData) as CareersRef | null) ?? null);
       })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
+      .catch(() => setError('Could not load one or more stat blocks'))
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idsKey]);
+  }, [idsKey, resolvedIds]);
 
-  if (ids.length === 0) {
+  if (resolvedIds !== null && ids.length === 0) {
     return (
       <div className="grim-card p-8 text-center flex flex-col items-center gap-4 max-w-xl mx-auto">
         <ScrollIcon className="w-12 h-12 text-gold-500" />

@@ -58,6 +58,7 @@ export const statblockBodySchema = z
     traits: z.array(traitSchema).max(200).optional(),
     tags: z.array(z.string().min(1).max(80)).max(50).optional(),
     careers: z.array(careerSchema).max(20).optional(),
+    notes: z.string().max(5000).optional(),
     weapons: z
       .union([
         z.string().max(5000),

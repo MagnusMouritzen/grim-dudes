@@ -14,7 +14,18 @@ import type {
   WeaponsRef,
 } from '@/lib/types';
 import { useGrimMotion } from '@/lib/useMotion';
-import { ChevronIcon, EditIcon, PrinterIcon, SkullIcon, TrashIcon } from './icons';
+import {
+  armourRefSchema,
+  careersRefSchema,
+  safeParse,
+  skillRefSchema,
+  traitRefSchema,
+  weaponsRefSchema,
+} from '@/lib/apiSchemas';
+import { statblockBodySchema } from '@/lib/validateStatblock';
+import { z } from 'zod';
+import { deleteStatblockAction } from '@/app-actions/statblocks';
+import { ChevronIcon, EditIcon, PrinterIcon, ScrollIcon, SkullIcon, TrashIcon } from './icons';
 
 const API = '/api';
 
@@ -55,14 +66,19 @@ export default function StatBlockView() {
 
     Promise.all([fetchBlock, fetchSkills, fetchTraits, fetchWeapons, fetchArmour, fetchCareers])
       .then(([blockData, skillsData, traitsData, weaponsData, armourData, careersData]) => {
-        setBlock((blockData as Statblock) ?? null);
-        setSkillsRef(Array.isArray(skillsData) ? (skillsData as SkillRef[]) : []);
-        setTraitsRef(Array.isArray(traitsData) ? (traitsData as TraitRef[]) : []);
-        setWeaponsRef((weaponsData as WeaponsRef | null) || null);
-        setArmourRef((armourData as ArmourRef | null) || null);
-        setCareersRef((careersData as CareersRef | null) || null);
+        const parsedBlock = safeParse(statblockBodySchema.passthrough(), blockData);
+        setBlock((parsedBlock as Statblock | null) ?? null);
+        setSkillsRef(
+          (safeParse(z.array(skillRefSchema), skillsData) as SkillRef[] | null) ?? []
+        );
+        setTraitsRef(
+          (safeParse(z.array(traitRefSchema), traitsData) as TraitRef[] | null) ?? []
+        );
+        setWeaponsRef((safeParse(weaponsRefSchema, weaponsData) as WeaponsRef | null) ?? null);
+        setArmourRef((safeParse(armourRefSchema, armourData) as ArmourRef | null) ?? null);
+        setCareersRef((safeParse(careersRefSchema, careersData) as CareersRef | null) ?? null);
       })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
+      .catch(() => setError('Could not load this stat block'))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -84,18 +100,22 @@ export default function StatBlockView() {
     };
   }, [confirmOpen]);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!id) return;
     setDeleting(true);
-    fetch(`${API}/statblocks/${encodeURIComponent(id)}`, { method: 'DELETE' })
-      .then((r) => {
-        if (!r.ok) throw new Error('Failed to delete');
-        router.push('/');
-      })
-      .catch((e: unknown) => {
-        setError(e instanceof Error ? e.message : String(e));
+    try {
+      const res = await deleteStatblockAction(id);
+      if (!res.ok) {
+        setError(res.error);
         setDeleting(false);
-      });
+        return;
+      }
+      router.push('/');
+    } catch (e) {
+      console.error(e);
+      setError('Failed to delete');
+      setDeleting(false);
+    }
   };
 
   if (loading) {
@@ -130,6 +150,27 @@ export default function StatBlockView() {
           Bestiary
         </Link>
         <div className="flex gap-2 relative">
+          <button
+            type="button"
+            onClick={() => {
+              if (!block) return;
+              const data = JSON.stringify(block, null, 2);
+              const blob = new Blob([data], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${block.id || 'statblock'}.json`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }}
+            className="grim-btn-ghost"
+            aria-label="Download JSON"
+          >
+            <ScrollIcon className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">JSON</span>
+          </button>
           <button
             type="button"
             onClick={() => window.print()}

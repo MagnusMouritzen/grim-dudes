@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
-import { listStatblocks, saveStatblock } from '@/lib/statblockRedis';
+import {
+  listStatblocks,
+  listStatblocksPage,
+  saveStatblock,
+} from '@/lib/statblockRedis';
 import { slugifyStatblockId } from '@/lib/statblockKeys';
 import { validateStatblockPayload } from '@/lib/validateStatblock';
+import { requireWriteAuth } from '@/lib/writeAuth';
+import { limitWrite } from '@/lib/rateLimit';
+import { logError, requestId } from '@/lib/logger';
 import type { StatblockRecord } from '@/lib/statblockRedis';
 
 export const runtime = 'nodejs';
@@ -10,18 +17,51 @@ export const revalidate = 0;
 
 const MAX_BODY = 256 * 1024;
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const cursorParam = url.searchParams.get('cursor');
+    const limitParam = url.searchParams.get('limit');
+    const all = url.searchParams.get('all');
+
+    if (cursorParam != null || limitParam != null) {
+      const cursor = cursorParam ?? '0';
+      const limit = Math.min(Math.max(Number(limitParam ?? '100'), 1), 500);
+      const page = await listStatblocksPage(cursor, limit);
+      return NextResponse.json({
+        items: page.blocks,
+        nextCursor: page.nextCursor,
+      });
+    }
+
     const blocks = await listStatblocks();
+    if (all === '1') {
+      // Explicit opt-in; same response as the default for backwards compat.
+      return NextResponse.json(blocks);
+    }
     return NextResponse.json(blocks);
   } catch (e) {
-    console.error(e);
-    const msg = e instanceof Error ? e.message : 'Failed to list stat blocks';
-    return NextResponse.json({ error: msg }, { status: 503 });
+    logError('api.statblocks.list.failed', e, { rid: requestId(req) });
+    return NextResponse.json({ error: 'Failed to list stat blocks' }, { status: 503 });
   }
 }
 
 export async function POST(req: Request) {
+  const authError = requireWriteAuth(req);
+  if (authError) return authError;
+  const limit = await limitWrite(req);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded' },
+      {
+        status: 429,
+        headers: {
+          'retry-after': String(Math.max(1, Math.ceil((limit.reset - Date.now()) / 1000))),
+        },
+      }
+    );
+  }
+
   try {
     const text = await req.text();
     if (text.length > MAX_BODY) {
@@ -44,8 +84,7 @@ export async function POST(req: Request) {
     await saveStatblock(payload);
     return NextResponse.json(payload, { status: 201 });
   } catch (e) {
-    console.error(e);
-    const msg = e instanceof Error ? e.message : 'Failed to save stat block';
-    return NextResponse.json({ error: msg }, { status: 503 });
+    logError('api.statblocks.save.failed', e, { rid: requestId(req) });
+    return NextResponse.json({ error: 'Failed to save stat block' }, { status: 503 });
   }
 }

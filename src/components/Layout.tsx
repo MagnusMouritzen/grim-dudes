@@ -28,6 +28,12 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 grim-btn-primary"
+      >
+        Skip to content
+      </a>
       <header className="sticky top-0 z-20 print:hidden">
         <div className="bg-ink-900/80 backdrop-blur-md">
           <div className="max-w-6xl mx-auto px-4 h-[72px] flex items-center justify-between">
@@ -52,6 +58,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     <Link
                       key={link.href}
                       href={link.href}
+                      aria-current={active ? 'page' : undefined}
                       className={
                         active
                           ? 'grim-btn-primary text-xs'
@@ -67,6 +74,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   <Link
                     key={link.href}
                     href={link.href}
+                    aria-current={active ? 'page' : undefined}
                     className={`relative px-3 py-1.5 text-xs uppercase tracking-wider transition-colors duration-fast ease-grim ${
                       active ? 'text-gold-400' : 'text-parchment/80 hover:text-parchment'
                     }`}
@@ -89,7 +97,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           <div className="h-px bg-gradient-to-r from-transparent via-gold-600/50 to-transparent" />
         </div>
       </header>
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-10 relative z-[1]">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex-1 max-w-6xl w-full mx-auto px-4 py-10 relative z-[1] focus:outline-none"
+      >
         <PageTransition>{children}</PageTransition>
       </main>
       <footer className="print:hidden relative z-[1] pb-8 pt-6">
@@ -101,6 +113,14 @@ export default function Layout({ children }: { children: ReactNode }) {
           </p>
           <Heraldry className="w-5 h-5 text-gold-500/80" />
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-700/40" />
+        </div>
+        <div className="mt-3 text-center">
+          <Link
+            href="/admin"
+            className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-parchment/30 hover:text-gold-400/70 transition-colors"
+          >
+            Admin
+          </Link>
         </div>
       </footer>
     </div>

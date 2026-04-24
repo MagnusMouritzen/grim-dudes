@@ -1,15 +1,36 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SIZES, DEFAULT_SIZE } from '@/lib/statblockUtils';
 import { computeEffectiveStats } from '@/lib/statblockDerived';
 import { useGrimMotion } from '@/lib/useMotion';
+import { saveStatblockAction } from '@/app-actions/statblocks';
+import dynamic from 'next/dynamic';
+
+const EditorModals = dynamic(() => import('./editor/EditorModals'), { ssr: false });
+import {
+  armourRefSchema,
+  careersRefSchema,
+  safeParse,
+  skillRefSchema,
+  templateSchema,
+  templatesArraySchema,
+  traitRefSchema,
+  weaponsRefSchema,
+} from '@/lib/apiSchemas';
+import { statblockBodySchema } from '@/lib/validateStatblock';
+import { z } from 'zod';
 import {
   ChevronIcon,
-  CloseIcon,
   DiceIcon,
   PlusIcon,
   ScrollIcon,
@@ -102,6 +123,14 @@ function computeCareerEffectsFrom(
   return { careerSkillAdv, careerCharAdv };
 }
 
+function focusFirst(container: HTMLElement | null): void {
+  if (!container) return;
+  const selectors =
+    'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const focusable = container.querySelectorAll<HTMLElement>(selectors);
+  (focusable[0] ?? container).focus();
+}
+
 const emptyWeaponsRef: WeaponsRef = {
   qualitiesAndFlaws: [],
   melee: { categories: [] },
@@ -141,6 +170,12 @@ export default function StatBlockEditor() {
   const { ease } = useGrimMotion();
   const [rerollKey, setRerollKey] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const markDirty = useCallback(() => setDirty(true), []);
+  const templateModalRef = useRef<HTMLDivElement | null>(null);
+  const careerModalRef = useRef<HTMLDivElement | null>(null);
+  const templateButtonRef = useRef<HTMLButtonElement | null>(null);
+  const careerButtonRef = useRef<HTMLButtonElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [allSkills, setAllSkills] = useState<SkillRef[]>([]);
   const [allTraits, setAllTraits] = useState<TraitRef[]>([]);
@@ -181,6 +216,7 @@ export default function StatBlockEditor() {
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+    markDirty();
   };
 
   const updateChar = (key: CharKey, value: string) => {
@@ -188,7 +224,50 @@ export default function StatBlockEditor() {
       ...prev,
       characteristics: { ...prev.characteristics, [key]: value },
     }));
+    markDirty();
   };
+
+  // Warn on tab close / refresh when there are unsaved edits.
+  useEffect(() => {
+    if (!dirty) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => window.removeEventListener('beforeunload', onBeforeUnload);
+  }, [dirty]);
+
+  // Keyboard: Cmd/Ctrl+S saves, Escape closes open modals.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        void handleSaveRef.current?.();
+      } else if (e.key === 'Escape') {
+        if (templateModalOpen) setTemplateModalOpen(false);
+        if (careerModalOpen) setCareerModalOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [templateModalOpen, careerModalOpen]);
+
+  // Return focus to the opener when a modal closes; focus first focusable inside on open.
+  useEffect(() => {
+    if (templateModalOpen) {
+      focusFirst(templateModalRef.current);
+    } else {
+      templateButtonRef.current?.focus();
+    }
+  }, [templateModalOpen]);
+  useEffect(() => {
+    if (careerModalOpen) {
+      focusFirst(careerModalRef.current);
+    } else {
+      careerButtonRef.current?.focus();
+    }
+  }, [careerModalOpen]);
 
   useEffect(() => {
     Promise.all([
@@ -200,20 +279,25 @@ export default function StatBlockEditor() {
       fetch(`${API}/careers`).then((r) => (r.ok ? r.json() : { classes: [] })),
     ])
       .then(([skills, traits, templates, weapons, armour, careers]) => {
-        const skillArr = Array.isArray(skills) ? (skills as SkillRef[]) : [];
-        const traitArr = Array.isArray(traits) ? (traits as TraitRef[]) : [];
-        const templateArr = Array.isArray(templates) ? (templates as Template[]) : [];
+        const skillArr =
+          (safeParse(z.array(skillRefSchema), skills) as SkillRef[] | null) ?? [];
+        const traitArr =
+          (safeParse(z.array(traitRefSchema), traits) as TraitRef[] | null) ?? [];
+        const templateArr =
+          (safeParse(templatesArraySchema, templates) as Template[] | null) ?? [];
         setAllSkills([...skillArr].sort((a, b) => a.name.localeCompare(b.name)));
         setAllTraits([...traitArr].sort((a, b) => a.name.localeCompare(b.name)));
         setTemplatesList(
           [...templateArr].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
         );
-        setWeaponsRef((weapons as WeaponsRef) || emptyWeaponsRef);
-        setArmourRef((armour as ArmourRef) || emptyArmourRef);
+        setWeaponsRef(
+          (safeParse(weaponsRefSchema, weapons) as WeaponsRef | null) ?? emptyWeaponsRef
+        );
+        setArmourRef(
+          (safeParse(armourRefSchema, armour) as ArmourRef | null) ?? emptyArmourRef
+        );
         setAllCareers(
-          careers && typeof careers === 'object'
-            ? (careers as CareersRef)
-            : { classes: [] }
+          (safeParse(careersRefSchema, careers) as CareersRef | null) ?? { classes: [] }
         );
       })
       .catch(() => {
@@ -263,7 +347,8 @@ export default function StatBlockEditor() {
     fetch(`${API}/statblocks/${encodeURIComponent(id)}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Not found'))))
       .then((raw: unknown) => {
-        const data = raw as Statblock;
+        const parsed = safeParse(statblockBodySchema.passthrough(), raw);
+        const data = (parsed as Statblock | null) ?? ({} as Statblock);
         setExistingId(typeof data.id === 'string' ? data.id : null);
         const chars = data.characteristics || {};
         const wsVal = chars.WS;
@@ -273,7 +358,8 @@ export default function StatBlockEditor() {
           pendingNonTemplateRef.current = null;
           fetch(`${API}/templates/${encodeURIComponent(data.templateId)}`)
             .then((r) => (r.ok ? r.json() : null))
-            .then((tpl: Template | null) => {
+            .then((rawTpl: unknown) => {
+              const tpl = safeParse(templateSchema, rawTpl) as Template | null;
               if (tpl) setTemplate(tpl);
               const advances: CharMap<number> = { ...zeroAdvances };
               const additions: CharMap<number> = { ...defaultAdditions };
@@ -589,7 +675,7 @@ export default function StatBlockEditor() {
         byChar[c].push(s);
       }
       Object.keys(byChar).forEach((k) => {
-        byChar[k].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        byChar[k]?.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
       });
       return { grouped: byChar, flat: null };
     }
@@ -681,23 +767,31 @@ export default function StatBlockEditor() {
     };
   };
 
-  const handleSave = () => {
+  const handleSave = useCallback(async () => {
     setError(null);
     setSaving(true);
-    fetch(`${API}/statblocks`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toPayload()),
-    })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Save failed'))))
-      .then((data: { id?: string }) => {
-        if (data?.id) router.push(`/statblock/${data.id}`);
-      })
-      .catch((e: unknown) => {
-        setError(e instanceof Error ? e.message : String(e));
+    try {
+      const res = await saveStatblockAction(toPayload());
+      if (!res.ok) {
+        setError(res.error);
         setSaving(false);
-      });
-  };
+        return;
+      }
+      setDirty(false);
+      router.push(`/statblock/${res.id}`);
+    } catch (e) {
+      console.error(e);
+      setError('Save failed');
+      setSaving(false);
+    }
+    // toPayload is a closure over current state; we intentionally don't list it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
+
+  const handleSaveRef = useRef(handleSave);
+  useEffect(() => {
+    handleSaveRef.current = handleSave;
+  }, [handleSave]);
 
   return (
     <div>
@@ -717,122 +811,26 @@ export default function StatBlockEditor() {
         {id ? 'Edit Stat Block' : 'New Stat Block'}
       </h1>
 
-      <AnimatePresence>
-        {templateModalOpen && (
-          <motion.div
-            key="tpl-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18, ease }}
-            className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-            onClick={() => setTemplateModalOpen(false)}
-          >
-            <motion.div
-              role="dialog"
-              aria-label="Choose template"
-              initial={{ opacity: 0, y: 8, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 4, scale: 0.98 }}
-              transition={{ duration: 0.2, ease }}
-              className="grim-card max-w-md w-full max-h-[80vh] overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="fx-card-header px-4 py-3 border-b border-gold-700/50 flex justify-between items-center">
-                <h2 className="font-display text-gold-400 tracking-wide">Choose template</h2>
-                <button
-                  type="button"
-                  className="text-parchment/80 hover:text-gold-400 transition-colors"
-                  onClick={() => setTemplateModalOpen(false)}
-                  aria-label="Close"
-                >
-                  <CloseIcon className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="p-4 overflow-y-auto max-h-96 space-y-1">
-                {templatesList.length === 0 ? (
-                  <p className="text-parchment/70">No templates available.</p>
-                ) : (
-                  templatesList.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => applyTemplate(t)}
-                      className="w-full text-left px-3 py-2 rounded border border-iron-700 bg-ink-800/60 text-parchment transition-all duration-fast ease-grim hover:border-gold-600 hover:bg-ink-700 hover:translate-x-0.5"
-                    >
-                      {t.name || t.id}
-                    </button>
-                  ))
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-        {careerModalOpen && (
-          <motion.div
-            key="career-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18, ease }}
-            className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-            onClick={() => setCareerModalOpen(false)}
-          >
-            <motion.div
-              role="dialog"
-              aria-label="Choose career"
-              initial={{ opacity: 0, y: 8, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 4, scale: 0.98 }}
-              transition={{ duration: 0.2, ease }}
-              className="grim-card max-w-2xl w-full max-h-[80vh] overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="fx-card-header px-4 py-3 border-b border-gold-700/50 flex justify-between items-center">
-                <h2 className="font-display text-gold-400 tracking-wide">Choose career</h2>
-                <button
-                  type="button"
-                  className="text-parchment/80 hover:text-gold-400 transition-colors"
-                  onClick={() => setCareerModalOpen(false)}
-                  aria-label="Close"
-                >
-                  <CloseIcon className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="p-4 overflow-y-auto max-h-[70vh] space-y-4">
-                {!(Array.isArray(allCareers.classes) && allCareers.classes.length) ? (
-                  <p className="text-parchment/70 text-sm">No careers available.</p>
-                ) : (
-                  allCareers.classes.map((cls) => (
-                    <div key={cls.name}>
-                      <h3 className="grim-label mb-1.5">{cls.name}</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {(cls.careers || []).map((career) => (
-                          <button
-                            key={career.name}
-                            type="button"
-                            onClick={() => {
-                              userChangedCareersRef.current = true;
-                              setSelectedCareers((prev) => {
-                                if (prev.some((c) => c.className === cls.name && c.careerName === career.name)) return prev;
-                                return [...prev, { className: cls.name, careerName: career.name, level: 1 }];
-                              });
-                              setCareerModalOpen(false);
-                            }}
-                            className="grim-pill text-xs px-2.5 py-1 cursor-pointer"
-                          >
-                            {career.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <EditorModals
+        templateOpen={templateModalOpen}
+        careerOpen={careerModalOpen}
+        templates={templatesList}
+        careers={allCareers}
+        onCloseTemplate={() => setTemplateModalOpen(false)}
+        onCloseCareer={() => setCareerModalOpen(false)}
+        onPickTemplate={(t) => applyTemplate(t)}
+        onPickCareer={(pick) => {
+          userChangedCareersRef.current = true;
+          setSelectedCareers((prev) => {
+            if (prev.some((c) => c.className === pick.className && c.careerName === pick.careerName))
+              return prev;
+            return [...prev, pick];
+          });
+          setCareerModalOpen(false);
+        }}
+        templateDialogRef={templateModalRef}
+        careerDialogRef={careerModalRef}
+      />
 
       <div className="grim-card p-6 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)] lg:gap-8 items-start">
         <div className="space-y-6">
@@ -854,6 +852,7 @@ export default function StatBlockEditor() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
+              ref={templateButtonRef}
               onClick={() => setTemplateModalOpen(true)}
               className="inline-flex items-center gap-2 rounded border border-gold-700 bg-ink-800/70 px-3 py-1.5 text-xs uppercase tracking-wider text-gold-400 transition-all duration-fast ease-grim hover:border-gold-500 hover:text-parchment hover:bg-blood-700/40"
             >
@@ -862,6 +861,7 @@ export default function StatBlockEditor() {
             </button>
             <button
               type="button"
+              ref={careerButtonRef}
               onClick={() => setCareerModalOpen(true)}
               className="grim-btn-ghost"
             >
@@ -1306,7 +1306,7 @@ export default function StatBlockEditor() {
                       .map((charKey) => (
                         <div key={charKey} className="mb-2 last:mb-0">
                           <p className="text-gold/80 text-[0.65rem] uppercase tracking-wide mb-0.5">{charKey}</p>
-                          {filteredSkillsForPicker.grouped[charKey].map((skill) => (
+                          {(filteredSkillsForPicker.grouped[charKey] ?? []).map((skill) => (
                             <button
                               type="button"
                               key={skill.name}

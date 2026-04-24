@@ -59,6 +59,7 @@ export type Statblock = {
   careers?: CareerEntry[];
   weapons?: WeaponsShape;
   armour?: ArmourShape;
+  notes?: string;
   [key: string]: unknown;
 };
 

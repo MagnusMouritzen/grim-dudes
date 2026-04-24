@@ -2,91 +2,103 @@
 
 An interactive editor for creating and viewing **Warhammer Fantasy Roleplay 4th Edition** stat blocks.
 
-The **current app** is **Next.js 15** (App Router, TypeScript, Tailwind) and is intended to deploy on **[Vercel](https://vercel.com)** with **[Upstash Redis](https://upstash.com)** for stat block storage. The JSON API matches the legacy Express routes (`/api/statblocks`, reference data under `/api/skills`, etc.).
+Built as a **Next.js 15** App Router app (TypeScript + Tailwind), deployable on **Vercel**, backed by **[Upstash Redis](https://upstash.com)** for stat block storage. Created with Cursor.ai.
 
-Created with Cursor.ai.
+## Requirements
 
-## What you need
+- **Node.js 20+** ([nodejs.org](https://nodejs.org))
+- **Upstash Redis** REST URL and token (for stat block CRUD - local and production)
 
-- **Node.js** (v20 LTS recommended) — [nodejs.org](https://nodejs.org)
-- **npm** (comes with Node)
-- **Upstash Redis** — REST URL and token for stat block CRUD (local and production)
-
-Bundled reference data (skills, traits, weapons, templates, …) lives under **`data/`** at the repo root (copied from the old `server/data` layout).
+Bundled reference data (skills, traits, weapons, armour, careers, templates) lives under `data/` at the repo root.
 
 ## Environment
 
-Copy `.env.example` to `.env.local` and set:
+Copy `.env.example` to `.env.local` and fill in:
 
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `UPSTASH_REDIS_REST_URL` | yes | Upstash REST endpoint |
+| `UPSTASH_REDIS_REST_TOKEN` | yes | Upstash REST token |
+| `REDIS_KEY_PREFIX` | no | e.g. `preview:` to isolate environments |
+| `WRITE_TOKEN` | optional | Shared secret for create/update/delete. If unset, writes are open (dev default) |
+| `RATE_LIMIT_WRITES_PER_MIN` | no | Override the 30/min default |
 
-Optional:
+On Vercel, add the same vars in **Project -> Settings -> Environment Variables**, one set per environment (Production / Preview / Development).
 
-- `REDIS_KEY_PREFIX` — e.g. `preview:` so Preview deployments do not share keys with Production.
+When `WRITE_TOKEN` is set, the editor UI reads the token from browser `localStorage`. Open `/admin`, paste the token, and save. It is sent as `x-write-token` on write requests.
 
-On Vercel, add the same variables in **Project → Settings → Environment Variables** (use different Upstash databases or prefixes for Preview vs Production if you want isolated data).
-
-## Run the project (Next.js)
-
-1. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. Configure `.env.local` (see above).
-
-3. Development server:
-
-   ```bash
-   npm run dev
-   ```
-
-4. Open **http://localhost:3000**.
-
-### Production build locally
+## Run
 
 ```bash
-npm run build
-npm start
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-## Migrate JSON stat blocks into Redis
+Production build locally:
 
-If you have files under `data/statblocks/*.json` (or legacy `server/data/statblocks/`), load them into Upstash once:
+```bash
+npm run build && npm start
+```
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `npm run dev` | Next dev server |
+| `npm run build` | Production build |
+| `npm start` | Run production build |
+| `npm run lint` | ESLint (`next lint`) |
+| `npm test` | Vitest (lib + route handlers) |
+| `npm run migrate:statblocks` | Seed Redis from `data/statblocks/*.json` |
+| `npm run migrate:statblocks -- --prune` | Also delete Redis entries missing from disk |
+| `npm run migrate:statblocks -- --dry-run` | Report only |
+| `npm run cleanup:orphans` | Remove phantom index entries |
+
+## API shape
+
+- `GET /api/statblocks` - full list (array)
+- `GET /api/statblocks?cursor=0&limit=100` - paginated (`{ items, nextCursor }`)
+- `POST /api/statblocks` - create/overwrite (write-auth + rate-limited)
+- `GET /api/statblocks/:id` - one by id (404 on miss; `?legacy=1` triggers a legacy fallback scan)
+- `PUT /api/statblocks/:id` - update at canonical slug
+- `DELETE /api/statblocks/:id` - delete (write-auth + rate-limited)
+- `GET /api/skills | traits | weapons | armour | careers | templates[/:id]` - bundled reference data
+- `POST /api/sharepacks` (body: `{ ids: string[] }`) - creates a short id so long selections can be shared via `/view?pack=<id>`
+- `GET /api/sharepacks/:id` - resolve back to `{ ids }`
+- `GET /api/healthz` - `{ ok, redis, writeAuth, region, env }` for uptime checks
+
+## Migrating JSON to Redis
+
+If you have files under `data/statblocks/*.json`, seed Upstash once:
 
 ```bash
 npm run migrate:statblocks
 ```
 
-The script reads `.env.local` and writes each file with `SET` plus index membership, using the same slug rules as the API.
+To also delete stale Redis entries that are no longer on disk:
 
-## Scripts (root)
+```bash
+npm run migrate:statblocks -- --prune
+```
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Next.js dev server (port 3000). |
-| `npm run build` | Production build. |
-| `npm run start` | Run production server after `build`. |
-| `npm test` | Vitest (stat block helpers). |
-| `npm run migrate:statblocks` | One-off: JSON files → Redis. |
+## Troubleshooting
+
+- **503 on list/save** with `Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN`: set them in `.env.local` (local) or Project Settings (Vercel).
+- **Editor shows "Not authorised - set a write token in /admin"**: `WRITE_TOKEN` is set on the deploy. Open `/admin` and paste the token.
+- **Bestiary shows a phantom entry**: run `npm run cleanup:orphans`.
+- **Reset Redis completely**: from your Upstash dashboard use the "flush database" action, then `npm run migrate:statblocks`. Alternatively, target a prefix by running a small script that `SREM`s every member of `<prefix>statblock:index` and `DEL`s the matching `<prefix>statblock:<id>` keys.
 
 ## Project layout
 
-- **`app/`** — App Router pages and **`app/api/*`** route handlers.
-- **`src/components/`** — Client UI (ported from the old Vite app).
-- **`src/lib/`** — Redis access, validation (Zod), reference data readers, stat block utilities.
-- **`data/`** — Bundled JSON (skills, traits, weapons, armour, careers, templates, sample stat blocks for migration).
-
-## Legacy stack (`client/` + `server/`)
-
-The original **Vite + Express** app is still in the repo for reference:
-
-- **`server/`** — Express API and former file-based stat blocks under `server/data/`.
-- **`client/`** — React (Vite); dev server on 5173 with `/api` proxy to port 3000.
-
-Use the root **`npm`** scripts above for the Next.js app; the legacy app used separate `npm install` in `client/` and `server/` and different root scripts (see git history if you need them).
+```
+app/                 Next.js App Router routes and route handlers
+  api/*              JSON endpoints
+  admin/             Token entry for write-auth
+src/components/      Client UI (ported from the Vite app)
+src/lib/             Redis access, Zod validation, domain types, motion helpers
+data/                Bundled JSON reference + sample stat blocks
+scripts/             Migration + cleanup helpers
+```
 
 ## Stat block format
 
@@ -94,8 +106,8 @@ Each stat block in Redis (or a `.json` file under `data/statblocks/`) is a JSON 
 
 - `id`, `name`
 - `characteristics`: for plain NPCs, each of `WS`, `BS`, `S`, `T`, `I`, `Ag`, `Dex`, `Int`, `WP`, `Fel` is a **number**. For template-based PCs/creatures, each can instead be `{ "base": number, "advances": number, "addition": number }` plus optional `templateId` and `randomiseCharacteristics`.
-- `size` — e.g. `Average` (used with characteristics to derive wounds in the UI).
-- `wounds`, `movement` — numbers; `wounds` is kept in sync with the trait-aware formula when saved from the editor.
+- `size` - e.g. `Average`.
+- `wounds`, `movement` - numbers; `wounds` is kept in sync with the trait-aware formula when saved from the editor.
 - `skills`: `[{ "name": string, "advances": number }, ...]`
 - `talents`: array of strings
 - `traits`: array of trait names as strings, or `{ "name": string, "inputValue"?: string }` when a trait needs a value (see `data/traits.json`).
@@ -104,9 +116,13 @@ Each stat block in Redis (or a `.json` file under `data/statblocks/`) is a JSON 
 - `weapons`: either a **string** (legacy free text) or `{ "melee": [...], "ranged": [...] }` with `{ "category", "name", "ammunition"? }` entries matching `data/weapons/`.
 - `armour`: either a **string** (legacy) or an array of `{ "category", "name" }` matching `data/armour/`.
 
-Reference data:
+Reference data: `data/skills.json`, `data/traits.json`. Example stat blocks: `data/statblocks/human-thug.json`, `data/statblocks/dog.json`.
 
-- `data/skills.json` — skills and their linked characteristic.
-- `data/traits.json` — trait names, descriptions, and optional mechanical `effects`.
+## Contributing
 
-Example stat blocks: `data/statblocks/human-thug.json`, `data/statblocks/dog.json`.
+- Lint, tests, and build all run on PRs via `.github/workflows/ci.yml`.
+- Keep components strict-TS - no `@ts-nocheck`.
+- Validate new payloads with Zod at both ends (server via `validateStatblockPayload`, client via the schemas in `src/lib/apiSchemas.ts`).
+- Rate limit and write-auth are additive: leave them disabled in dev (env unset) unless you are testing those paths.
+
+_Migrated from the original Vite + Express prototype. See git history prior to the Next.js migration for the legacy stack._

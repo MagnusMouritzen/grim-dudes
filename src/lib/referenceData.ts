@@ -1,79 +1,86 @@
-import fs from 'fs';
-import path from 'path';
-import { DATA_DIR, listTemplateFilenames, slugifyForFilename, templateDir } from './dataFiles';
+import skills from '../../data/skills.json';
+import traits from '../../data/traits.json';
+import careers from '../../data/careers.json';
+import weaponsQualities from '../../data/weapons/qualities-and-flaws.json';
+import meleeWeapons from '../../data/weapons/melee-weapons.json';
+import rangedWeapons from '../../data/weapons/ranged-weapons.json';
+import ammunition from '../../data/weapons/ammunition.json';
+import armourQualities from '../../data/armour/qualities-and-flaws.json';
+import armourItems from '../../data/armour/armour.json';
+import dogTemplate from '../../data/templates/dog.json';
+import humanTemplate from '../../data/templates/human.json';
+import ogreTemplate from '../../data/templates/ogre.json';
+import saurusTemplate from '../../data/templates/saurus.json';
+import skeletonMinionTemplate from '../../data/templates/skeleton-minion.json';
+import skinkTemplate from '../../data/templates/skink.json';
 
-function loadJsonArray(...segments: string[]): unknown[] {
-  const p = path.join(DATA_DIR, ...segments);
-  const raw = fs.readFileSync(p, 'utf8');
-  const data = JSON.parse(raw);
-  return Array.isArray(data) ? data : [];
+type TemplateLike = Record<string, unknown> & { id?: string; name?: string };
+
+const TEMPLATE_FILES: Record<string, TemplateLike> = {
+  dog: dogTemplate as TemplateLike,
+  human: humanTemplate as TemplateLike,
+  ogre: ogreTemplate as TemplateLike,
+  saurus: saurusTemplate as TemplateLike,
+  'skeleton-minion': skeletonMinionTemplate as TemplateLike,
+  skink: skinkTemplate as TemplateLike,
+};
+
+function slugifyTemplateId(id: string): string {
+  const safe = id.replace(/[^a-z0-9-_]/gi, '-').replace(/-+/g, '-').toLowerCase();
+  return safe || 'template';
 }
 
-function loadJson<T>(defaultValue: T, ...segments: string[]): T {
-  const p = path.join(DATA_DIR, ...segments);
-  if (!fs.existsSync(p)) return defaultValue;
-  const raw = fs.readFileSync(p, 'utf8');
-  return JSON.parse(raw) as T;
+const TEMPLATES: TemplateLike[] = Object.entries(TEMPLATE_FILES).map(([fileId, data]) => ({
+  id: data.id || fileId,
+  name: data.name || 'Template',
+  ...data,
+}));
+
+const TEMPLATES_BY_ID: Map<string, TemplateLike> = (() => {
+  const m = new Map<string, TemplateLike>();
+  for (const [fileId, data] of Object.entries(TEMPLATE_FILES)) {
+    const merged: TemplateLike = { id: data.id || fileId, name: data.name || 'Template', ...data };
+    m.set(fileId, merged);
+    if (typeof merged.id === 'string' && merged.id !== fileId) m.set(merged.id, merged);
+  }
+  return m;
+})();
+
+export function getSkills(): unknown[] {
+  return Array.isArray(skills) ? skills : [];
 }
 
-export function getSkills() {
-  return loadJsonArray('skills.json');
-}
-
-export function getTraits() {
-  return loadJsonArray('traits.json');
+export function getTraits(): unknown[] {
+  return Array.isArray(traits) ? traits : [];
 }
 
 export function getWeaponsBundle() {
   return {
-    qualitiesAndFlaws: loadJsonArray('weapons', 'qualities-and-flaws.json'),
-    melee: loadJson({ categories: [] }, 'weapons', 'melee-weapons.json'),
-    ranged: loadJson({ categories: [] }, 'weapons', 'ranged-weapons.json'),
-    ammunition: loadJson({ categories: [] }, 'weapons', 'ammunition.json'),
+    qualitiesAndFlaws: Array.isArray(weaponsQualities) ? weaponsQualities : [],
+    melee: meleeWeapons,
+    ranged: rangedWeapons,
+    ammunition,
   };
 }
 
 export function getArmourBundle() {
   return {
-    qualitiesAndFlaws: loadJsonArray('armour', 'qualities-and-flaws.json'),
-    armour: loadJson({ categories: [] }, 'armour', 'armour.json'),
+    qualitiesAndFlaws: Array.isArray(armourQualities) ? armourQualities : [],
+    armour: armourItems,
   };
 }
 
 export function getCareers() {
-  return loadJson({ classes: [] }, 'careers.json');
+  return careers;
 }
 
-export function listTemplates() {
-  const files = listTemplateFilenames();
-  return files.map((f) => {
-    const raw = fs.readFileSync(path.join(templateDir(), f), 'utf8');
-    const data = JSON.parse(raw) as Record<string, unknown>;
-    return { id: data.id || path.basename(f, '.json'), name: data.name || 'Template', ...data };
-  });
+export function listTemplates(): TemplateLike[] {
+  return TEMPLATES;
 }
 
-export function getTemplateById(id: string): Record<string, unknown> | null {
-  if (!fs.existsSync(templateDir())) return null;
-  const filename = slugifyForFilename(id);
-  const filepath = path.join(templateDir(), filename);
-  if (fs.existsSync(filepath)) {
-    const raw = fs.readFileSync(filepath, 'utf8');
-    const data = JSON.parse(raw) as Record<string, unknown>;
-    return { id: data.id || path.basename(filename, '.json'), ...data };
-  }
-  const files = listTemplateFilenames();
-  const byId = files.find((f) => {
-    try {
-      const raw = fs.readFileSync(path.join(templateDir(), f), 'utf8');
-      const data = JSON.parse(raw) as { id?: string };
-      return (data.id || path.basename(f, '.json')) === id;
-    } catch {
-      return false;
-    }
-  });
-  if (!byId) return null;
-  const raw = fs.readFileSync(path.join(templateDir(), byId), 'utf8');
-  const data = JSON.parse(raw) as Record<string, unknown>;
-  return { id: data.id || path.basename(byId, '.json'), ...data };
+export function getTemplateById(id: string): TemplateLike | null {
+  const direct = TEMPLATES_BY_ID.get(id);
+  if (direct) return direct;
+  const bySlug = TEMPLATES_BY_ID.get(slugifyTemplateId(id));
+  return bySlug ?? null;
 }
