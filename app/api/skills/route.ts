@@ -1,0 +1,14 @@
+import { NextResponse } from 'next/server';
+import { getSkills } from '@/lib/referenceData';
+
+export const runtime = 'nodejs';
+export const revalidate = 3600;
+
+export async function GET() {
+  try {
+    return NextResponse.json(getSkills());
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: 'Failed to load skills' }, { status: 500 });
+  }
+}

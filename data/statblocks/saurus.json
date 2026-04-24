@@ -1,0 +1,184 @@
+{
+  "id": "saurus",
+  "name": "Saurus",
+  "templateId": "saurus",
+  "randomiseCharacteristics": false,
+  "characteristics": {
+    "WS": {
+      "base": 25,
+      "advances": 10,
+      "addition": 10
+    },
+    "BS": {
+      "base": 0,
+      "advances": 5,
+      "addition": 10
+    },
+    "S": {
+      "base": 35,
+      "advances": 0,
+      "addition": 10
+    },
+    "T": {
+      "base": 35,
+      "advances": 10,
+      "addition": 10
+    },
+    "I": {
+      "base": 5,
+      "advances": 0,
+      "addition": 10
+    },
+    "Ag": {
+      "base": 10,
+      "advances": 0,
+      "addition": 10
+    },
+    "Dex": {
+      "base": 8,
+      "advances": 0,
+      "addition": 10
+    },
+    "Int": {
+      "base": 15,
+      "advances": 0,
+      "addition": 10
+    },
+    "WP": {
+      "base": 55,
+      "advances": 10,
+      "addition": 10
+    },
+    "Fel": {
+      "base": 10,
+      "advances": 0,
+      "addition": 10
+    }
+  },
+  "size": "Average",
+  "wounds": 21,
+  "movement": 4,
+  "skills": [
+    {
+      "name": "Athletics",
+      "advances": 10
+    },
+    {
+      "name": "Climb",
+      "advances": 10
+    },
+    {
+      "name": "Consume Alcohol",
+      "advances": 5
+    },
+    {
+      "name": "Cool",
+      "advances": 10
+    },
+    {
+      "name": "Dodge",
+      "advances": 10
+    },
+    {
+      "name": "Endurance",
+      "advances": 10
+    },
+    {
+      "name": "Gamble",
+      "advances": 5
+    },
+    {
+      "name": "Gossip",
+      "advances": 5
+    },
+    {
+      "name": "Melee (Any)",
+      "advances": 5
+    },
+    {
+      "name": "Melee (Basic)",
+      "advances": 10
+    },
+    {
+      "name": "Outdoor Survival",
+      "advances": 5
+    },
+    {
+      "name": "Play (Drum or Fife)",
+      "advances": 10
+    },
+    {
+      "name": "Ranged (Any)",
+      "advances": 5
+    }
+  ],
+  "traits": [
+    {
+      "name": "Bite",
+      "inputValue": "4"
+    },
+    {
+      "name": "Cold Blood"
+    },
+    {
+      "name": "Infected"
+    },
+    {
+      "name": "Night Vision"
+    },
+    {
+      "name": "Tail Attack",
+      "inputValue": "7"
+    }
+  ],
+  "careers": [
+    {
+      "className": "Warriors",
+      "careerName": "Soldier",
+      "level": 2
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Lizardmen",
+        "name": "Obsinite Spiked Maul"
+      },
+      {
+        "category": "Basic",
+        "name": "Sword"
+      },
+      {
+        "category": "Polearm",
+        "name": "Spear"
+      },
+      {
+        "category": "Polearm",
+        "name": "Halberd"
+      },
+      {
+        "category": "Basic",
+        "name": "Shield"
+      }
+    ],
+    "ranged": []
+  },
+  "armour": [
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jack"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jerkin"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Leggings"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Skullcap"
+    }
+  ]
+}

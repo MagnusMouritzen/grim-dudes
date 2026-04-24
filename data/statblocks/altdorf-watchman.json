@@ -1,0 +1,172 @@
+{
+  "id": "altdorf-watchman",
+  "name": "Altdorf Watchman",
+  "templateId": "human",
+  "randomiseCharacteristics": false,
+  "characteristics": {
+    "WS": {
+      "base": 20,
+      "advances": 15,
+      "addition": 10
+    },
+    "BS": {
+      "base": 20,
+      "advances": 5,
+      "addition": 10
+    },
+    "S": {
+      "base": 20,
+      "advances": 5,
+      "addition": 10
+    },
+    "T": {
+      "base": 20,
+      "advances": 10,
+      "addition": 10
+    },
+    "I": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Ag": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Dex": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "Int": {
+      "base": 20,
+      "advances": 0,
+      "addition": 10
+    },
+    "WP": {
+      "base": 20,
+      "advances": 10,
+      "addition": 10
+    },
+    "Fel": {
+      "base": 20,
+      "advances": 5,
+      "addition": 10
+    }
+  },
+  "size": "Average",
+  "wounds": 15,
+  "movement": 4,
+  "skills": [
+    {
+      "name": "Athletics",
+      "advances": 10
+    },
+    {
+      "name": "Climb",
+      "advances": 10
+    },
+    {
+      "name": "Consume Alcohol",
+      "advances": 5
+    },
+    {
+      "name": "Cool",
+      "advances": 10
+    },
+    {
+      "name": "Dodge",
+      "advances": 10
+    },
+    {
+      "name": "Endurance",
+      "advances": 10
+    },
+    {
+      "name": "Gamble",
+      "advances": 5
+    },
+    {
+      "name": "Gossip",
+      "advances": 5
+    },
+    {
+      "name": "Melee (Any)",
+      "advances": 5
+    },
+    {
+      "name": "Melee (Basic)",
+      "advances": 10
+    },
+    {
+      "name": "Outdoor Survival",
+      "advances": 5
+    },
+    {
+      "name": "Perception",
+      "advances": 5
+    },
+    {
+      "name": "Play (Drum or Fife)",
+      "advances": 10
+    },
+    {
+      "name": "Ranged (Any)",
+      "advances": 5
+    }
+  ],
+  "careers": [
+    {
+      "className": "Burghers",
+      "careerName": "Watchman",
+      "level": 1
+    },
+    {
+      "className": "Warriors",
+      "careerName": "Soldier",
+      "level": 2
+    }
+  ],
+  "weapons": {
+    "melee": [
+      {
+        "category": "Basic",
+        "name": "Mace"
+      },
+      {
+        "category": "Polearm",
+        "name": "Halberd"
+      },
+      {
+        "category": "Basic",
+        "name": "Dagger"
+      }
+    ],
+    "ranged": [
+      {
+        "category": "Crossbow",
+        "name": "Crossbow",
+        "ammunition": "Bolt"
+      }
+    ]
+  },
+  "armour": [
+    {
+      "category": "Soft Leather",
+      "name": "Leather Jack"
+    },
+    {
+      "category": "Soft Leather",
+      "name": "Leather Leggings"
+    },
+    {
+      "category": "Plate",
+      "name": "Breastplate"
+    },
+    {
+      "category": "Plate",
+      "name": "Open Helm"
+    }
+  ]
+}

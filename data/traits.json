@@ -1,0 +1,498 @@
+[
+  {
+    "name": "Afraid",
+    "description": "The creature gains Fear(0) to the Target. See page 190 for Fear rules.",
+    "generic": true
+  },
+  {
+    "name": "Amphibious",
+    "description": "The creature is at home in water. It can add its Agility Bonus to the SL of all Swim Tests and move at full Movement through water.",
+    "generic": false
+  },
+  {
+    "name": "Analgesic Saliva",
+    "description": "The creature’s bites cause no pain, which allows it to attach to sleeping victims undetected. This effect wears off 10 – Toughness Bonus Rounds after the creature detaches.",
+    "generic": false
+  },
+  {
+    "name": "Anticoagulant Saliva",
+    "description": "The victim of the creature’s bite gains one Bleeding Condition.",
+    "generic": false
+  },
+  {
+    "name": "Aquatic",
+    "description": "The creature can breathe underwater and moves at its full Movement rate in water. It cannot move on land.",
+    "generic": false
+  },
+  {
+    "name": "Arboreal",
+    "description": "The creature is at home in the forests. In the woodlands, it adds its Agility Bonus to the SL of all Climb and Stealth Tests.",
+    "generic": false
+  },
+  {
+    "name": "Animosity",
+    "description": "The creature dislikes the Target. See page 190 for Animosity rules.",
+    "generic": true,
+    "input": "Target"
+  },
+  {
+    "name": "Armour",
+    "description": "The creature is protected by armour or thick hide. It has Rating Armour Points on all Hit Locations.",
+    "generic": true,
+    "input": "Rating"
+  },
+  {
+    "name": "Attach and Feed",
+    "description": "If the creature makes a successful Bite attack, it becomes attached to the victim, clamping tight with surprising force. It then extracts blood, causing the automatic loss of 1 Wound every Round it is attached. Victims reduced to zero Wounds gain an Unconscious Condition as they pass out from blood loss. The creature will only free itself when full, which happens after it has extracted its TB in Wounds; it then retreats to digest the meal. The creature can be pulled off with an Opposed Strength Test, but doing so inflicts 1 Wound on the victim. If the creature has the appropriate Trait, anything it fears makes it release its hold immediately.",
+    "generic": false
+  },
+  {
+    "name": "Belligerent",
+    "description": "The creature loves to win a fight. As long as it has more Advantage than its opponent, it is Immune to Psychology.",
+    "generic": false
+  },
+  {
+    "name": "Bestial",
+    "description": "The creature has no rational thought or language. It shies away from fire and gains a Broken Condition if struck by it. In defence, it only uses the Dodge Skill. If it loses more than half its Wounds, it will attempt to Flee unless protecting its young or cornered, or unless it has the Territorial Trait. If so, it enters Frenzy. Bestial creatures have no Fellowship characteristic.",
+    "generic": false
+  },
+  {
+    "name": "Big",
+    "description": "The creature is a large example of its species. It receives +10 Strength and Toughness, and –5 Agility.",
+    "generic": true
+  },
+  {
+    "name": "Bite",
+    "description": "On its turn, the creature may make a Free Attack by spending 1 Advantage. The Damage of the attack equals Rating and includes the creature’s Strength Bonus already.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Blessed",
+    "description": "The creature is Blessed and can enact Blessings; the relevant deity is indicated in brackets.",
+    "generic": false,
+    "input": "Various"
+  },
+  {
+    "name": "Bounce",
+    "description": "The creature can bounce high, perhaps with powerful limbs, magic, or stubby wings. When Charging or Running, it doubles its Movement Characteristic, and can ignore all intervening terrain and characters as it leap over them.",
+    "generic": false
+  },
+  {
+    "name": "Breath",
+    "description": "The creature’s breath is a powerful weapon. On its turn, for the cost of 2 Advantage, it can activate its Breath as a Free Attack. Choose 1 target it can see within 20+Toughness Bonus yards. All characters within Strength Bonus yards of that target are struck, as are all characters between the creature and the target. Perform an Opposed Ballistic Skill/Dodge Test against all affected targets (the creature’s single roll opposed by each individual target). All targets that fail take Damage equal to the attack’s Rating. Further, if the Trait is marked with any of the following types in brackets, apply the associated rules.\n- Cold: Targets gain a Stunned Condition for every full 5 Wounds suffered (minimum of 1).\n- Corrosion: All Armour and Weapons carried by affected targets suffer 1 Damage.\n- Fire: Any Wounds caused ignore Armour Points. Targets gain an Ablaze Condition.\n- Electricity: Any Wounds caused ignore Armour Points. Targets gain a Stunned Condition.\n- Poison: Any Wounds caused ignore Armour Points. Targets gain a Poisoned Condition.\n- Smoke: The area fills with smoke, blocking Line of Sight for Toughness Bonus Rounds.",
+    "generic": false,
+    "input": "Type"
+  },
+  {
+    "name": "Brute",
+    "description": "The creature is heavy and brutish. It receives –1 Movement, –10 Agility, and +10 Strength and Toughness.",
+    "generic": true,
+    "effects": {
+      "movement": -1,
+      "characteristics": { "Ag": -10, "S": 10, "T": 10 }
+    }
+  },
+  {
+    "name": "Capricious",
+    "description": "The creature’s temper swings from one extreme to the other. When any creature makes a Fellowship Test in dealing with the creature, roll 1d10: 1: –2 SL; 2–3: –1 SL; 4–7: no change; 8–9: +1 SL; 10: +2 SL.",
+    "generic": false
+  },
+  {
+    "name": "Chameleon",
+    "description": "The creature can change colour to blend into its surroundings. Perception Tests to spot it suffer –4 SL (–2 if moving). Shooting at it suffers –2 SL.",
+    "generic": false
+  },
+  {
+    "name": "Champion",
+    "description": "If it wins an Opposed Test when defending in melee combat, it can cause Damage as if it were the attacker.",
+    "generic": false
+  },
+  {
+    "name": "Chill Grasp",
+    "description": "For 2 Advantage and its Action, it may attempt an Opposed Weapon Skill/Melee or Dodge Test. If successful, the target loses 1d10 + SL Wounds ignoring Toughness Bonus and Armour Points. Magical.",
+    "generic": false
+  },
+  {
+    "name": "Clever",
+    "description": "Receives +20 Intelligence and +10 Initiative.",
+    "generic": true
+  },
+  {
+    "name": "Cold-blooded",
+    "description": "It can reverse all failed Willpower Tests.",
+    "generic": false
+  },
+  {
+    "name": "Constrictor",
+    "description": "Successful hits give the target an Entangled Condition and may initiate a Grapple.",
+    "generic": false
+  },
+  {
+    "name": "Construct",
+    "description": "Has no Intelligence, Willpower, or Fellowship. Uses Strength Bonus when Willpower Bonus is required for Wounds. All attacks are Magical.",
+    "generic": false
+  },
+  {
+    "name": "Corrosive Blood",
+    "description": "When Wounded, Engaged targets take 1d10 Wounds modified by Toughness Bonus and Armour Points (minimum 1).",
+    "generic": false
+  },
+  {
+    "name": "Corruption",
+    "description": "The creature is tainted by Chaos. Strength marked in brackets. See page 182.",
+    "generic": false,
+    "input": "Strength"
+  },
+  {
+    "name": "Cunning",
+    "description": "Receives +10 Fellowship, Intelligence, and Initiative.",
+    "generic": true
+  },
+  {
+    "name": "Creeping",
+    "description": "Cannot take Run actions.",
+    "generic": false
+  },
+  {
+    "name": "Dark Vision",
+    "description": "Can see in darkness as daylight.",
+    "generic": false
+  },
+  {
+    "name": "Daemonic",
+    "description": "All attacks are Magical. After any blow, roll 1d10; if the roll equals or exceeds the Target number, the blow is ignored. At 0 Wounds it returns to the Realms of Chaos.",
+    "generic": false,
+    "input": "Target"
+  },
+  {
+    "name": "Die Hard",
+    "description": "Critical Wounds not resulting in death can be healed by reattaching parts. After death, may attempt Endurance Tests for Toughness Bonus Rounds to return with 1 Wound.",
+    "generic": false
+  },
+  {
+    "name": "Disease",
+    "description": "Carries the listed disease. Others must Test for Contraction as appropriate.",
+    "generic": false,
+    "input": "Type"
+  },
+  {
+    "name": "Distracting",
+    "description": "Living targets within Toughness Bonus yards suffer –20 to all Tests (only once regardless of multiple sources).",
+    "generic": false
+  },
+  {
+    "name": "Elite",
+    "description": "Receives +20 Weapon Skill, Ballistic Skill, and Willpower.",
+    "generic": true
+  },
+  {
+    "name": "Engulf",
+    "description": "Successful attacks may engulf victims, inflicting Entangled and automatic Wound loss each Round.",
+    "generic": false
+  },
+  {
+    "name": "Ethereal",
+    "description": "Can pass through solid objects. Can only be harmed by Magical attacks.",
+    "generic": false
+  },
+  {
+    "name": "Fast",
+    "description": "Receives +1 Movement and +10 Agility.",
+    "generic": true
+  },
+  {
+    "name": "Fear",
+    "description": "Causes supernatural Fear equal to Rating.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Flight",
+    "description": "May fly up to Rating yards. Ignores terrain. Ranged attacks against it suffer –20 while flying.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Frenzy",
+    "description": "Can Frenzy. See page 190.",
+    "generic": false
+  },
+  {
+    "name": "Fury",
+    "description": "May expend Advantage to gain Hatred or Frenzy.",
+    "generic": false
+  },
+  {
+    "name": "Ghostly Howl",
+    "description": "Spend all Advantage (min 2) to affect living targets within Initiative yards: 3 Deafened, 1d10 Wounds ignoring TB/AP, and possible Broken Condition.",
+    "generic": false
+  },
+  {
+    "name": "Grim",
+    "description": "If it begins its turn below Rating Advantage, it increases to Rating unless Surprised, Unconscious, or Entangled.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Hallucinogen",
+    "description": "Victims within 2 yards must pass Average Willpower or gain Stunned Conditions per level of failure.",
+    "generic": false
+  },
+  {
+    "name": "Hardy",
+    "description": "Increase Wounds by Toughness Bonus (before Size modifiers).",
+    "generic": true,
+    "effects": {
+      "wounds": { "addBonus": "T" }
+    }
+  },
+  {
+    "name": "Hatred",
+    "description": "Really hates the Target. See page 190.",
+    "generic": true,
+    "input": "Target"
+  },
+  {
+    "name": "Horns",
+    "description": "When gaining Advantage for Charging, the creature may make a Free Attack with its Horns using Rating to calculate Damage (Strength Bonus already included).",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Hungry",
+    "description": "If it kills or incapacitates a living opponent (or encounters a fresh body), it must pass an Average (+20) Willpower Test or feast, losing its next Action and Move.",
+    "generic": false
+  },
+  {
+    "name": "Immunity",
+    "description": "Completely immune to a certain type of Damage (e.g., poison, magic, electricity). All Damage of that type, including Critical Wounds, is ignored.",
+    "generic": false,
+    "input": "Type"
+  },
+  {
+    "name": "Immunity to Psychology",
+    "description": "Ignores the Psychology rules.",
+    "generic": false
+  },
+  {
+    "name": "Infected",
+    "description": "If it causes a living opponent to lose Wounds, the victim must pass an Easy (+40) Endurance Test or contract a Festering Wound.",
+    "generic": false
+  },
+  {
+    "name": "Infestation",
+    "description": "Opponents suffer –10 to hit it in melee combat as parasites distract them.",
+    "generic": false
+  },
+  {
+    "name": "Leader",
+    "description": "Receives +10 Fellowship and Willpower. Cannot be taken by creatures with the Bestial Trait.",
+    "generic": true
+  },
+  {
+    "name": "Magical",
+    "description": "All its attacks count as Magical.",
+    "generic": false
+  },
+  {
+    "name": "Magic Resistance",
+    "description": "The SL of any spell affecting it is reduced by Rating.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Markings",
+    "description": "The creature bears special markings such as Marks of the Old Ones or Marks of Chaos.",
+    "generic": false
+  },
+  {
+    "name": "Mental Corruption",
+    "description": "Roll on the Mental Corruption Table (page 185).",
+    "generic": false
+  },
+  {
+    "name": "Miracles",
+    "description": "Can enact Miracles; the relevant deity is indicated in brackets.",
+    "generic": false,
+    "input": "Various"
+  },
+  {
+    "name": "Mutation",
+    "description": "Roll on the Physical Corruption Table (page 184).",
+    "generic": false
+  },
+  {
+    "name": "Night Vision",
+    "description": "Has the Night Vision Talent.",
+    "generic": false
+  },
+  {
+    "name": "Painless",
+    "description": "Ignores non-amputation penalties from Critical Wounds (Conditions still apply).",
+    "generic": false
+  },
+  {
+    "name": "Petrifying Gaze",
+    "description": "Spend all Advantage (min 1) to Oppose Ballistic Skill vs Initiative (or Language (Magick)). Target gains 1 Stunned per 2 SL by which it wins; at 6+ SL, target turns to stone permanently.",
+    "generic": false
+  },
+  {
+    "name": "Prejudice",
+    "description": "Dislikes the Target. See page 190.",
+    "generic": true,
+    "input": "Target"
+  },
+  {
+    "name": "Ranged",
+    "description": "Has a ranged weapon that does Rating Damage; range in yards marked in brackets.",
+    "generic": false,
+    "input": "Rating (Range)"
+  },
+  {
+    "name": "Rear",
+    "description": "For its Move, may make a Stomp attack if larger than its opponent.",
+    "generic": false
+  },
+  {
+    "name": "Regenerate",
+    "description": "At start of each round, regenerates 1d10 Wounds if above 0. At 0 Wounds, regains 1 Wound on 8+. Fire Damage cannot be regenerated.",
+    "generic": false
+  },
+  {
+    "name": "Skittish",
+    "description": "If exposed to magic or loud noises, it receives +3 Broken Conditions.",
+    "generic": false
+  },
+  {
+    "name": "Spellcaster",
+    "description": "Can cast spells; the specific Lore of Magic is indicated in brackets.",
+    "generic": false,
+    "input": "Various"
+  },
+  {
+    "name": "Stealthy",
+    "description": "Adds its Agility Bonus to the SL of all Stealth Tests.",
+    "generic": false
+  },
+  {
+    "name": "Stride",
+    "description": "Multiply Run Movement by 1.5 when Running.",
+    "generic": false
+  },
+  {
+    "name": "Stupid",
+    "description": "If not guided by allies without this Trait, must pass an Easy (+40) Intelligence Test each round or lose both Move and Action.",
+    "generic": false
+  },
+  {
+    "name": "Swamp-strider",
+    "description": "Suffers no Movement penalties for moving through boggy ground.",
+    "generic": false
+  },
+  {
+    "name": "Swarm",
+    "description": "Counts as a single Creature made of many individuals. Ignores Psychology and Engaged rules for movement, gains +10 Weapon Skill, has five times normal Wounds, and causes automatic Wound loss to Engaged opponents.",
+    "generic": false
+  },
+  {
+    "name": "Tail Attack",
+    "description": "May make a Free Attack by spending 1 Advantage. Deals Rating Damage (Strength Bonus included). Smaller targets suffering Wounds also gain Prone.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Telepathy",
+    "description": "Can transmit and read thoughts. Targets may resist with an Average (+20) Cool Test.",
+    "generic": false
+  },
+  {
+    "name": "Tentacles",
+    "description": "Has a number of tentacles equal to the given value. Gains one Free Attack per tentacle. Each attack deals Rating Damage and may cause Entangled, initiating a Grapple.",
+    "generic": false,
+    "input": "# (Rating)"
+  },
+  {
+    "name": "Territorial",
+    "description": "Protects a specific area and will fight to the death to defend it. Does not normally pursue enemies beyond this area.",
+    "generic": false
+  },
+  {
+    "name": "Terror",
+    "description": "Causes supernatural Terror at the Rating given.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Trained",
+    "description": "Represents animals trained in specific skills listed in brackets (e.g., Broken, Drive, Entertain, Fetch, Guard, Home, Magic, Mount, War).",
+    "generic": false,
+    "input": "Trained Skills"
+  },
+  {
+    "name": "Tongue Attack",
+    "description": "May make a Free ranged attack by spending 1 Advantage. Deals Rating Damage (range in brackets). On hit, target gains Entangled and may be dragged into Engaged range.",
+    "generic": false,
+    "input": "Rating (Range)"
+  },
+  {
+    "name": "Tough",
+    "description": "Receives +10 Toughness and Willpower.",
+    "generic": true
+  },
+  {
+    "name": "Tracker",
+    "description": "Adds SL equal to its Initiative Bonus to all Track Tests.",
+    "generic": false
+  },
+  {
+    "name": "Undead",
+    "description": "Not reliant on normal life prerequisites such as air, food, or water. Often interacts with abilities affecting Undead specifically.",
+    "generic": false
+  },
+  {
+    "name": "Unstable",
+    "description": "If engaged with opponents with higher Advantage at end of Round, loses Wounds equal to the Advantage difference. At 0 Wounds, collapses.",
+    "generic": false
+  },
+  {
+    "name": "Vampiric",
+    "description": "Heals Wounds equal to those inflicted by a successful Bite attack. This is the only way it can heal.",
+    "generic": false
+  },
+  {
+    "name": "Venom",
+    "description": "When it causes Wounds, the target gains a Poisoned Condition. If no Difficulty is listed, it is Challenging.",
+    "generic": false,
+    "input": "Difficulty"
+  },
+  {
+    "name": "Vomit",
+    "description": "Spend 3 Advantage to make a Free Attack against a target within Toughness Bonus yards; nearby targets are also hit. Opposed Ballistic Skill/Dodge Test. Losers suffer Damage equal to Toughness Bonus +4 and gain Stunned. Armour and Weapons suffer 1 Damage.",
+    "generic": false
+  },
+  {
+    "name": "Ward",
+    "description": "After any blow is received, roll 1d10; if the result equals or exceeds Rating, the blow is ignored.",
+    "generic": false,
+    "input": "Rating"
+  },
+  {
+    "name": "Wallcrawler",
+    "description": "Moves at full Movement across vertical surfaces and ceilings and automatically passes all Climb Tests.",
+    "generic": false
+  },
+  {
+    "name": "Weapon",
+    "description": "Carries a melee weapon or natural weapon. Causes Damage equal to Rating (Strength Bonus included).",
+    "generic": true,
+    "input": "Rating"
+  },
+  {
+    "name": "Web",
+    "description": "On a successful hit, opponents gain 1 Entangled Condition with Strength equal to Rating.",
+    "generic": false,
+    "input": "Rating"
+  }
+]
+

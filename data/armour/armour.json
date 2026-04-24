@@ -1,0 +1,38 @@
+{
+  "categories": [
+    {
+      "name": "Soft Leather",
+      "items": [
+        { "name": "Leather Jack", "locations": ["Arms", "Body"], "aps": 1, "qualitiesAndFlaws": [] },
+        { "name": "Leather Jerkin", "locations": ["Body"], "aps": 1, "qualitiesAndFlaws": [] },
+        { "name": "Leather Leggings", "locations": ["Legs"], "aps": 1, "qualitiesAndFlaws": [] },
+        { "name": "Leather Skullcap", "locations": ["Head"], "aps": 1, "qualitiesAndFlaws": ["Partial"] }
+      ]
+    },
+    {
+      "name": "Boiled Leather",
+      "items": [
+        { "name": "Breastplate", "locations": ["Body"], "aps": 2, "qualitiesAndFlaws": ["Weakpoints"] }
+      ]
+    },
+    {
+      "name": "Mail",
+      "items": [
+        { "name": "Mail Chausses", "locations": ["Legs"], "aps": 2, "qualitiesAndFlaws": ["Flexible"] },
+        { "name": "Mail Coat", "locations": ["Arms", "Body"], "aps": 2, "qualitiesAndFlaws": ["Flexible"] },
+        { "name": "Mail Coif", "locations": ["Head"], "aps": 2, "qualitiesAndFlaws": ["Flexible", "Partial"] },
+        { "name": "Mail Shirt", "locations": ["Body"], "aps": 2, "qualitiesAndFlaws": ["Flexible"] }
+      ]
+    },
+    {
+      "name": "Plate",
+      "items": [
+        { "name": "Breastplate", "locations": ["Body"], "aps": 2, "qualitiesAndFlaws": ["Impenetrable", "Weakpoints"] },
+        { "name": "Open Helm", "locations": ["Head"], "aps": 2, "qualitiesAndFlaws": ["Partial"] },
+        { "name": "Bracers", "locations": ["Arms"], "aps": 2, "qualitiesAndFlaws": ["Impenetrable", "Weakpoints"] },
+        { "name": "Plate Leggings", "locations": ["Legs"], "aps": 2, "qualitiesAndFlaws": ["Impenetrable", "Weakpoints"] },
+        { "name": "Helm", "locations": ["Head"], "aps": 2, "qualitiesAndFlaws": ["Impenetrable", "Weakpoints"] }
+      ]
+    }
+  ]
+}

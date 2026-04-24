@@ -1,93 +1,112 @@
 # Grim Dudes
 
-An interactive editor for creating and viewing **Warhammer Fantasy Roleplay 4th Edition** stat blocks. Lightweight Node.js + React app, suitable for running on a Raspberry Pi.
+An interactive editor for creating and viewing **Warhammer Fantasy Roleplay 4th Edition** stat blocks.
+
+The **current app** is **Next.js 15** (App Router, TypeScript, Tailwind) and is intended to deploy on **[Vercel](https://vercel.com)** with **[Upstash Redis](https://upstash.com)** for stat block storage. The JSON API matches the legacy Express routes (`/api/statblocks`, reference data under `/api/skills`, etc.).
+
 Created with Cursor.ai.
 
 ## What you need
 
-- **Node.js** (v18 or v20 LTS recommended) — [nodejs.org](https://nodejs.org)
+- **Node.js** (v20 LTS recommended) — [nodejs.org](https://nodejs.org)
 - **npm** (comes with Node)
+- **Upstash Redis** — REST URL and token for stat block CRUD (local and production)
 
-No database: stat blocks are stored as JSON files in `server/data/`.
+Bundled reference data (skills, traits, weapons, templates, …) lives under **`data/`** at the repo root (copied from the old `server/data` layout).
 
-## Run the project
+## Environment
 
-### Development (client + server with hot reload)
+Copy `.env.example` to `.env.local` and set:
 
-1. Install dependencies (once):
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+
+Optional:
+
+- `REDIS_KEY_PREFIX` — e.g. `preview:` so Preview deployments do not share keys with Production.
+
+On Vercel, add the same variables in **Project → Settings → Environment Variables** (use different Upstash databases or prefixes for Preview vs Production if you want isolated data).
+
+## Run the project (Next.js)
+
+1. Install dependencies:
 
    ```bash
    npm install
-   cd client && npm install && cd ..
-   cd server && npm install && cd ..
    ```
 
-2. Start both the API server and the React dev server:
+2. Configure `.env.local` (see above).
+
+3. Development server:
 
    ```bash
    npm run dev
    ```
 
-3. Open **http://localhost:5173** in your browser. The Vite dev server proxies `/api` to the backend on port 3000.
+4. Open **http://localhost:3000**.
 
-### Production (e.g. on a Raspberry Pi)
-
-1. Build the React app and run only the Node server:
-
-   ```bash
-   npm install
-   cd client && npm install && npm run build && cd ..
-   cd server && npm install && cd ..
-   npm run preview
-   ```
-
-2. Open **http://localhost:3000** (or your Pi’s IP). The server serves the built frontend and the API.
-
-To allow access from another PC on your network:
-
-- Find this machine’s IP (e.g. `ip addr` or `hostname -I` on Linux, or your router’s DHCP list).
-- On the other PC, open `http://<this-machine-ip>:3000` (e.g. `http://192.168.1.10:3000`).
-- If your firewall blocks port 3000, allow it (e.g. `sudo ufw allow 3000` on Linux).
-
-For development (`npm run dev`), use **http://\<this-machine-ip\>:5173** from another PC; the dev server is bound to all interfaces.
-
-To use a different port:
+### Production build locally
 
 ```bash
-PORT=8080 npm run preview
+npm run build
+npm start
 ```
 
-## Scripts
+## Migrate JSON stat blocks into Redis
 
-| Script      | Description |
-|------------|-------------|
-| `npm run dev` | Runs server (port 3000) and Vite dev server (port 5173). Use for development. |
-| `npm run server` | Runs only the backend. |
-| `npm run client` | Runs only the Vite dev server (from `client/`). |
-| `npm run build` | Builds the React app into `client/dist/`. |
-| `npm run preview` | Builds the client then starts the server (serves app on port 3000). |
+If you have files under `data/statblocks/*.json` (or legacy `server/data/statblocks/`), load them into Upstash once:
+
+```bash
+npm run migrate:statblocks
+```
+
+The script reads `.env.local` and writes each file with `SET` plus index membership, using the same slug rules as the API.
+
+## Scripts (root)
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Next.js dev server (port 3000). |
+| `npm run build` | Production build. |
+| `npm run start` | Run production server after `build`. |
+| `npm test` | Vitest (stat block helpers). |
+| `npm run migrate:statblocks` | One-off: JSON files → Redis. |
 
 ## Project layout
 
-- `server/` — Express API: serves JSON stat blocks from `server/data/`, saves new ones via POST.
-- `client/` — React (Vite) + Tailwind; bestiary list, stat block view, and new stat block editor.
-- `server/data/` — JSON files (e.g. `skeleton.json`, `rat-catcher.json`). Add or edit files here or via the “New Stat Block” form.
+- **`app/`** — App Router pages and **`app/api/*`** route handlers.
+- **`src/components/`** — Client UI (ported from the old Vite app).
+- **`src/lib/`** — Redis access, validation (Zod), reference data readers, stat block utilities.
+- **`data/`** — Bundled JSON (skills, traits, weapons, armour, careers, templates, sample stat blocks for migration).
+
+## Legacy stack (`client/` + `server/`)
+
+The original **Vite + Express** app is still in the repo for reference:
+
+- **`server/`** — Express API and former file-based stat blocks under `server/data/`.
+- **`client/`** — React (Vite); dev server on 5173 with `/api` proxy to port 3000.
+
+Use the root **`npm`** scripts above for the Next.js app; the legacy app used separate `npm install` in `client/` and `server/` and different root scripts (see git history if you need them).
 
 ## Stat block format
 
-Each JSON file in `server/data/` can have:
+Each stat block in Redis (or a `.json` file under `data/statblocks/`) is a JSON object. Common fields:
 
 - `id`, `name`
-- `characteristics`: `WS`, `BS`, `S`, `T`, `I`, `Ag`, `Dex`, `Int`, `WP`, `Fel` (numbers)
-- `wounds`, `movement`
-- `skills`: array of `{ \"name\": string, \"advances\": number }`
+- `characteristics`: for plain NPCs, each of `WS`, `BS`, `S`, `T`, `I`, `Ag`, `Dex`, `Int`, `WP`, `Fel` is a **number**. For template-based PCs/creatures, each can instead be `{ "base": number, "advances": number, "addition": number }` plus optional `templateId` and `randomiseCharacteristics`.
+- `size` — e.g. `Average` (used with characteristics to derive wounds in the UI).
+- `wounds`, `movement` — numbers; `wounds` is kept in sync with the trait-aware formula when saved from the editor.
+- `skills`: `[{ "name": string, "advances": number }, ...]`
 - `talents`: array of strings
-- `traits`: array of strings (names that exist in `traits.json`)
-- `armour`, `weapons`: strings
+- `traits`: array of trait names as strings, or `{ "name": string, "inputValue"?: string }` when a trait needs a value (see `data/traits.json`).
+- `tags`: optional string array for bestiary search/filter (comma-separated in the editor).
+- `careers`: optional `[{ "className", "careerName", "level" }, ...]`
+- `weapons`: either a **string** (legacy free text) or `{ "melee": [...], "ranged": [...] }` with `{ "category", "name", "ammunition"? }` entries matching `data/weapons/`.
+- `armour`: either a **string** (legacy) or an array of `{ "category", "name" }` matching `data/armour/`.
 
 Reference data:
 
-- `server/data/skills.json` — list of all skills and their associated characteristic.
-- `server/data/traits.json` — list of all traits and their descriptions.
+- `data/skills.json` — skills and their linked characteristic.
+- `data/traits.json` — trait names, descriptions, and optional mechanical `effects`.
 
-Example: see `server/data/skeleton.json` or `server/data/chaos-warrior.json`.
+Example stat blocks: `data/statblocks/human-thug.json`, `data/statblocks/dog.json`.

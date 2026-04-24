@@ -1,0 +1,46 @@
+{
+  "categories": [
+    {
+      "name": "Blackpowder",
+      "ammunition": [
+        { "name": "Bullet", "damage": 1, "qualitiesAndFlaws": ["Impale", "Penetrating"], "range": 0 },
+        { "name": "Improvised Shot", "damage": 0, "qualitiesAndFlaws": [], "range": -10 },
+        { "name": "Small Shot", "damage": 0, "qualitiesAndFlaws": ["Blast 1"], "range": 0 }
+      ]
+    },
+    {
+      "name": "Engineering",
+      "ammunition": [
+        { "name": "Bullet", "damage": 1, "qualitiesAndFlaws": ["Impale", "Penetrating"], "range": 0 },
+        { "name": "Improvised Shot", "damage": 0, "qualitiesAndFlaws": [], "range": -10 },
+        { "name": "Small Shot", "damage": 0, "qualitiesAndFlaws": ["Blast 1"], "range": 0 }
+      ]
+    },
+    {
+      "name": "Bow",
+      "ammunition": [
+        { "name": "Arrow", "damage": 0, "qualitiesAndFlaws": ["Impale"], "range": 0 },
+        { "name": "Elf Arrow", "damage": 1, "qualitiesAndFlaws": ["Accurate", "Impale", "Penetrating"], "range": 50 }
+      ]
+    },
+    {
+      "name": "Crossbow",
+      "ammunition": [
+        { "name": "Bolt", "damage": 0, "qualitiesAndFlaws": ["Impale"], "range": 0 }
+      ]
+    },
+    {
+      "name": "Sling",
+      "ammunition": [
+        { "name": "Lead Bullet", "damage": 1, "qualitiesAndFlaws": ["Pummel"], "range": -10 },
+        { "name": "Stone Bullet", "damage": 0, "qualitiesAndFlaws": ["Pummel"], "range": 0 }
+      ]
+    },
+    {
+      "name": "Lizardmen",
+      "ammunition": [
+        { "name": "Blowpipe Dart", "damage": 1, "qualitiesAndFlaws": [], "range": 0 }
+      ]
+    }
+  ]
+}

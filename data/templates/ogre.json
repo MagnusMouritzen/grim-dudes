@@ -1,0 +1,27 @@
+{
+    "id": "ogre",
+    "name": "Ogre",
+    "characteristics": {
+      "WS": 20,
+      "BS": 10,
+      "S": 35,
+      "T": 35,
+      "I": 0,
+      "Ag": 15,
+      "Dex": 10,
+      "Int": 10,
+      "WP": 20,
+      "Fel": 10
+    },
+    "size": "Large",
+    "movement": 6,
+    "talents": [],
+    "traits": {
+      "base": ["Hungry", "Prejudice (Thin People)", "Night Vision"],
+      "optional": ["Belligerent", "Infected", "Tracker"]
+    },
+    "armour": "",
+    "weapons": ""
+  }
+  
+  

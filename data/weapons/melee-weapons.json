@@ -1,0 +1,86 @@
+{
+  "categories": [
+    {
+      "name": "Basic",
+      "weapons": [
+        { "name": "Axe", "damage": 4, "qualitiesAndFlaws": ["Hack", "Unbalanced"], "reach": "Average", "sbDamage": true },
+        { "name": "Ballock Knife", "damage": 1, "qualitiesAndFlaws": ["Impale", "Penetrating", "Precise"], "reach": "Very Short", "sbDamage": true },
+        { "name": "Club", "damage": 4, "qualitiesAndFlaws": ["Undamaging", "Unbalanced"], "reach": "Average", "sbDamage": true },
+        { "name": "Dagger", "damage": 2, "qualitiesAndFlaws": [], "reach": "Very Short", "sbDamage": true },
+        { "name": "Improvised Weapon", "damage": 1, "qualitiesAndFlaws": ["Undamaging", "Unbalanced"], "reach": "Average", "sbDamage": true },
+        { "name": "Knife", "damage": 1, "qualitiesAndFlaws": ["Undamaging"], "reach": "Very Short", "sbDamage": true },
+        { "name": "Mace", "damage": 4, "qualitiesAndFlaws": ["Pummel", "Unbalanced"], "reach": "Average", "sbDamage": true },
+        { "name": "Military Pick", "damage": 4, "qualitiesAndFlaws": ["Penetrating", "Unbalanced"], "reach": "Average", "sbDamage": true },
+        { "name": "Scimitar", "damage": 4, "qualitiesAndFlaws": ["Slash"], "reach": "Short", "sbDamage": true },
+        { "name": "Sword", "damage": 4, "qualitiesAndFlaws": [], "reach": "Average", "sbDamage": true },
+        { "name": "Warhammer", "damage": 4, "qualitiesAndFlaws": ["Unbalanced", "Pummel", "Penetrating"], "reach": "Average", "sbDamage": true },
+        { "name": "Shield (Buckler)", "damage": 1, "qualitiesAndFlaws": ["Shield 1", "Defensive", "Undamaging"], "reach": "Personal", "sbDamage": true },
+        { "name": "Shield", "damage": 2, "qualitiesAndFlaws": ["Shield 2", "Defensive", "Undamaging"], "reach": "Very Short", "sbDamage": true },
+        { "name": "Shield (Large)", "damage": 3, "qualitiesAndFlaws": ["Shield 3", "Defensive", "Undamaging"], "reach": "Very Short", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Cavalry",
+      "weapons": [
+        { "name": "Cavalry Hammer", "damage": 5, "qualitiesAndFlaws": ["Pummel"], "reach": "Long", "sbDamage": true },
+        { "name": "Lance", "damage": 6, "qualitiesAndFlaws": ["Impact", "Impale"], "reach": "Very Long", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Fencing",
+      "weapons": [
+        { "name": "Foil", "damage": 3, "qualitiesAndFlaws": ["Fast", "Impale", "Precise", "Undamaging"], "reach": "Medium", "sbDamage": true },
+        { "name": "Rapier", "damage": 4, "qualitiesAndFlaws": ["Fast", "Impale"], "reach": "Long", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Brawling",
+      "weapons": [
+        { "name": "Unarmed", "damage": 0, "qualitiesAndFlaws": ["Undamaging"], "reach": "Personal", "sbDamage": true },
+        { "name": "Knuckledusters", "damage": 2, "qualitiesAndFlaws": [], "reach": "Personal", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Flail",
+      "weapons": [
+        { "name": "Grain Flail", "damage": 3, "qualitiesAndFlaws": ["Distract", "Imprecise", "Wrap"], "reach": "Average", "sbDamage": true },
+        { "name": "Flail", "damage": 5, "qualitiesAndFlaws": ["Distract", "Wrap"], "reach": "Average", "sbDamage": true },
+        { "name": "Military Flail", "damage": 6, "qualitiesAndFlaws": ["Distract", "Impact", "Tiring", "Wrap"], "reach": "Long", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Parry",
+      "weapons": [
+        { "name": "Main Gauche", "damage": 2, "qualitiesAndFlaws": ["Defensive"], "reach": "Very Short", "sbDamage": true },
+        { "name": "Swordbreaker", "damage": 3, "qualitiesAndFlaws": ["Defensive", "Trap-blade"], "reach": "Short", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Polearm",
+      "weapons": [
+        { "name": "Halberd", "damage": 4, "qualitiesAndFlaws": ["Defensive", "Hack", "Impale"], "reach": "Long", "sbDamage": true },
+        { "name": "Pollaxe", "damage": 4, "qualitiesAndFlaws": ["Defensive", "Hack", "Impale", "Pummel"], "reach": "Very Long", "sbDamage": true },
+        { "name": "Spear", "damage": 4, "qualitiesAndFlaws": ["Impale"], "reach": "Very Long", "sbDamage": true },
+        { "name": "Pike", "damage": 4, "qualitiesAndFlaws": ["Impale"], "reach": "Massive", "sbDamage": true },
+        { "name": "Quarter Staff", "damage": 4, "qualitiesAndFlaws": ["Defensive", "Pummel"], "reach": "Long", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Two-handed",
+      "weapons": [
+        { "name": "Bastard Sword", "damage": 5, "qualitiesAndFlaws": ["Damaging", "Defensive"], "reach": "Long", "sbDamage": true },
+        { "name": "Great Axe", "damage": 6, "qualitiesAndFlaws": ["Hack", "Impact", "Tiring"], "reach": "Long", "sbDamage": true },
+        { "name": "Pick", "damage": 5, "qualitiesAndFlaws": ["Damaging", "Impale", "Slow"], "reach": "Average", "sbDamage": true },
+        { "name": "Warhammer Maul", "damage": 6, "qualitiesAndFlaws": ["Damaging", "Pummel", "Slow"], "reach": "Average", "sbDamage": true },
+        { "name": "Zweihänder", "damage": 5, "qualitiesAndFlaws": ["Damaging", "Hack"], "reach": "Long", "sbDamage": true }
+      ]
+    },
+    {
+      "name": "Lizardmen",
+      "weapons": [
+        { "name": "Obsinite Club", "damage": 3, "qualitiesAndFlaws": ["Penetrating"], "reach": "Short", "sbDamage": true },
+        { "name": "Obsinite Spiked Maul", "damage": 4, "qualitiesAndFlaws": ["Penetrating", "Pummel"], "reach": "Average", "sbDamage": true }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,563 @@
+{
+  "classes": [
+    {
+      "name": "Academics",
+      "careers": [
+        {
+          "name": "Scholar",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Student",
+              "status": "Brass 3",
+              "skills": ["Consume Alcohol", "Entertain (Storytelling)", "Gamble", "Gossip", "Haggle", "Language (Classical)", "Lore (Any)", "Research"],
+              "characteristics": ["T", "Int", "WP"],
+              "talents": ["Carouser", "Read/Write", "Savvy", "Super Numerate"],
+              "trappings": ["Alcohol", "Book", "Opinions", "Writing Kit"]
+            },
+            {
+              "level": 2,
+              "name": "Scholar",
+              "status": "Silver 2",
+              "skills": ["Art (Writing)", "Intuition", "Language (Any)", "Lore (Any)", "Perception", "Trade (Any)"],
+              "characteristics": ["I"],
+              "talents": ["Bookish", "Etiquette (Scholars)", "Speedreader", "Suave"],
+              "trappings": ["Access to a Library", "Degree"]
+            },
+            {
+              "level": 3,
+              "name": "Fellow",
+              "status": "Silver 5",
+              "skills": ["Entertain (Lecture)", "Intimidate", "Language (Any)", "Lore (Any)"],
+              "characteristics": ["Fel"],
+              "talents": ["Linguistics", "Public Speaker", "Savant (Any)", "Tower of Memories"],
+              "trappings": ["Mortarboard", "Robes"]
+            },
+            {
+              "level": 4,
+              "name": "Professor",
+              "status": "Gold 1",
+              "skills": ["Entertain (Rhetoric)", "Lore (Any)"],
+              "characteristics": ["Dex"],
+              "talents": ["Magnum Opus", "Master Orator", "Savant (Any)", "Sharp"],
+              "trappings": ["Study"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Burghers",
+      "careers": [
+        {
+          "name": "Watchman",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Watch Recruit",
+              "status": "Brass 3",
+              "skills": ["Athletics", "Climb", "Consume Alcohol", "Dodge", "Endurance", "Gamble", "Melee (Any)", "Perception"],
+              "characteristics": ["WS", "S", "Fel"],
+              "talents": ["Drilled", "Hardy", "Strike to Stun", "Tenacious"],
+              "trappings": ["Hand Weapon", "Leather Jack", "Uniform"]
+            },
+            {
+              "level": 2,
+              "name": "Watchman",
+              "status": "Silver 1",
+              "skills": ["Charm", "Cool", "Gossip", "Intimidate", "Intuition", "Lore (Local)"],
+              "characteristics": ["WP"],
+              "talents": ["Break and Enter", "Criminal", "Night Vision", "Sprinter"],
+              "trappings": ["Lantern and Pole", "Lamp Oil", "Copper Badge"]
+            },
+            {
+              "level": 3,
+              "name": "Watch Sergeant",
+              "status": "Silver 3",
+              "skills": ["Entertain (Storytelling)", "Haggle", "Leadership", "Lore (Law)"],
+              "characteristics": ["I"],
+              "talents": ["Disarm", "Etiquette (Soldiers)", "Fearless (Criminals)", "Nose for Trouble"],
+              "trappings": ["Breastplate", "Helm", "Symbol of Rank"]
+            },
+            {
+              "level": 4,
+              "name": "Watch Captain",
+              "status": "Gold 1",
+              "skills": ["Lore (Politics)", "Ride (Horse)"],
+              "characteristics": ["Int"],
+              "talents": ["Public Speaker", "Robust", "Kingpin", "Schemer"],
+              "trappings": ["Riding Horse with Saddle and Tack", "Quality Hat", "Quality Hand Weapon", "Quality Symbol of Rank"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Courtiers",
+      "careers": [
+        {
+          "name": "Duellist",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Fencer",
+              "status": "Silver 3",
+              "skills": ["Athletics", "Dodge", "Endurance", "Heal", "Intuition", "Melee (Any)", "Perception"],
+              "characteristics": ["WS", "I", "Ag"],
+              "talents": ["Beat Blade", "Distract", "Feint", "Step Aside"],
+              "trappings": ["Hand Weapon or Rapier", "Sling Bag", "Clothing", "1d10 Bandages"]
+            },
+            {
+              "level": 2,
+              "name": "Duellist",
+              "status": "Silver 5",
+              "skills": ["Charm", "Cool", "Gamble", "Melee (Parry)", "Ranged (Blackpowder)", "Trade (Gunsmith)"],
+              "characteristics": ["BS"],
+              "talents": ["Combat Reflexes", "Etiquette (Any)", "Fast Shot", "Reversal"],
+              "trappings": ["Main Gauche or Sword-breaker", "Pistol", "Gunpowder", "Ammunition"]
+            },
+            {
+              "level": 3,
+              "name": "Duelmaster",
+              "status": "Gold 1",
+              "skills": ["Intimidate", "Leadership", "Melee (Basic)", "Perform (Acrobatics)"],
+              "characteristics": ["S"],
+              "talents": ["Ambidextrous", "Disarm", "Dual Wielder", "Riposte"],
+              "trappings": ["Quality Rapier", "Hand Weapon", "Trusty Second", "2 Wooden Training Swords"]
+            },
+            {
+              "level": 4,
+              "name": "Judicial Champion",
+              "status": "Gold 3",
+              "skills": ["Lore (Law)", "Melee (Any)"],
+              "characteristics": ["WP"],
+              "talents": ["Combat Master", "Menacing", "Reaction Strike", "Strike to Injure"],
+              "trappings": ["2 Quality Weapons"]
+            }
+          ]
+        },
+        {
+          "name": "Noble",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Scion",
+              "status": "Gold 1",
+              "skills": ["Bribery", "Consume Alcohol", "Gamble", "Intimidate", "Leadership", "Lore (Heraldry)", "Melee (Fencing)", "Play (Any)"],
+              "characteristics": ["WS", "I", "Dex"],
+              "talents": ["Etiquette (Nobles)", "Luck", "Noble Blood", "Read/Write"],
+              "trappings": ["Courtly Garb", "Foil or Hand Mirror", "Jewellery worth 3d10 GC", "Personal Servant"]
+            },
+            {
+              "level": 2,
+              "name": "Noble",
+              "status": "Gold 3",
+              "skills": ["Charm", "Gossip", "Language (Classical)", "Lore (Local)", "Ride (Horse)", "Melee (Parry)"],
+              "characteristics": ["Fel"],
+              "talents": ["Attractive", "Briber", "Carouser", "Suave"],
+              "trappings": ["4 Household Servants", "Quality Courtly Garb", "Courtly Garb", "Riding Horse with Saddle and Harness or Coach", "Main Gauche or Quality Cloak", "Jewellery worth 50 GC"]
+            },
+            {
+              "level": 3,
+              "name": "Magnate",
+              "status": "Gold 5",
+              "skills": ["Language (Any)", "Intuition", "Lore (Politics)", "Perception"],
+              "characteristics": ["Int"],
+              "talents": ["Coolheaded", "Dealmaker", "Public Speaker", "Schemer"],
+              "trappings": ["2 Sets of Quality Courtly Garb", "200 GC", "Fiefdom", "Jewellery worth 200 GC", "Signet Ring"]
+            },
+            {
+              "level": 4,
+              "name": "Noble Lord",
+              "status": "Gold 7",
+              "skills": ["Lore (Any)", "Track"],
+              "characteristics": ["WP"],
+              "talents": ["Commanding Presence", "Iron Will", "Warleader", "Wealthy"],
+              "trappings": ["4 Sets of Best Quality Courtly Garb", "Quality Foil or Hand Mirror", "500 GC", "Jewellery worth 500 GC", "Province"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rogues",
+      "careers": [
+        {
+          "name": "Racketeer",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Thug",
+              "status": "Brass 3",
+              "skills": ["Consume Alcohol", "Cool", "Dodge", "Endurance", "Intimidate", "Lore (Local)", "Melee (Brawling)", "Stealth (Urban)"],
+              "characteristics": ["WS", "S", "T"],
+              "talents": ["Criminal", "Etiquette (Criminals)", "Menacing", "Strike Mighty Blow"],
+              "trappings": ["Knuckledusters", "Leather Jack"]
+            },
+            {
+              "level": 2,
+              "name": "Racketeer",
+              "status": "Brass 5",
+              "skills": ["Bribery", "Charm", "Evaluate", "Gossip", "Melee (Basic)"],
+              "characteristics": ["Fel"],
+              "talents": ["Dirty Fighting", "Embezzle", "Strike to Stun", "Warrior Born"],
+              "trappings": ["Hand Weapon", "Hat", "Mail Shirt"]
+            },
+            {
+              "level": 3,
+              "name": "Gang Bos",
+              "status": "Silver 3",
+              "skills": ["Intuition", "Leadership", "Perception", "Ranged (Crossbow)"],
+              "characteristics": ["WP"],
+              "talents": ["Fearless (Watchmen)", "Iron Will", "Resistance (Poison)", "Robust"],
+              "trappings": ["Crossbow Pistol", "10 Bolts", "Gang of Thugs and Racketeers", "Lair"]
+            },
+            {
+              "level": 4,
+              "name": "Crime Lord",
+              "status": "Silver 5",
+              "skills": ["Lore (Law)", "Lore (Politics)"],
+              "characteristics": ["Fel"],
+              "talents": ["Commanding Presence", "Kingpin", "Frightening", "Wealthy"],
+              "trappings": ["Network of Informers", "Quality Clothing", "Hat", "Subordinate Gang Bosses"]
+            }
+          ]
+        },
+        {
+          "name": "Bawd",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Hustler",
+              "status": "Brass 1",
+              "skills": ["Bribery", "Charm", "Consume Alcohol", "Entertain (Any)", "Gamble", "Gossip", "Haggle", "Intimidate"],
+              "characteristics": ["Fel", "Ag", "Dex"],
+              "talents": ["Attractive", "Alley Cat", "Blather", "Gregarious"],
+              "trappings": ["Flask of Spirits"]
+            },
+            {
+              "level": 2,
+              "name": "Bawd",
+              "status": "Brass 3",
+              "skills": ["Dodge", "Endurance", "Intuition", "Lore (Local)", "Melee (Basic)", "Perception"],
+              "characteristics": ["I"],
+              "talents": ["Ambidextrous", "Carouser", "Criminal", "Resistant (Disease)"],
+              "trappings": ["Dose of Weirdroot", "Quality Clothing"]
+            },
+            {
+              "level": 3,
+              "name": "Procurer",
+              "status": "Silver 1",
+              "skills": ["Cool", "Evaluate", "Language (Any)", "Lore (Law)"],
+              "characteristics": ["WP"],
+              "talents": ["Dealmaker", "Embezzle", "Etiquette (Any)", "Suave"],
+              "trappings": ["A Ring of Hustlers"]
+            },
+            {
+              "level": 4,
+              "name": "Ringleader",
+              "status": "Silver 3",
+              "skills": ["Leadership", "Lore (Heraldry)"],
+              "characteristics": ["Int"],
+              "talents": ["Briber", "Kingpin", "Numismatics", "Savvy"],
+              "trappings": ["Townhouse with Discreet Back Entrance", "A Ring of Bawds"]
+            }
+          ]
+        },
+        {
+          "name": "Charlatan",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Swindler",
+              "status": "Brass 3",
+              "skills": ["Bribery", "Consume Alcohol", "Charm", "Entertain (Storytelling)", "Gamble", "Gossip", "Haggle", "Sleight of Hand"],
+              "characteristics": ["I", "Dex", "Fel"],
+              "talents": ["Cardsharp", "Diceman", "Etiquette (Any)", "Luck"],
+              "trappings": ["Backpack", "2 Sets of Clothing", "Deck of Cards", "Dice"]
+            },
+            {
+              "level": 2,
+              "name": "Charlatan",
+              "status": "Brass 5",
+              "skills": ["Cool", "Dodge", "Entertain (Acting)", "Evaluate", "Intuition", "Perception"],
+              "characteristics": ["WP"],
+              "talents": ["Blather", "Criminal", "Fast Hands", "Secret Identity"],
+              "trappings": ["1 Forged Document", "2 Sets of Quality Clothing", "Selection of Coloured Powders and Water", "Selection of Trinkets and Charms"]
+            },
+            {
+              "level": 3,
+              "name": "Con Artist",
+              "status": "Silver 2",
+              "skills": ["Language (Thief)", "Lore (Heraldry)", "Pick Lock", "Secret Signs (Thief)"],
+              "characteristics": ["Ag"],
+              "talents": ["Attractive", "Cat-tongued", "Dealmaker", "Read/Write"],
+              "trappings": ["Disguise Kit", "Lock Picks", "Multiple Forged Documents"]
+            },
+            {
+              "level": 4,
+              "name": "Scoundrel",
+              "status": "Silver 4",
+              "skills": ["Lore (Genealogy)", "Research"],
+              "characteristics": ["Int"],
+              "talents": ["Gregarious", "Master of Disguise", "Nose for Trouble", "Suave"],
+              "trappings": ["Forged Seal", "Writing Kit"]
+            }
+          ]
+        },
+        {
+          "name": "Thief",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Prowler",
+              "status": "Brass 1",
+              "skills": ["Athletics", "Climb", "Cool", "Dodge", "Endurance", "Intuition", "Perception", "Stealth (Urban)"],
+              "characteristics": ["I", "Ag", "WP"],
+              "talents": ["Alley Cat", "Criminal", "Flee!", "Strike to Stun"],
+              "trappings": ["Crowbar", "Leather Jerkin", "Sack"]
+            },
+            {
+              "level": 2,
+              "name": "Thief",
+              "status": "Brass 3",
+              "skills": ["Evaluate", "Gossip", "Lore (Local)", "Pick Lock", "Secret Signs (Thief)", "Sleight of Hand"],
+              "characteristics": ["Dex"],
+              "talents": ["Break and Enter", "Etiquette (Criminals)", "Fast Hands", "Shadow"],
+              "trappings": ["Trade Tools (Thief)", "Rope"]
+            },
+            {
+              "level": 3,
+              "name": "Master Thief",
+              "status": "Brass 5",
+              "skills": ["Bribery", "Gamble", "Intimidate", "Ranged (Crossbow)"],
+              "characteristics": ["S"],
+              "talents": ["Night Vision", "Nimble Fingered", "Step Aside", "Trapper"],
+              "trappings": ["Crossbow Pistol", "10 Bolts"]
+            },
+            {
+              "level": 4,
+              "name": "Cat Burglar",
+              "status": "Silver 3",
+              "skills": ["Charm", "Set Trap"],
+              "characteristics": ["Fel"],
+              "talents": ["Catfall", "Scale Sheer Surface", "Strong Legs", "Wealthy"],
+              "trappings": ["Dark Clothing", "Grappling Hook", "Mask or Scarves"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Warriors",
+      "careers": [
+        {
+          "name": "Guard",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Sentry",
+              "status": "Silver 1",
+              "skills": ["Consume Alcohol", "Endurance", "Entertain (Storytelling)", "Gamble", "Gossip", "Intuition", "Melee (Basic)", "Perception"],
+              "characteristics": ["WS", "T", "Ag"],
+              "talents": ["Diceman", "Etiquette (Servants)", "Strike to Stun", "Tenacious"],
+              "trappings": ["Buckler", "Leather Jerkin", "Storm Lantern with Oil"]
+            },
+            {
+              "level": 2,
+              "name": "Guard",
+              "status": "Silver 2",
+              "skills": ["Athletics", "Cool", "Dodge", "Intimidate", "Melee (Polearm)", "Ranged (Bow)"],
+              "characteristics": ["I"],
+              "talents": ["Relentless", "Reversal", "Shieldsman", "Strike Mighty Blow"],
+              "trappings": ["Bow with 10 Arrows", "Sleeved Mail Shirt", "Shield", "Spear"]
+            },
+            {
+              "level": 3,
+              "name": "Honour Guard",
+              "status": "Silver 3",
+              "skills": ["Heal", "Lore (Etiquette)", "Melee (Two-handed)"],
+              "characteristics": ["S"],
+              "talents": ["Fearless (Intruders)", "Jump Up", "Stout-hearted", "Unshakeable"],
+              "trappings": ["Great Weapon or Halberd", "Helmet", "Uniform"]
+            },
+            {
+              "level": 4,
+              "name": "Guard Officer",
+              "status": "Silver 5",
+              "skills": ["Leadership", "Lore (Warfare)"],
+              "characteristics": ["Int"],
+              "talents": ["Combat Master", "Furious Assault", "Iron Will", "Robust"],
+              "trappings": ["Breastplate"]
+            }
+          ]
+        },
+        {
+          "name": "Knight",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Squire",
+              "status": "Silver 3",
+              "skills": ["Athletics", "Animal Care", "Charm Animal", "Heal", "Lore (Heraldry)", "Melee (Cavalry)", "Ride (Horse)", "Trade (Farrier)"],
+              "characteristics": ["S", "I", "Ag"],
+              "talents": ["Etiquette (Any)", "Roughrider", "Sturdy", "Warrior Born"],
+              "trappings": ["Leather Jack", "Mail Shirt", "Riding Horse with Saddle and Tack", "Shield", "Trade Tools (Farrier)"]
+            },
+            {
+              "level": 2,
+              "name": "Knight",
+              "status": "Silver 5",
+              "skills": ["Cool", "Dodge", "Endurance", "Intimidate", "Melee (Any)"],
+              "characteristics": ["WS"],
+              "talents": ["Menacing", "Seasoned Traveller", "Shieldsman", "Strike Mighty Blow"],
+              "trappings": ["Destrier with Saddle and Tack", "Melee Weapon (Any)", "Lance", "Plate Armour", "Helm"]
+            },
+            {
+              "level": 3,
+              "name": "First Knight",
+              "status": "Gold 2",
+              "skills": ["Charm", "Consume Alcohol", "Leadership", "Lore (Warfare)"],
+              "characteristics": ["WP"],
+              "talents": ["Fearless (Any)", "Stout-hearted", "Unshakeable", "Warleader"],
+              "trappings": ["Barding", "Small Unit of Knights"]
+            },
+            {
+              "level": 4,
+              "name": "Knight of the Inner Circle",
+              "status": "Gold 4",
+              "skills": ["Lore (Any)", "Secret Signs (Knightly Order)"],
+              "characteristics": ["Fel"],
+              "talents": ["Disarm", "Inspiring", "Iron Will", "Strike to Injure"],
+              "trappings": ["Plumed Great Helm", "Squire", "Large Unit of Knights or Several Small Units of Knights"]
+            }
+          ]
+        },
+        {
+          "name": "Pit Fighter",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Pugilist",
+              "status": "Brass 4",
+              "skills": ["Athletics", "Cool", "Dodge", "Endurance", "Gamble", "Intimidate", "Melee (Any)", "Melee (Brawling)"],
+              "characteristics": ["WS", "S", "T"],
+              "talents": ["Dirty Fighting", "In-fighter", "Iron Jaw", "Reversal"],
+              "trappings": ["Bandages", "Knuckledusters", "Leather Jack"]
+            },
+            {
+              "level": 2,
+              "name": "Pit Fighter",
+              "status": "Silver 2",
+              "skills": ["Haggle", "Intuition", "Melee (Basic)", "Melee (Flail or Two-handed)", "Perception", "Ranged (Entangling)"],
+              "characteristics": ["I"],
+              "talents": ["Ambidextrous", "Combat Reflexes", "Dual Wielder", "Shieldsman"],
+              "trappings": ["Flail or Great Weapon", "Hand Weapon", "Net or Whip", "Shield or Buckler"]
+            },
+            {
+              "level": 3,
+              "name": "Pit Champion",
+              "status": "Silver 5",
+              "skills": ["Consume Alcohol", "Gossip", "Lore (Anatomy)", "Perform (Fight)"],
+              "characteristics": ["Ag"],
+              "talents": ["Combat Master", "Disarm", "Menacing", "Robust"],
+              "trappings": ["Breast Plate", "Helmet"]
+            },
+            {
+              "level": 4,
+              "name": "Pit Legend",
+              "status": "Gold 2",
+              "skills": ["Charm", "Ranged (Any)"],
+              "characteristics": ["Fel"],
+              "talents": ["Frightening", "Furious Assault", "Implacable", "Reaction Strike"],
+              "trappings": ["Quality Helmet"]
+            }
+          ]
+        },
+        {
+          "name": "Protagonist",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Braggart",
+              "status": "Brass 2",
+              "skills": ["Athletics", "Dodge", "Endurance", "Entertain (Taunt)", "Gossip", "Haggle", "Intimidate", "Melee (Any)"],
+              "characteristics": ["WS", "Ag", "T"],
+              "talents": ["In-fighter", "Dirty Fighting", "Menacing", "Warrior Born"],
+              "trappings": ["Hood or Mask", "Knuckledusters", "Leather Jack"]
+            },
+            {
+              "level": 2,
+              "name": "Protagonist",
+              "status": "Silver 1",
+              "skills": ["Bribery", "Charm", "Intuition", "Melee (Basic)", "Perception", "Ride (Horse)"],
+              "characteristics": ["I"],
+              "talents": ["Combat Reflexes", "Criminal", "Reversal", "Strike to Stun"],
+              "trappings": ["Hand Weapon", "Mail Shirt", "Riding Horse with Saddle and Tack", "Shield"]
+            },
+            {
+              "level": 3,
+              "name": "Hitman",
+              "status": "Silver 4",
+              "skills": ["Climb", "Cool", "Navigation", "Ranged (Thrown)"],
+              "characteristics": ["Bs"],
+              "talents": ["Careful Strike", "Disarm", "Marksman", "Relentless"],
+              "trappings": ["Cloak", "Garotte", "Poison", "Throwing Knives"]
+            },
+            {
+              "level": 4,
+              "name": "Assassin",
+              "status": "Gold 1",
+              "skills": ["Entertain (Acting)", "Ranged (Crossbow)"],
+              "characteristics": ["Fel"],
+              "talents": ["Accurate Shot", "Ambidextrous", "Furious Assault", "Strike to Injure"],
+              "trappings": ["Crossbow with 10 shots", "Disguise Kit"]
+            }
+          ]
+        },
+        {
+          "name": "Soldier",
+          "levels": [
+            {
+              "level": 1,
+              "name": "Recruit",
+              "status": "Silver 1",
+              "skills": ["Athletics", "Climb", "Cool", "Dodge", "Endurance", "Melee (Basic)", "Play (Drum or Fife)"],
+              "characteristics": ["WS", "WP", "T"],
+              "talents": ["Diceman", "Marksman", "Strong Back", "Warrior Born"],
+              "trappings": ["Dagger", "Leather Breastplate", "Uniform"]
+            },
+            {
+              "level": 2,
+              "name": "Soldier",
+              "status": "Silver 3",
+              "skills": ["Consume Alcohol", "Gamble", "Gossip", "Melee (Any)", "Ranged (Any)", "Outdoor Survival"],
+              "characteristics": ["BS"],
+              "talents": ["Drilled", "Etiquette (Soldiers)", "Rapid Reload", "Shieldsman"],
+              "trappings": ["Breastplate", "Helmet", "Weapon (Any)"]
+            },
+            {
+              "level": 3,
+              "name": "Sergeant",
+              "status": "Silver 5",
+              "skills": ["Heal", "Intuition", "Leadership", "Perception"],
+              "characteristics": ["I"],
+              "talents": ["Combat Aware", "Enclosed Fighter", "Unshakeable", "Warleader"],
+              "trappings": ["Symbol of Rank", "Unit of Troops"]
+            },
+            {
+              "level": 4,
+              "name": "Officer",
+              "status": "Gold 1",
+              "skills": ["Lore (Warfare)", "Navigation"],
+              "characteristics": ["Fel"],
+              "talents": ["Inspiring", "Public Speaking", "Seasoned Traveller", "Stout-hearted"],
+              "trappings": ["Letter of Commission", "Light Warhorse with Saddle and Tack", "Map", "Orders", "Unit of Soldiers", "Quality Uniform", "Symbol of Rank"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
