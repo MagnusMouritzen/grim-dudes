@@ -6,6 +6,7 @@ import {
   safeRedirectPath,
   SESSION_COOKIE,
   SESSION_MAX_AGE_SEC,
+  shouldWarnPlaintextAuthPasswordInProduction,
   signSessionToken,
   timingSafeEqualString,
 } from '@/lib/session';
@@ -13,6 +14,8 @@ import {
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+let warnedPlaintextPassword = false;
 
 async function verifyPassword(plain: string): Promise<boolean> {
   const hash = process.env.AUTH_PASSWORD_HASH;
@@ -27,6 +30,13 @@ async function verifyPassword(plain: string): Promise<boolean> {
 export async function POST(req: Request) {
   if (!isAuthConfigured()) {
     return NextResponse.json({ error: 'Auth not configured' }, { status: 503 });
+  }
+
+  if (shouldWarnPlaintextAuthPasswordInProduction() && !warnedPlaintextPassword) {
+    warnedPlaintextPassword = true;
+    console.warn(
+      '[auth] AUTH_PASSWORD is set in production without AUTH_PASSWORD_HASH. Prefer a bcrypt hash (AUTH_PASSWORD_HASH).'
+    );
   }
 
   const limit = await limitLogin(req);
@@ -67,7 +77,7 @@ export async function POST(req: Request) {
   res.cookies.set(SESSION_COOKIE, jwt, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' || process.env.VERCEL === '1',
     path: '/',
     maxAge: SESSION_MAX_AGE_SEC,
   });

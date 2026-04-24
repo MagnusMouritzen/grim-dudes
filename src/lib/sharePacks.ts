@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import { getJSON, setJSON } from './redis';
 import { slugifyStatblockId, redisPrefix } from './statblockKeys';
 
@@ -10,9 +11,9 @@ function keySharePack(id: string): string {
 }
 
 function generateId(): string {
-  // 8-char base36 id: ~41 bits; fine for sharepack URLs.
-  const rand = Math.floor(Math.random() * 2 ** 41).toString(36);
-  return rand.padStart(8, '0').slice(0, 10);
+  // ~41 bits base36; CSPRNG for unguessable share links.
+  const n = randomInt(0, 2 ** 41);
+  return n.toString(36).padStart(8, '0').slice(0, 10);
 }
 
 export async function createSharePack(rawIds: string[]): Promise<string> {

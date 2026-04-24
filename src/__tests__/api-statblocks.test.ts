@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeRedis } from './fakeRedis';
-import { SESSION_COOKIE } from '@/lib/session';
+import { PROD_WRITE_AUTH_MISCONFIG_MESSAGE, SESSION_COOKIE } from '@/lib/session';
 
 vi.mock('@/lib/redis', () => ({
   getRedis: () => fakeRedis,
@@ -42,6 +42,8 @@ const origAuthSecret = process.env.AUTH_SECRET;
 const origAuthPassword = process.env.AUTH_PASSWORD;
 const origAuthHash = process.env.AUTH_PASSWORD_HASH;
 const origAuthDisabled = process.env.AUTH_DISABLED;
+const origVercelEnv = process.env.VERCEL_ENV;
+const origAllowUnauth = process.env.ALLOW_UNAUTHENTICATED_WRITES;
 
 beforeEach(() => {
   fakeRedis.reset();
@@ -52,6 +54,8 @@ beforeEach(() => {
   delete process.env.AUTH_PASSWORD;
   delete process.env.AUTH_PASSWORD_HASH;
   delete process.env.AUTH_DISABLED;
+  delete process.env.VERCEL_ENV;
+  delete process.env.ALLOW_UNAUTHENTICATED_WRITES;
 });
 
 afterEach(() => {
@@ -67,6 +71,10 @@ afterEach(() => {
   else process.env.AUTH_PASSWORD_HASH = origAuthHash;
   if (origAuthDisabled == null) delete process.env.AUTH_DISABLED;
   else process.env.AUTH_DISABLED = origAuthDisabled;
+  if (origVercelEnv == null) delete process.env.VERCEL_ENV;
+  else process.env.VERCEL_ENV = origVercelEnv;
+  if (origAllowUnauth == null) delete process.env.ALLOW_UNAUTHENTICATED_WRITES;
+  else process.env.ALLOW_UNAUTHENTICATED_WRITES = origAllowUnauth;
 });
 
 async function POSTstatblocks(body: unknown, headers: Record<string, string> = {}) {
@@ -135,6 +143,16 @@ describe('POST /api/statblocks', () => {
       { cookie: `${SESSION_COOKIE}=${token}` }
     );
     expect(ok.status).toBe(201);
+  });
+
+  it('returns 503 when production has Upstash but auth is not configured', async () => {
+    process.env.VERCEL_ENV = 'production';
+    process.env.UPSTASH_REDIS_REST_URL = 'https://test.upstash.io';
+    process.env.UPSTASH_REDIS_REST_TOKEN = 'x';
+    const res = await POSTstatblocks({ name: 'X' });
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toBe(PROD_WRITE_AUTH_MISCONFIG_MESSAGE);
   });
 });
 

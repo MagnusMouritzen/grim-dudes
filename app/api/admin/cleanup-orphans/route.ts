@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cleanupOrphans } from '@/lib/statblockRedis';
+import { isProductionEnv } from '@/lib/session';
 import { logError, logInfo, requestId } from '@/lib/logger';
 
 export const runtime = 'nodejs';
@@ -7,20 +8,27 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 /**
- * Invoked by Vercel Cron. Protected in two ways:
- *  1. `x-vercel-cron: 1` is set by Vercel itself for cron invocations.
- *  2. If `CRON_SECRET` is configured, we additionally require an
- *     `authorization: Bearer <CRON_SECRET>` header, letting you trigger the
- *     endpoint manually while still rejecting anonymous traffic.
+ * Invoked by Vercel Cron: when `CRON_SECRET` is set, Vercel sends
+ * `Authorization: Bearer <CRON_SECRET>`. In production, `CRON_SECRET` is required
+ * and the Bearer token must match. Without a secret, non-production may allow
+ * `x-vercel-cron: 1` only (local / preview with cron header).
  */
 export async function GET(req: Request) {
   const rid = requestId(req);
   const isCron = req.headers.get('x-vercel-cron') === '1';
-  const expected = process.env.CRON_SECRET;
+  const expected = process.env.CRON_SECRET?.trim();
   const provided = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
-  const authedManually = Boolean(expected) && provided === expected;
 
-  if (!isCron && !authedManually) {
+  if (expected) {
+    if (provided !== expected) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  } else if (isProductionEnv()) {
+    return NextResponse.json(
+      { error: 'Set CRON_SECRET in production. Vercel injects it as Authorization: Bearer for cron jobs.' },
+      { status: 401 }
+    );
+  } else if (!isCron) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

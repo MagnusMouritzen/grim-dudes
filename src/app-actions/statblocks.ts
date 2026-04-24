@@ -3,8 +3,7 @@
 import { cookies, headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Ratelimit } from '@upstash/ratelimit';
-import { getRedis } from '@/lib/redis';
+import { getClientIpFromHeaders } from '@/lib/clientIp';
 import {
   deleteStatblock,
   saveStatblock,
@@ -12,35 +11,17 @@ import {
 } from '@/lib/statblockRedis';
 import { slugifyStatblockId } from '@/lib/statblockKeys';
 import { validateStatblockPayload } from '@/lib/validateStatblock';
-import { isCookieAuthenticated } from '@/lib/session';
+import {
+  isCookieAuthenticated,
+  isProdWriteAuthMisconfigured,
+  PROD_WRITE_AUTH_MISCONFIG_MESSAGE,
+} from '@/lib/session';
+import { limitWriteByIp } from '@/lib/rateLimit';
 
-async function clientIp(): Promise<string> {
-  const h = await headers();
-  return (
-    h.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    h.get('x-real-ip') ||
-    'anon'
-  );
-}
-
-let actionLimiter: Ratelimit | null = null;
 async function checkLimit(): Promise<boolean> {
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    return true;
-  }
-  if (!actionLimiter) {
-    actionLimiter = new Ratelimit({
-      redis: getRedis(),
-      limiter: Ratelimit.slidingWindow(
-        Number(process.env.RATE_LIMIT_WRITES_PER_MIN || '30'),
-        '60 s'
-      ),
-      prefix: `${process.env.REDIS_KEY_PREFIX || ''}ratelimit:action`,
-      analytics: false,
-    });
-  }
-  const { success } = await actionLimiter.limit(await clientIp());
-  return success;
+  const h = await headers();
+  const { ok } = await limitWriteByIp(getClientIpFromHeaders(h));
+  return ok;
 }
 
 export type SaveResult =
@@ -50,6 +31,9 @@ export type SaveResult =
 export async function saveStatblockAction(
   raw: unknown
 ): Promise<SaveResult> {
+  if (isProdWriteAuthMisconfigured()) {
+    return { ok: false, error: PROD_WRITE_AUTH_MISCONFIG_MESSAGE };
+  }
   if (!(await isCookieAuthenticated(await cookies()))) {
     return { ok: false, error: 'Not authorised — sign in at /login.' };
   }
@@ -76,6 +60,9 @@ export async function saveStatblockAction(
 }
 
 export async function deleteStatblockAction(id: string): Promise<SaveResult> {
+  if (isProdWriteAuthMisconfigured()) {
+    return { ok: false, error: PROD_WRITE_AUTH_MISCONFIG_MESSAGE };
+  }
   if (!(await isCookieAuthenticated(await cookies()))) {
     return { ok: false, error: 'Not authorised — sign in at /login.' };
   }

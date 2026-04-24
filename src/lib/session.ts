@@ -26,9 +26,53 @@ export function isAuthConfigured(): boolean {
   return Boolean(secret && hasPassword);
 }
 
-/** When true, mutating routes require a valid session cookie. */
+/**
+ * When true, mutating routes require a valid session cookie.
+ * Does not include production misconfig checks — see {@link isProdWriteAuthMisconfigured}.
+ */
 export function writesRequireAuth(): boolean {
   return isAuthConfigured() && !authDisabled();
+}
+
+export function isProductionEnv(): boolean {
+  return process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+}
+
+export function isUpstashConfigured(): boolean {
+  const u = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const t = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+  return Boolean(u && t);
+}
+
+/**
+ * Intentional open writes in production (demos, internal). Dangerous; document in .env.
+ */
+export function allowUnauthenticatedWrites(): boolean {
+  const v = process.env.ALLOW_UNAUTHENTICATED_WRITES;
+  return v === '1' || v === 'true';
+}
+
+/**
+ * In production with Upstash, session auth must be fully configured, unless AUTH_DISABLED
+ * or ALLOW_UNAUTHENTICATED_WRITES is set.
+ */
+export function isProdWriteAuthMisconfigured(): boolean {
+  if (allowUnauthenticatedWrites()) return false;
+  if (authDisabled()) return false;
+  if (!isProductionEnv()) return false;
+  if (!isUpstashConfigured()) return false;
+  return !isAuthConfigured();
+}
+
+/** 503 error body for API routes; server actions use the same string in SaveResult. */
+export const PROD_WRITE_AUTH_MISCONFIG_MESSAGE =
+  'Service unavailable: set AUTH_SECRET and AUTH_PASSWORD (or AUTH_PASSWORD_HASH) for this deployment, or set ALLOW_UNAUTHENTICATED_WRITES=1 if open writes are intentional.';
+
+export function shouldWarnPlaintextAuthPasswordInProduction(): boolean {
+  if (!isProductionEnv()) return false;
+  if (process.env.AUTH_PASSWORD_HASH?.length) return false;
+  if (!process.env.AUTH_PASSWORD?.length) return false;
+  return true;
 }
 
 function getSecretKey(): Uint8Array {
@@ -75,6 +119,7 @@ export async function verifySessionToken(token: string): Promise<boolean> {
 }
 
 export async function verifyRequestSession(req: Request): Promise<boolean> {
+  if (isProdWriteAuthMisconfigured()) return false;
   if (!writesRequireAuth()) return true;
   const raw = getSessionCookieFromHeader(req.headers.get('cookie'));
   if (!raw) return false;
@@ -84,6 +129,7 @@ export async function verifyRequestSession(req: Request): Promise<boolean> {
 export async function isCookieAuthenticated(
   cookieStore: SessionCookieStore
 ): Promise<boolean> {
+  if (isProdWriteAuthMisconfigured()) return false;
   if (!writesRequireAuth()) return true;
   const t = cookieStore.get(SESSION_COOKIE)?.value;
   if (!t) return false;

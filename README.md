@@ -41,13 +41,24 @@ Otherwise **writes are open** (useful for local dev), same spirit as the old opt
 
 Do not use **`AUTH_DISABLED=1` in production**; it is only for local convenience when you already have auth vars in `.env.local` but want to skip sign-in.
 
+### Production, Upstash, and open writes
+
+On **production** (`VERCEL_ENV` or `NODE_ENV` is `production`) with **Upstash** configured, if session auth is **not** fully configured (same rules as [When is auth enforced?](#when-is-auth-enforced)), **mutating** API routes and server actions return **503** until you set `AUTH_SECRET` and a password or hash. This prevents accidentally leaving the bestiary world-writable on Vercel.
+
+To **opt out** (demos or internal only), set **`ALLOW_UNAUTHENTICATED_WRITES=1`** — documented as dangerous in [.env.example](.env.example).
+
+### Threat model (single admin, public read)
+
+- **Read:** All stat blocks are **world-readable** via the UI and `GET /api/statblocks` / `GET /api/statblocks/:id` — designed for a public bestiary.
+- **Write:** With auth on, there is a **single** shared admin session (or fixed `AUTH_USER` + password). Any signed-in user can **create, update, or delete any** stat block **by id**; there is no per-entry ownership or multi-tenant isolation.
+
 ### Sign-in flow
 
 1. Open `/login` and submit the password (and username if you configure `AUTH_USER`).
 2. The app sets an **httpOnly** cookie `grim_session` (JWT). Sessions last **14 days** from last sign-in ([`SESSION_MAX_AGE_SEC`](src/lib/session.ts)); sign in again to refresh.
 3. **Sign out:** use **Sign out** on [`/admin`](app/admin/page.tsx) or `POST /api/auth/logout`.
 
-In **development**, the session cookie is not `Secure`, so **http://localhost** works. **Production** (e.g. Vercel) uses `Secure` cookies.
+In **development**, the session cookie is often not `Secure`, so **http://localhost** works. **Production and Vercel** (including Preview when `VERCEL=1`) use `Secure` cookies over HTTPS.
 
 ### Generating secrets and passwords
 
@@ -65,7 +76,7 @@ If set, the username field on `/login` must match exactly (in addition to the pa
 
 ### Rate limits
 
-**Write** and **login** rate limits use Upstash when `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` are set. Without Redis, those limiters are disabled (typical local setup).
+**Write** and **login** use Upstash for rate limiting when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set. Without them, the app uses a **per-process in-memory** limiter (same env vars `RATE_LIMIT_WRITES_PER_MIN` / `RATE_LIMIT_LOGIN_PER_MIN` apply). In-memory limits do not share state across serverless instances but still cap abuse per instance.
 
 ### Previews and production
 
@@ -73,7 +84,11 @@ For **Vercel Preview** deployments, copy the same `AUTH_*` variables into the Pr
 
 ### Health check
 
-`GET /api/healthz` returns `authConfigured`, `authDisabled`, and `writesProtected` among other fields ([`app/api/healthz/route.ts`](app/api/healthz/route.ts)).
+`GET /api/healthz` returns `{ ok, redis }` in **production** by default. To include `authConfigured`, `authDisabled`, `writesProtected`, `region`, and `env`, set **`HEALTHZ_TOKEN`** in the environment and call:
+
+`GET /api/healthz?verbose=1` with `Authorization: Bearer <HEALTHZ_TOKEN>`
+
+In **non-production**, the full object is returned without a token ([`app/api/healthz/route.ts`](app/api/healthz/route.ts)).
 
 ## Deploying to Vercel
 
@@ -81,7 +96,7 @@ For **Vercel Preview** deployments, copy the same `AUTH_*` variables into the Pr
 2. In **Project → Settings → Environment Variables**, add the variables from the [table below](#environment-variables) for **Production**, **Preview**, and/or **Development** as needed.
 3. **Isolate Redis data:** use a **separate Upstash database** or set **`REDIS_KEY_PREFIX`** (e.g. `preview:` vs `prod:`) so Preview and Production do not share stat blocks.
 4. Optional: set **`NEXT_PUBLIC_SITE_URL`** to your canonical site URL (e.g. `https://example.com`) so [`app/robots.ts`](app/robots.ts) / sitemap use the right base.
-5. **Scheduled cleanup:** [`vercel.json`](vercel.json) runs `GET /api/admin/cleanup-orphans` daily. Vercel Cron is authenticated via the `x-vercel-cron` header. If you set **`CRON_SECRET`**, that value is **only** required for **manual** HTTP calls to the same route (use `Authorization: Bearer <CRON_SECRET>`); it does **not** replace Vercel’s cron header.
+5. **Scheduled cleanup:** [`vercel.json`](vercel.json) runs `GET /api/admin/cleanup-orphans` daily. Set **`CRON_SECRET`** in the project: Vercel sends **`Authorization: Bearer <CRON_SECRET>`** to the cron URL. The handler requires this Bearer in **production**; it does not rely on the `x-vercel-cron` header alone. See [Vercel: Cron jobs](https://vercel.com/docs/cron-jobs) for the latest auth behavior. Locally (non-production) without `CRON_SECRET`, the route accepts `x-vercel-cron: 1` for testing.
 
 ## Environment variables
 
@@ -100,11 +115,13 @@ Copy [.env.example](.env.example) to `.env.local` for local development. On Verc
 | `AUTH_PASSWORD_HASH` | optional** | Bcrypt hash of the admin password (production) |
 | `AUTH_USER` | no | If set, login username must match exactly |
 | `AUTH_DISABLED` | no | `1` or `true` skips auth and keeps writes open (use **locally** only) |
-| `CRON_SECRET` | no | If set, manual calls to `/api/admin/cleanup-orphans` need `Authorization: Bearer …`; Vercel Cron still uses `x-vercel-cron` |
-| `RATE_LIMIT_WRITES_PER_MIN` | no | Override default **30**/min for writes (requires Upstash) |
-| `RATE_LIMIT_LOGIN_PER_MIN` | no | Override default **15**/min for `/api/auth/login` (requires Upstash) |
+| `ALLOW_UNAUTHENTICATED_WRITES` | no | In **production** with Upstash, allows open writes if auth is not configured — **dangerous**; demos only |
+| `CRON_SECRET` | yes (prod) | **Production** cleanup route requires `Authorization: Bearer` matching this. Vercel injects the header for project crons. |
+| `HEALTHZ_TOKEN` | no | **Production** only: with `?verbose=1` and this Bearer, `/api/healthz` returns detailed fields |
+| `RATE_LIMIT_WRITES_PER_MIN` | no | Override default **30**/min for writes (Upstash or in-process fallback) |
+| `RATE_LIMIT_LOGIN_PER_MIN` | no | Override default **15**/min for `/api/auth/login` (Upstash or in-process fallback) |
 
-\*Required for stat block CRUD. \*\*Use **either** `AUTH_PASSWORD` **or** `AUTH_PASSWORD_HASH` together with `AUTH_SECRET` to require sign-in at `/login`. If that trio is incomplete, writes stay open; `AUTH_DISABLED=1` forces open writes even when a password is configured (see [Authentication](#authentication)).
+\*Required for stat block CRUD. \*\*Use **either** `AUTH_PASSWORD` **or** `AUTH_PASSWORD_HASH` together with `AUTH_SECRET` to require sign-in at `/login`. If that trio is incomplete, writes stay open **except** in **production with Upstash** (then configure auth or set `ALLOW_UNAUTHENTICATED_WRITES=1`); `AUTH_DISABLED=1` still forces open writes when auth vars exist (see [Authentication](#authentication)).
 
 ## Run and build
 
@@ -133,14 +150,14 @@ npm run build && npm start   # production build locally
 
 - `GET /api/statblocks` - full list (array)
 - `GET /api/statblocks?cursor=0&limit=100` - paginated (`{ items, nextCursor }`)
-- `POST /api/statblocks` - create/overwrite (session auth when configured + rate-limited when Upstash is set)
+- `POST /api/statblocks` - create/overwrite (session auth when configured + rate-limited)
 - `GET /api/statblocks/:id` - one by **canonical slug** (404 on miss); the `:id` segment is normalised with the same rules as Redis keys ([`slugifyStatblockId`](src/lib/statblockKeys.ts))
-- `PUT /api/statblocks/:id` - update at canonical slug (session auth when configured + rate-limited)
-- `DELETE /api/statblocks/:id` - delete (session auth when configured + rate-limited)
+- `PUT /api/statblocks/:id` - update at canonical slug (session auth + rate-limited)
+- `DELETE /api/statblocks/:id` - delete (session auth + rate-limited)
 - `GET /api/skills | traits | weapons | armour | careers | templates[/:id]` - bundled reference data
 - `POST /api/sharepacks` (body: `{ ids: string[] }`) - creates a short id so long selections can be shared via `/view?pack=<id>`
 - `GET /api/sharepacks/:id` - resolve back to `{ ids }`
-- `GET /api/healthz` - `{ ok, redis, authConfigured, authDisabled, writesProtected, region, env }` for uptime checks
+- `GET /api/healthz` - `{ ok, redis }` in production; optional details with `?verbose=1` + `HEALTHZ_TOKEN` (see [Health check](#health-check))
 
 ## Migrating JSON to Redis
 
@@ -160,6 +177,8 @@ npm run migrate:statblocks -- --prune
 
 - **503 on list/save** with missing Upstash env: set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in `.env.local` or Vercel.
 - **“Not authorised — sign in at /login”** in the editor: configure `AUTH_SECRET` and a password (or hash), then open `/login`. For open writes locally, omit those vars or set `AUTH_DISABLED=1`.
+- **503** on save/delete in production: Upstash is set but auth is not; configure `AUTH_SECRET` + password/hash, or set `ALLOW_UNAUTHENTICATED_WRITES=1` only if intentional.
+- **Cron cleanup returns 401** in production: set **`CRON_SECRET`** in Vercel to match; scheduled invocations use `Authorization: Bearer` automatically when the var is set.
 - **Bestiary shows a phantom entry:** run `npm run cleanup:orphans`.
 - **Reset Redis completely:** from the Upstash dashboard use “flush database”, then `npm run migrate:statblocks`. Alternatively, delete keys under your `REDIS_KEY_PREFIX` if you use one.
 
@@ -198,6 +217,6 @@ Reference data: `data/skills.json`, `data/traits.json`. Example stat blocks: `da
 - Lint, tests, and build run on PRs via `.github/workflows/ci.yml`. Before opening a PR, run `npm run lint` and `npm test` locally.
 - Keep components strict-TS - no `@ts-nocheck`.
 - Validate new payloads with Zod at both ends (server via `validateStatblockPayload`, client via the schemas in `src/lib/apiSchemas.ts`).
-- Session auth is optional for local work: omit `AUTH_SECRET` / password for open writes, or set `AUTH_DISABLED=1` if you configure auth but want to bypass checks locally.
+- Session auth is optional for local work: omit `AUTH_SECRET` / password for open writes, or set `AUTH_DISABLED=1` if you configure auth but want to bypass checks locally. In production with Redis, unconfigured auth returns 503 for writes unless `ALLOW_UNAUTHENTICATED_WRITES=1`.
 
 _Migrated from the original Vite + Express prototype. See git history prior to the Next.js migration for the legacy stack._

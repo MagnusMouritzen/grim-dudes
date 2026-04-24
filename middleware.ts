@@ -3,11 +3,18 @@ import type { NextRequest } from 'next/server';
 import {
   authDisabled,
   isAuthConfigured,
+  isProdWriteAuthMisconfigured,
   SESSION_COOKIE,
   verifySessionToken,
 } from '@/lib/session';
 
 export async function middleware(req: NextRequest) {
+  if (isProdWriteAuthMisconfigured()) {
+    return new NextResponse(
+      'Authentication is not configured for this deployment. Set AUTH_SECRET and a password (or hash), or ALLOW_UNAUTHENTICATED_WRITES=1 if intentional.',
+      { status: 503, headers: { 'content-type': 'text/plain; charset=utf-8' } }
+    );
+  }
   if (authDisabled() || !isAuthConfigured()) {
     return NextResponse.next();
   }
