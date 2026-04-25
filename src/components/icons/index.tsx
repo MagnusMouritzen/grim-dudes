@@ -166,3 +166,30 @@ export function QuillIcon(props: IconProps) {
     </svg>
   );
 }
+
+/** Two interlocking links (copy URL, share). */
+export function LinkIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2" />
+      <line x1="8" y1="12" x2="16" y2="12" />
+    </svg>
+  );
+}
+
+type StarIconProps = IconProps & { active?: boolean };
+
+/** Bestiary “often used in this campaign” — outline until starred. */
+export function StarIcon({ active, ...props }: StarIconProps) {
+  return (
+    <svg {...base} fill="none" {...props} aria-hidden>
+      <path
+        d="M12 2.5l2.1 4.3 4.7.7-3.4 3.3.8 4.6L12 12.6 7.8 15.4l.8-4.6-3.4-3.3 4.7-.7L12 2.5z"
+        fill={active ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth={1.4}
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

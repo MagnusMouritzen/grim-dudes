@@ -1,10 +1,20 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import StatBlockCard from './StatBlockCard';
+import MultiViewWoundBar from './MultiViewWoundBar';
+import ViewD6Roller from './ViewD6Roller';
+import ViewDamageRoller from './ViewDamageRoller';
+import ViewDiceRoller from './ViewDiceRoller';
+import ViewCombatLog from './ViewCombatLog';
+import ViewCurrencyHelper from './ViewCurrencyHelper';
+import ViewOpposedD100 from './ViewOpposedD100';
+import ViewSceneTimeChips from './ViewSceneTimeChips';
+import ViewSessionBundleCopy from './ViewSessionBundleCopy';
+import ViewSessionNotes from './ViewSessionNotes';
 import type {
   ArmourRef,
   CareersRef,
@@ -22,16 +32,30 @@ import {
   traitRefSchema,
   weaponsRefSchema,
 } from '@/lib/apiSchemas';
-import { statblockBodySchema } from '@/lib/validateStatblock';
+import { statblockBodySchemaBase } from '@/lib/validateStatblock';
 import { z } from 'zod';
 import { deleteStatblockAction } from '@/app-actions/statblocks';
-import { ChevronIcon, EditIcon, PrinterIcon, ScrollIcon, SkullIcon, TrashIcon } from './icons';
+import { buildStatblockPlainText } from '@/lib/encounterSheet';
+import { getPublicSiteBase } from '@/lib/siteUrl';
+import { postDuplicateStatblock } from '@/lib/duplicateStatblockClient';
+import {
+  ChevronIcon,
+  EditIcon,
+  LinkIcon,
+  PlusIcon,
+  PrinterIcon,
+  ScrollIcon,
+  SkullIcon,
+  TrashIcon,
+} from './icons';
 
 const API = '/api';
 
-export default function StatBlockView() {
+function StatBlockViewInner() {
   const params = useParams<{ id: string }>();
   const id = params?.id;
+  const searchParams = useSearchParams();
+  const playerMode = searchParams.get('player') === '1';
   const router = useRouter();
   const [block, setBlock] = useState<Statblock | null>(null);
   const [skillsRef, setSkillsRef] = useState<SkillRef[]>([]);
@@ -43,7 +67,10 @@ export default function StatBlockView() {
   const [error, setError] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [copyHint, setCopyHint] = useState<string | null>(null);
+  const [dupBusy, setDupBusy] = useState(false);
   const confirmRef = useRef<HTMLDivElement | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { rise, ease } = useGrimMotion();
 
   useEffect(() => {
@@ -66,7 +93,7 @@ export default function StatBlockView() {
 
     Promise.all([fetchBlock, fetchSkills, fetchTraits, fetchWeapons, fetchArmour, fetchCareers])
       .then(([blockData, skillsData, traitsData, weaponsData, armourData, careersData]) => {
-        const parsedBlock = safeParse(statblockBodySchema.passthrough(), blockData);
+        const parsedBlock = safeParse(statblockBodySchemaBase.passthrough(), blockData);
         setBlock((parsedBlock as Statblock | null) ?? null);
         setSkillsRef(
           (safeParse(z.array(skillRefSchema), skillsData) as SkillRef[] | null) ?? []
@@ -99,6 +126,73 @@ export default function StatBlockView() {
       document.removeEventListener('mousedown', onClick);
     };
   }, [confirmOpen]);
+
+  useEffect(
+    () => () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    },
+    []
+  );
+
+  const pageUrl = id
+    ? `${getPublicSiteBase()}/statblock/${encodeURIComponent(id)}`
+    : '';
+  const playerPageUrl = id
+    ? `${getPublicSiteBase()}/statblock/${encodeURIComponent(id)}?player=1`
+    : '';
+  const flashCopy = (label: string) => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    setCopyHint(label);
+    copyTimerRef.current = setTimeout(() => setCopyHint(null), 2000);
+  };
+
+  const copyPageUrl = async () => {
+    if (!pageUrl) return;
+    try {
+      await navigator.clipboard.writeText(playerMode ? playerPageUrl : pageUrl);
+      flashCopy('Link copied');
+    } catch {
+      setError('Could not copy to clipboard');
+    }
+  };
+
+  const copyMd = async () => {
+    if (!pageUrl) return;
+    const url = playerMode ? playerPageUrl : pageUrl;
+    const line = block?.name
+      ? `[${block.name.replace(/]/g, '')}](${url})`
+      : url;
+    try {
+      await navigator.clipboard.writeText(line);
+      flashCopy('Markdown copied');
+    } catch {
+      setError('Could not copy to clipboard');
+    }
+  };
+
+  const copyPlain = async () => {
+    if (!block || !pageUrl) return;
+    const url = playerMode ? playerPageUrl : pageUrl;
+    try {
+      await navigator.clipboard.writeText(buildStatblockPlainText(block, traitsRef, url));
+      flashCopy('Text copied');
+    } catch {
+      setError('Could not copy to clipboard');
+    }
+  };
+
+  const handleDuplicate = async () => {
+    if (!block) return;
+    setError(null);
+    setDupBusy(true);
+    const r = await postDuplicateStatblock(block);
+    setDupBusy(false);
+    if (!r.ok) {
+      setError(r.error);
+      return;
+    }
+    router.push(`/statblock/${encodeURIComponent(r.id)}/edit`);
+  };
 
   const handleDelete = async () => {
     if (!id) return;
@@ -149,7 +243,14 @@ export default function StatBlockView() {
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />
           Bestiary
         </Link>
-        <div className="flex gap-2 relative">
+        <div className="flex flex-wrap gap-2 items-center relative justify-end">
+          {copyHint && (
+            <span className="text-[0.65rem] uppercase tracking-wider text-gold-400" role="status">
+              {copyHint}
+            </span>
+          )}
+          {!playerMode && (
+            <>
           <button
             type="button"
             onClick={() => {
@@ -173,6 +274,46 @@ export default function StatBlockView() {
           </button>
           <button
             type="button"
+            onClick={copyPageUrl}
+            className="grim-btn-ghost"
+            aria-label="Copy page link"
+          >
+            <LinkIcon className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Copy link</span>
+          </button>
+          <button
+            type="button"
+            onClick={copyPlain}
+            className="grim-btn-ghost"
+            aria-label="Copy as plain text summary"
+            title="Name, wounds, move, short note, link — for chat or VTT"
+          >
+            <ScrollIcon className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Text</span>
+          </button>
+          <button
+            type="button"
+            onClick={copyMd}
+            className="grim-btn-ghost"
+            aria-label="Copy as markdown"
+          >
+            <ScrollIcon className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">MD</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleDuplicate}
+            disabled={dupBusy}
+            className="grim-btn-ghost"
+            aria-label="Duplicate as new stat block"
+          >
+            <PlusIcon className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{dupBusy ? '…' : 'Duplicate'}</span>
+          </button>
+            </>
+          )}
+          <button
+            type="button"
             onClick={() => window.print()}
             className="grim-btn-ghost"
             aria-label="Print"
@@ -180,12 +321,20 @@ export default function StatBlockView() {
             <PrinterIcon className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Print</span>
           </button>
+          {!playerMode && (
+            <>
           <Link
             href={`/statblock/${encodeURIComponent(id ?? '')}/edit`}
             className="grim-btn-ghost"
           >
             <EditIcon className="w-3.5 h-3.5" />
             Edit
+          </Link>
+          <Link
+            href={id ? `/statblock/${encodeURIComponent(id)}?player=1` : '#'}
+            className="grim-btn-ghost"
+          >
+            Player view
           </Link>
           <div className="relative" ref={confirmRef}>
             <button
@@ -234,18 +383,52 @@ export default function StatBlockView() {
               )}
             </AnimatePresence>
           </div>
+            </>
+          )}
+          {playerMode && id && (
+            <Link href={`/statblock/${encodeURIComponent(id)}`} className="grim-btn-ghost">
+              GM view
+            </Link>
+          )}
         </div>
       </div>
+
+      {block && !playerMode && id && (
+        <div className="max-w-xl lg:max-w-md xl:max-w-lg mx-auto mb-4 print:hidden w-full space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <ViewDiceRoller compact historyKey={id ? `statblock:${String(id)}` : undefined} />
+            <ViewDamageRoller compact logKey={id ? `statblock:${String(id)}` : undefined} />
+            <ViewD6Roller compact logKey={id ? `statblock:${String(id)}` : undefined} />
+          </div>
+          <ViewCurrencyHelper compact />
+          <ViewOpposedD100 compact logKey={id ? `statblock:${String(id)}` : undefined} />
+          <ViewSceneTimeChips compact viewKey={`statblock:${String(id)}`} />
+          <ViewSessionNotes viewKey={`statblock:${String(id)}`} />
+          <ViewCombatLog viewKey={`statblock:${String(id)}`} />
+          <ViewSessionBundleCopy viewKey={`statblock:${String(id)}`} />
+        </div>
+      )}
 
       <motion.article
         initial={rise.initial}
         animate={rise.animate}
         transition={rise.transition}
-        className="max-w-xl lg:max-w-md xl:max-w-lg mx-auto"
+        className="statblock-print-root max-w-xl lg:max-w-md xl:max-w-lg mx-auto"
       >
+        {block && !playerMode && (
+          <div className="mb-2 flex justify-end print:hidden">
+            <MultiViewWoundBar
+              viewKey="statblock-page"
+              block={block}
+              traitsRef={traitsRef}
+              dense
+            />
+          </div>
+        )}
         <StatBlockCard
           block={block}
           dense
+          playerMode={playerMode}
           skillsRef={skillsRef}
           traitsRef={traitsRef}
           weaponsRef={weaponsRef}
@@ -254,5 +437,20 @@ export default function StatBlockView() {
         />
       </motion.article>
     </div>
+  );
+}
+
+export default function StatBlockView() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-xl mx-auto grim-card shimmer h-80 p-6">
+          <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
+          <div className="h-40 w-full bg-ink-900/60 rounded" />
+        </div>
+      }
+    >
+      <StatBlockViewInner />
+    </Suspense>
   );
 }

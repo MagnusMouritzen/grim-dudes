@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { statblockBodySchema } from './validateStatblock';
+import { statblockBodySchemaBase } from './validateStatblock';
 
 /**
  * Client-facing parse schemas. These are intentionally lenient:
@@ -7,7 +7,7 @@ import { statblockBodySchema } from './validateStatblock';
  * does not break on forward-compatible API changes.
  */
 
-const statblockReadSchema = statblockBodySchema.passthrough();
+const statblockReadSchema = statblockBodySchemaBase.passthrough();
 
 export const statblockArraySchema = z.array(statblockReadSchema);
 

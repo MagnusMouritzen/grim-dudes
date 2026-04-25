@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ablaze",
+    "name": "Ablaze",
+    "hint": "Burning: ongoing damage and panic-style checks are resolved with your group’s fire rules."
+  },
+  {
+    "id": "bleeding",
+    "name": "Bleeding",
+    "hint": "Uncontrolled blood loss over time—use your rulebook’s bleeding steps between rounds."
+  },
+  {
+    "id": "blinded",
+    "name": "Blinded",
+    "hint": "Vision heavily impaired: ranged and observation suffer until the condition ends."
+  },
+  {
+    "id": "broken",
+    "name": "Broken",
+    "hint": "Morale collapse: may flee, hide, or refuse to fight until rallied—see social/fear rules."
+  },
+  {
+    "id": "charmed",
+    "name": "Charmed",
+    "hint": "Pulled to favour the charmer: judgement and loyalties skew—combat, commands, and tests use your book."
+  },
+  {
+    "id": "deafened",
+    "name": "Deafened",
+    "hint": "Hearing impaired: orders and awareness at distance can fail until it clears."
+  },
+  {
+    "id": "encumbered",
+    "name": "Encumbered",
+    "hint": "Burdened by gear or wounds: movement and sometimes tests are harder than usual."
+  },
+  {
+    "id": "entangled",
+    "name": "Entangled",
+    "hint": "Caught in nets, vines, or grapples: movement and freedom of action are restricted."
+  },
+  {
+    "id": "fatigued",
+    "name": "Fatigued",
+    "hint": "Tired from exertion: stamina and focus suffer until you rest or recover."
+  },
+  {
+    "id": "fear",
+    "name": "Fear",
+    "hint": "Dread in play: terror checks, fight-or-flight, and when you must flee or freeze—your book is the source."
+  },
+  {
+    "id": "poisoned",
+    "name": "Poisoned",
+    "hint": "Toxin in the body: damage or debuffs may tick—follow the poison’s profile in play."
+  },
+  {
+    "id": "prone",
+    "name": "Prone",
+    "hint": "On the ground: melee and movement work differently; standing usually costs an action."
+  },
+  {
+    "id": "restrained",
+    "name": "Restrained",
+    "hint": "Pinned, tied, or grappled: arms or legs may be limited; breaking free and attacks follow your book."
+  },
+  {
+    "id": "stunned",
+    "name": "Stunned",
+    "hint": "Dazed or reeling: fewer or worse actions until the stun wears off."
+  },
+  {
+    "id": "surprised",
+    "name": "Surprised",
+    "hint": "Caught off-guard: your group’s surprise rules set who acts when before normal initiative."
+  },
+  {
+    "id": "unconscious",
+    "name": "Unconscious",
+    "hint": "Out cold: no voluntary actions until revived; very vulnerable in combat."
+  }
+]

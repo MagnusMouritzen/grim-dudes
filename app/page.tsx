@@ -1,4 +1,5 @@
-import StatBlockList from '@/components/StatBlockList';
+import { Suspense } from 'react';
+import StatBlockList, { BestiaryListSkeleton } from '@/components/StatBlockList';
 import { listStatblocks } from '@/lib/statblockRedis';
 import { getTraits } from '@/lib/referenceData';
 import type { Statblock, TraitRef } from '@/lib/types';
@@ -24,8 +25,16 @@ export default async function HomePage() {
 
   if (blocks == null) {
     // Redis unavailable: let the client island render its own error state.
-    return <StatBlockList />;
+    return (
+      <Suspense fallback={<BestiaryListSkeleton />}>
+        <StatBlockList />
+      </Suspense>
+    );
   }
 
-  return <StatBlockList initialBlocks={blocks} initialTraits={traits} />;
+  return (
+    <Suspense fallback={<BestiaryListSkeleton />}>
+      <StatBlockList initialBlocks={blocks} initialTraits={traits} />
+    </Suspense>
+  );
 }

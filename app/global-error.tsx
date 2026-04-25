@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Cinzel, Crimson_Text } from 'next/font/google';
 import './globals.css';
 
@@ -17,6 +18,15 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+    if (!dsn) return;
+    void import('@sentry/browser').then((Sentry) => {
+      Sentry.init({ dsn, tracesSampleRate: 0.1, sendDefaultPii: false });
+      Sentry.captureException(error);
+    });
+  }, [error]);
+
   return (
     <html lang="en" className={`${cinzel.variable} ${crimson.variable}`}>
       <body className="bg-ink-900 text-parchment min-h-screen flex items-center justify-center p-6">

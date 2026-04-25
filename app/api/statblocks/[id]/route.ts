@@ -8,7 +8,7 @@ import { slugifyStatblockId } from '@/lib/statblockKeys';
 import { validateStatblockPayload } from '@/lib/validateStatblock';
 import { requireWriteAuth } from '@/lib/writeAuth';
 import { limitWrite } from '@/lib/rateLimit';
-import { logError, requestId } from '@/lib/logger';
+import { logError, logInfo, requestId } from '@/lib/logger';
 import type { StatblockRecord } from '@/lib/statblockRedis';
 
 export const runtime = 'nodejs';
@@ -68,6 +68,12 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
     const payload = { ...validated.data, id: slug } as StatblockRecord;
     await saveStatblock(payload);
+    const rid = requestId(req);
+    logInfo('api.statblocks.update', {
+      rid,
+      correlation: rid,
+      statblockId: slug,
+    });
     return NextResponse.json(payload, { status: 200 });
   } catch (e) {
     logError('api.statblocks.put.failed', e, { rid: requestId(req), slug });
@@ -90,6 +96,12 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     if (!ok) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
+    const rid = requestId(req);
+    logInfo('api.statblocks.delete', {
+      rid,
+      correlation: rid,
+      statblockId: slug,
+    });
     return new NextResponse(null, { status: 204 });
   } catch (e) {
     logError('api.statblocks.delete.failed', e, { rid: requestId(req), slug });

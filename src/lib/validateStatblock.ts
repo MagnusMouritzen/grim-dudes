@@ -43,39 +43,54 @@ const armourPickSchema = z.object({
   name: z.string().max(200),
 });
 
-export const statblockBodySchema = z
-  .object({
-    id: z.string().max(200).optional(),
-    name: z.string().max(500).optional(),
-    templateId: z.string().max(200).optional(),
-    randomiseCharacteristics: z.boolean().optional(),
-    characteristics: z.record(charKeyEnum, characteristicValueSchema).optional(),
-    size: z.string().max(50).optional(),
-    wounds: z.number().finite().nonnegative().optional(),
-    movement: z.number().finite().optional(),
-    skills: z.array(skillSchema).max(300).optional(),
-    talents: z.array(z.string().max(200)).max(200).optional(),
-    traits: z.array(traitSchema).max(200).optional(),
-    tags: z.array(z.string().min(1).max(80)).max(50).optional(),
-    careers: z.array(careerSchema).max(20).optional(),
-    notes: z.string().max(5000).optional(),
-    weapons: z
-      .union([
-        z.string().max(5000),
-        z.object({
-          melee: z.array(weaponPickSchema).max(50).optional(),
-          ranged: z.array(weaponPickSchema).max(50).optional(),
-        }),
-      ])
-      .optional(),
-    armour: z.union([z.array(armourPickSchema).max(30), z.string().max(2000)]).optional(),
-  })
-  .strict();
+/** Strips unknown keys; same field rules as the strict API schema. */
+export const statblockBodySchemaBase = z.object({
+  id: z.string().max(200).optional(),
+  name: z.string().max(500).optional(),
+  templateId: z.string().max(200).optional(),
+  randomiseCharacteristics: z.boolean().optional(),
+  characteristics: z.record(charKeyEnum, characteristicValueSchema).optional(),
+  size: z.string().max(50).optional(),
+  wounds: z.number().finite().nonnegative().optional(),
+  movement: z.number().finite().optional(),
+  skills: z.array(skillSchema).max(300).optional(),
+  talents: z.array(z.string().max(200)).max(200).optional(),
+  traits: z.array(traitSchema).max(200).optional(),
+  tags: z.array(z.string().min(1).max(80)).max(50).optional(),
+  careers: z.array(careerSchema).max(20).optional(),
+  notes: z.string().max(5000).optional(),
+  /** Read-aloud / player-safe description; separate from GM notes. */
+  playerNotes: z.string().max(5000).optional(),
+  weapons: z
+    .union([
+      z.string().max(5000),
+      z.object({
+        melee: z.array(weaponPickSchema).max(50).optional(),
+        ranged: z.array(weaponPickSchema).max(50).optional(),
+      }),
+    ])
+    .optional(),
+  armour: z.union([z.array(armourPickSchema).max(30), z.string().max(2000)]).optional(),
+});
 
-export type StatblockPayload = z.infer<typeof statblockBodySchema>;
+export const statblockBodySchema = statblockBodySchemaBase.strict();
+
+export type StatblockPayload = z.infer<typeof statblockBodySchemaBase>;
 
 export function validateStatblockPayload(body: unknown): { ok: true; data: StatblockPayload } | { ok: false; error: string } {
   const parsed = statblockBodySchema.safeParse(body);
+  if (!parsed.success) {
+    const msg = parsed.error.issues.map((e) => `${e.path.join('.') || 'root'}: ${e.message}`).join('; ');
+    return { ok: false, error: msg || 'Invalid stat block payload' };
+  }
+  return { ok: true, data: parsed.data };
+}
+
+/** For duplicating stored records that may include legacy or unknown keys. */
+export function normalizeStatblockPayload(
+  body: unknown
+): { ok: true; data: StatblockPayload } | { ok: false; error: string } {
+  const parsed = statblockBodySchemaBase.safeParse(body);
   if (!parsed.success) {
     const msg = parsed.error.issues.map((e) => `${e.path.join('.') || 'root'}: ${e.message}`).join('; ');
     return { ok: false, error: msg || 'Invalid stat block payload' };

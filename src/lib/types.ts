@@ -60,6 +60,8 @@ export type Statblock = {
   weapons?: WeaponsShape;
   armour?: ArmourShape;
   notes?: string;
+  /** Shown in player / read-aloud views; not full stat blocks. */
+  playerNotes?: string;
   [key: string]: unknown;
 };
 

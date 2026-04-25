@@ -27,7 +27,8 @@ import {
   traitRefSchema,
   weaponsRefSchema,
 } from '@/lib/apiSchemas';
-import { statblockBodySchema } from '@/lib/validateStatblock';
+import { statblockBodySchemaBase } from '@/lib/validateStatblock';
+import { postDuplicateStatblock } from '@/lib/duplicateStatblockClient';
 import { z } from 'zod';
 import {
   ChevronIcon,
@@ -65,6 +66,8 @@ type FormState = {
   movement: string;
   talents: string;
   tags: string;
+  notes: string;
+  playerNotes: string;
 };
 
 type NonTemplatePending = { routeId: string; data: Statblock } | null;
@@ -170,6 +173,7 @@ export default function StatBlockEditor() {
   const { ease } = useGrimMotion();
   const [rerollKey, setRerollKey] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [dupBusy, setDupBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
   const markDirty = useCallback(() => setDirty(true), []);
   const templateModalRef = useRef<HTMLDivElement | null>(null);
@@ -201,6 +205,8 @@ export default function StatBlockEditor() {
     movement: '',
     talents: '',
     tags: '',
+    notes: '',
+    playerNotes: '',
   });
   const [weaponsRef, setWeaponsRef] = useState<WeaponsRef>(emptyWeaponsRef);
   const [armourRef, setArmourRef] = useState<ArmourRef>(emptyArmourRef);
@@ -347,7 +353,7 @@ export default function StatBlockEditor() {
     fetch(`${API}/statblocks/${encodeURIComponent(id)}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Not found'))))
       .then((raw: unknown) => {
-        const parsed = safeParse(statblockBodySchema.passthrough(), raw);
+        const parsed = safeParse(statblockBodySchemaBase.passthrough(), raw);
         const data = (parsed as Statblock | null) ?? ({} as Statblock);
         setExistingId(typeof data.id === 'string' ? data.id : null);
         const chars = data.characteristics || {};
@@ -396,6 +402,8 @@ export default function StatBlockEditor() {
           movement: data.movement != null ? String(data.movement) : '',
           talents: Array.isArray(data.talents) ? data.talents.join(', ') : '',
           tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
+          notes: typeof data.notes === 'string' ? data.notes : '',
+          playerNotes: typeof (data as { playerNotes?: string }).playerNotes === 'string' ? (data as { playerNotes: string }).playerNotes : '',
         }));
         const weaponsObj =
           data.weapons && typeof data.weapons === 'object' ? data.weapons : null;
@@ -710,6 +718,8 @@ export default function StatBlockEditor() {
           level: c.level || 1,
         }))
       : undefined;
+    const notesTrim = form.notes.trim();
+    const playerNotesTrim = form.playerNotes.trim();
     if (template) {
       const characteristics: Record<string, { base: number; advances: number; addition: number }> = {};
       CHAR_ORDER.forEach((k) => {
@@ -734,6 +744,8 @@ export default function StatBlockEditor() {
         traits: traitsPayload.length ? traitsPayload : undefined,
         careers: careersPayload,
         tags: tags.length ? tags : undefined,
+        notes: notesTrim || undefined,
+        playerNotes: playerNotesTrim || undefined,
         weapons:
           selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0
             ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
@@ -759,6 +771,8 @@ export default function StatBlockEditor() {
       traits: traitsPayload.length ? traitsPayload : undefined,
       careers: careersPayload,
       tags: tags.length ? tags : undefined,
+      notes: notesTrim || undefined,
+      playerNotes: playerNotesTrim || undefined,
       weapons:
         selectedMeleeWeapons.length > 0 || selectedRangedWeapons.length > 0
           ? { melee: selectedMeleeWeapons, ranged: selectedRangedWeapons }
@@ -788,6 +802,21 @@ export default function StatBlockEditor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
+  const handleDuplicate = useCallback(async () => {
+    if (!id) return;
+    setError(null);
+    setDupBusy(true);
+    const r = await postDuplicateStatblock(toPayload());
+    setDupBusy(false);
+    if (!r.ok) {
+      setError(r.error);
+      return;
+    }
+    router.push(`/statblock/${encodeURIComponent(r.id)}/edit`);
+    // toPayload: same as handleSave
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, router]);
+
   const handleSaveRef = useRef(handleSave);
   useEffect(() => {
     handleSaveRef.current = handleSave;
@@ -795,7 +824,7 @@ export default function StatBlockEditor() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast"
@@ -803,9 +832,23 @@ export default function StatBlockEditor() {
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />
           Bestiary
         </Link>
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment/50 hidden sm:block">
-          {id ? 'Editing' : 'Forging new'}
-        </p>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {id ? (
+            <button
+              type="button"
+              onClick={handleDuplicate}
+              disabled={dupBusy || saving}
+              className="grim-btn-ghost"
+              aria-label="Duplicate as new stat block"
+            >
+              <PlusIcon className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{dupBusy ? 'Duplicating…' : 'Duplicate'}</span>
+            </button>
+          ) : null}
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment/50 hidden sm:block">
+            {id ? 'Editing' : 'Forging new'}
+          </p>
+        </div>
       </div>
       <h1 className="font-display text-display-lg text-gold-400 mb-6 tracking-wide leading-none">
         {id ? 'Edit Stat Block' : 'New Stat Block'}
@@ -1072,6 +1115,32 @@ export default function StatBlockEditor() {
               onChange={(e) => update('tags', e.target.value)}
               placeholder="e.g. human, ally, ubersreik"
               className="grim-input"
+            />
+          </div>
+          <div>
+            <label className="grim-label" htmlFor="statblock-gm-notes">
+              GM notes (not shown in player view)
+            </label>
+            <textarea
+              id="statblock-gm-notes"
+              value={form.notes}
+              onChange={(e) => update('notes', e.target.value)}
+              rows={3}
+              className="grim-input min-h-[4.5rem]"
+              placeholder="Private reminders, scene hooks…"
+            />
+          </div>
+          <div>
+            <label className="grim-label" htmlFor="statblock-player-notes">
+              Read aloud / player description
+            </label>
+            <textarea
+              id="statblock-player-notes"
+              value={form.playerNotes}
+              onChange={(e) => update('playerNotes', e.target.value)}
+              rows={3}
+              className="grim-input min-h-[4.5rem]"
+              placeholder="What players see or hear, without full stats…"
             />
           </div>
 

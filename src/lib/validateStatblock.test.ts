@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateStatblockPayload } from './validateStatblock';
+import { normalizeStatblockPayload, validateStatblockPayload } from './validateStatblock';
 
 describe('validateStatblockPayload', () => {
   it('accepts minimal empty payload', () => {
@@ -37,5 +37,27 @@ describe('validateStatblockPayload', () => {
     const skills = Array.from({ length: 500 }, (_, i) => ({ name: `s${i}`, advances: 0 }));
     const res = validateStatblockPayload({ skills });
     expect(res.ok).toBe(false);
+  });
+});
+
+describe('normalizeStatblockPayload', () => {
+  it('keeps playerNotes when present', () => {
+    const res = normalizeStatblockPayload({ name: 'X', playerNotes: 'You see a rat.' });
+    expect(res.ok).toBe(true);
+    if (res.ok) expect(res.data.playerNotes).toBe('You see a rat.');
+  });
+
+  it('strips unknown fields and succeeds', () => {
+    const res = normalizeStatblockPayload({
+      id: 'goblin',
+      name: 'Goblin',
+      extra: true,
+      legacy: { x: 1 },
+    });
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      expect(res.data.id).toBe('goblin');
+      expect('extra' in res.data).toBe(false);
+    }
   });
 });

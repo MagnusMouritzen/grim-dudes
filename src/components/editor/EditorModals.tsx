@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { CloseIcon } from '@/components/icons';
 import { useGrimMotion } from '@/lib/useMotion';
 import type { CareersRef, Template } from '@/lib/types';
@@ -17,9 +17,54 @@ type EditorModalsProps = {
   onCloseCareer: () => void;
   onPickTemplate: (t: Template) => void;
   onPickCareer: (pick: CareerPick) => void;
-  templateDialogRef: React.Ref<HTMLDivElement>;
-  careerDialogRef: React.Ref<HTMLDivElement>;
+  templateDialogRef: React.RefObject<HTMLDivElement | null>;
+  careerDialogRef: React.RefObject<HTMLDivElement | null>;
 };
+
+function useDialogA11y(
+  open: boolean,
+  rootRef: React.RefObject<HTMLDivElement | null>,
+  onClose: () => void
+) {
+  useEffect(() => {
+    if (!open) return;
+    const id = requestAnimationFrame(() => {
+      rootRef.current?.focus();
+    });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const root = rootRef.current;
+      if (!root) return;
+      const els = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])'
+        )
+      );
+      if (els.length === 0) return;
+      const first = els[0];
+      const last = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else if (last && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      cancelAnimationFrame(id);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, onClose, rootRef]);
+}
 
 const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
   function EditorModals(props) {
@@ -36,6 +81,10 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
       templateDialogRef,
       careerDialogRef,
     } = props;
+
+    useDialogA11y(templateOpen, templateDialogRef, onCloseTemplate);
+    useDialogA11y(careerOpen, careerDialogRef, onCloseCareer);
+
     return (
       <AnimatePresence>
         {templateOpen && (
@@ -51,7 +100,7 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Choose template"
+              aria-labelledby="editor-template-title"
               ref={templateDialogRef}
               tabIndex={-1}
               initial={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -62,7 +111,9 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
               onClick={(e) => e.stopPropagation()}
             >
               <div className="fx-card-header px-4 py-3 border-b border-gold-700/50 flex justify-between items-center">
-                <h2 className="font-display text-gold-400 tracking-wide">Choose template</h2>
+                <h2 id="editor-template-title" className="font-display text-gold-400 tracking-wide">
+                  Choose template
+                </h2>
                 <button
                   type="button"
                   className="text-parchment/80 hover:text-gold-400 transition-colors"
@@ -104,7 +155,7 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Choose career"
+              aria-labelledby="editor-career-title"
               ref={careerDialogRef}
               tabIndex={-1}
               initial={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -115,7 +166,9 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
               onClick={(e) => e.stopPropagation()}
             >
               <div className="fx-card-header px-4 py-3 border-b border-gold-700/50 flex justify-between items-center">
-                <h2 className="font-display text-gold-400 tracking-wide">Choose career</h2>
+                <h2 id="editor-career-title" className="font-display text-gold-400 tracking-wide">
+                  Choose career
+                </h2>
                 <button
                   type="button"
                   className="text-parchment/80 hover:text-gold-400 transition-colors"

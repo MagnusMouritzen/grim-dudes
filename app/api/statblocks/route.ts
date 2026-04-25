@@ -8,7 +8,7 @@ import { slugifyStatblockId } from '@/lib/statblockKeys';
 import { validateStatblockPayload } from '@/lib/validateStatblock';
 import { requireWriteAuth } from '@/lib/writeAuth';
 import { limitWrite } from '@/lib/rateLimit';
-import { logError, requestId } from '@/lib/logger';
+import { logDebug, logError, logInfo, requestId } from '@/lib/logger';
 import type { StatblockRecord } from '@/lib/statblockRedis';
 
 export const runtime = 'nodejs';
@@ -28,6 +28,13 @@ export async function GET(req: Request) {
       const cursor = cursorParam ?? '0';
       const limit = Math.min(Math.max(Number(limitParam ?? '100'), 1), 500);
       const page = await listStatblocksPage(cursor, limit);
+      const rid = requestId(req);
+      logInfo('api.statblocks.list.page', {
+        rid,
+        correlation: rid,
+        count: page.blocks.length,
+        hasNext: page.nextCursor !== '0',
+      });
       return NextResponse.json({
         items: page.blocks,
         nextCursor: page.nextCursor,
@@ -35,6 +42,12 @@ export async function GET(req: Request) {
     }
 
     const blocks = await listStatblocks();
+    const rid = requestId(req);
+    logDebug('api.statblocks.list.full', {
+      rid,
+      correlation: rid,
+      count: blocks.length,
+    });
     if (all === '1') {
       // Explicit opt-in; same response as the default for backwards compat.
       return NextResponse.json(blocks);
@@ -82,6 +95,12 @@ export async function POST(req: Request) {
     const id = slugifyStatblockId(String(baseId));
     const payload = { ...data, id } as StatblockRecord;
     await saveStatblock(payload);
+    const rid = requestId(req);
+    logInfo('api.statblocks.create', {
+      rid,
+      correlation: rid,
+      statblockId: id,
+    });
     return NextResponse.json(payload, { status: 201 });
   } catch (e) {
     logError('api.statblocks.save.failed', e, { rid: requestId(req) });

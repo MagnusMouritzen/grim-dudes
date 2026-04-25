@@ -27,7 +27,10 @@ beforeEach(() => {
   else process.env.UPSTASH_REDIS_REST_URL = origUpUrl;
   if (origUpTok == null) delete process.env.UPSTASH_REDIS_REST_TOKEN;
   else process.env.UPSTASH_REDIS_REST_TOKEN = origUpTok;
-  if (origNodeEnv != null) process.env.NODE_ENV = origNodeEnv;
+  if (origNodeEnv != null) {
+    // Tests restore env; @types/node marks NODE_ENV as read-only.
+    (process.env as { NODE_ENV?: string }).NODE_ENV = origNodeEnv;
+  }
 });
 
 afterEach(() => {
@@ -41,8 +44,11 @@ afterEach(() => {
   else process.env.AUTH_DISABLED = origDisabled;
   if (origVercelEnv == null) delete process.env.VERCEL_ENV;
   else process.env.VERCEL_ENV = origVercelEnv;
-  if (origNodeEnv == null) delete process.env.NODE_ENV;
-  else process.env.NODE_ENV = origNodeEnv;
+  if (origNodeEnv == null) {
+    delete (process.env as { NODE_ENV?: string }).NODE_ENV;
+  } else {
+    (process.env as { NODE_ENV?: string }).NODE_ENV = origNodeEnv;
+  }
   if (origUpUrl == null) delete process.env.UPSTASH_REDIS_REST_URL;
   else process.env.UPSTASH_REDIS_REST_URL = origUpUrl;
   if (origUpTok == null) delete process.env.UPSTASH_REDIS_REST_TOKEN;

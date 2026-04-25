@@ -144,6 +144,8 @@ type StatBlockCardProps = {
   block: Statblock | null | undefined;
   compact?: boolean;
   dense?: boolean;
+  /** Player-safe view: name + read-aloud text only (no mechanics). */
+  playerMode?: boolean;
   skillsRef?: SkillRef[];
   traitsRef?: TraitRef[];
   weaponsRef?: WeaponsRef | null;
@@ -155,6 +157,7 @@ export default function StatBlockCard({
   block,
   compact = false,
   dense = false,
+  playerMode = false,
   skillsRef,
   traitsRef,
   weaponsRef,
@@ -162,6 +165,26 @@ export default function StatBlockCard({
   careersRef,
 }: StatBlockCardProps) {
   if (!block) return null;
+
+  if (playerMode) {
+    const read = typeof block.playerNotes === 'string' ? block.playerNotes.trim() : '';
+    return (
+      <article className="grim-card print:break-inside-avoid border-gold-700/40">
+        <div className="fx-card-header px-6 py-4 border-b border-gold-700/50">
+          <h2 className="font-display text-2xl text-gold-400 tracking-wide">{block.name || block.id || 'Creature'}</h2>
+        </div>
+        <div className="p-6">
+          {read ? (
+            <p className="whitespace-pre-line text-parchment text-base leading-relaxed border-l-2 border-gold-600/70 pl-4">
+              {read}
+            </p>
+          ) : (
+            <p className="text-parchment/55 text-sm italic">No player-facing description yet.</p>
+          )}
+        </div>
+      </article>
+    );
+  }
   const talents = Array.isArray(block.talents) ? block.talents : [];
   const { effectiveCh, effectiveMovement, effectiveWounds } = computeEffectiveStats(
     block,
@@ -273,6 +296,31 @@ export default function StatBlockCard({
         </div>
       </div>
       <div className={d ? 'p-3 space-y-3' : 'p-6 space-y-6'}>
+        {typeof block.playerNotes === 'string' && block.playerNotes.trim() ? (
+          <section
+            className={
+              d
+                ? 'rounded border border-gold-600/35 bg-gold-950/20 px-3 py-2.5'
+                : 'rounded border border-gold-600/35 bg-gold-950/20 px-4 py-3'
+            }
+            aria-label="Read aloud"
+          >
+            <p
+              className={`text-gold-400/90 font-display uppercase tracking-wider font-semibold ${
+                d ? 'text-[0.6rem] mb-1' : 'text-xs mb-1.5'
+              }`}
+            >
+              Read aloud
+            </p>
+            <p
+              className={`whitespace-pre-line text-parchment/95 ${
+                d ? 'text-xs leading-snug' : 'text-sm leading-relaxed'
+              }`}
+            >
+              {block.playerNotes}
+            </p>
+          </section>
+        ) : null}
         <section>
           <SectionHeading dense={d}>Characteristics</SectionHeading>
           <div className={d ? 'grid grid-cols-5 sm:grid-cols-10 gap-1' : 'grid grid-cols-5 sm:grid-cols-10 gap-1.5'}>
