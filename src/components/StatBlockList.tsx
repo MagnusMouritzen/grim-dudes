@@ -585,7 +585,7 @@ export default function StatBlockList({
   }
 
   return (
-    <div className="space-y-6 w-full min-w-0">
+    <div className="space-y-6 grim-page">
       <header className="flex flex-wrap items-end justify-between gap-4 print:hidden">
         <div className="min-w-0">
           <p className="grim-label mb-1">Warhammer Fantasy Roleplay 4e</p>
@@ -1311,13 +1311,15 @@ function EmptyState({
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="grim-card p-8 text-center flex flex-col items-center gap-4 border-blood-700/60">
-      <div className="rounded-full border border-blood-700/60 bg-blood-900/40 p-4">
-        <SkullIcon className="w-12 h-12 text-blood-400" />
-      </div>
-      <div>
-        <h2 className="font-display text-xl text-blood-400 tracking-wide">The stars are ill</h2>
-        <p className="text-parchment/80 mt-1 max-w-md mx-auto text-sm">{message}</p>
+    <div className="grim-page max-w-xl mx-auto">
+      <div className="grim-card p-8 text-center flex flex-col items-center gap-4 border-blood-700/60">
+        <div className="rounded-full border border-blood-700/60 bg-blood-900/40 p-4">
+          <SkullIcon className="w-12 h-12 text-blood-400" />
+        </div>
+        <div>
+          <h2 className="font-display text-xl text-blood-400 tracking-wide">The stars are ill</h2>
+          <p className="text-parchment/80 mt-1 max-w-md mx-auto text-sm">{message}</p>
+        </div>
       </div>
     </div>
   );

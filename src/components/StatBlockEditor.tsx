@@ -823,7 +823,7 @@ export default function StatBlockEditor() {
   }, [handleSave]);
 
   return (
-    <div className="w-full min-w-0">
+    <div className="grim-page">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
         <Link href="/" className="grim-back-link">
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />

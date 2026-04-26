@@ -70,6 +70,13 @@
   .grim-back-link {
     @apply inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast;
   }
+  /**
+   * Root wrapper for route content inside `<main>`: prevents flex children from overflowing
+   * horizontally (wide tables, grids). Pair with `.grim-content-max` only when you need the max width.
+   */
+  .grim-page {
+    @apply w-full min-w-0;
+  }
 
   .grim-card {
     @apply relative rounded-card border border-iron-700 bg-ink-800 shadow-card;

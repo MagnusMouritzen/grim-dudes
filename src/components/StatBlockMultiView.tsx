@@ -399,7 +399,7 @@ export default function StatBlockMultiView() {
   }
 
   return (
-    <div className="w-full min-w-0">
+    <div className="grim-page">
       <div
         className={
           printLayout === 'encounter'
@@ -506,7 +506,7 @@ export default function StatBlockMultiView() {
 
       {!playerMode && blocks.length >= 2 && (
         <div className="mb-4 print:hidden w-full">
-          <div className="w-full min-w-0 max-w-sm">
+          <div className="grim-page max-w-sm">
             <div className="flex items-baseline justify-between gap-2 mb-0.5">
               <label
                 htmlFor="encounter-card-filter"
