@@ -59,7 +59,10 @@
 }
 
 @layer components {
-  /** Matches the app shell: same max width as header/footer/main. */
+  /**
+   * App shell width (header, main, footer). Page children of `<main>` should not
+   * add a second `px-3`/`px-4`—horizontal padding is already on main.
+   */
   .grim-content-max {
     @apply w-full max-w-6xl mx-auto;
   }

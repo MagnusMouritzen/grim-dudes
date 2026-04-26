@@ -39,59 +39,57 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="grim-content-max px-3 sm:px-4">
-      <div className="max-w-md mx-auto grim-card p-6 space-y-5">
-        <div className="flex items-center justify-between">
-          <p className="grim-label">Sign in</p>
-          <Link href="/" className="grim-back-link">
-            <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
-          </Link>
+    <div className="max-w-md mx-auto grim-card p-6 space-y-5">
+      <div className="flex items-center justify-between">
+        <p className="grim-label">Sign in</p>
+        <Link href="/" className="grim-back-link">
+          <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
+        </Link>
+      </div>
+      <div>
+        <h1 className="font-display text-2xl text-gold-400 tracking-wide">Admin access</h1>
+        <p className="text-parchment/80 text-sm mt-1">
+          Use the credentials configured for this deployment.
+        </p>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label htmlFor="login-user" className="grim-label">
+            Username <span className="text-parchment/50 font-normal">(if required)</span>
+          </label>
+          <input
+            id="login-user"
+            name="username"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="grim-input mt-1"
+          />
         </div>
         <div>
-          <h1 className="font-display text-2xl text-gold-400 tracking-wide">Admin access</h1>
-          <p className="text-parchment/80 text-sm mt-1">
-            Use the credentials configured for this deployment.
-          </p>
+          <label htmlFor="login-pass" className="grim-label">
+            Password
+          </label>
+          <input
+            id="login-pass"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="grim-input mt-1"
+          />
         </div>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div>
-            <label htmlFor="login-user" className="grim-label">
-              Username <span className="text-parchment/50 font-normal">(if required)</span>
-            </label>
-            <input
-              id="login-user"
-              name="username"
-              autoComplete="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="grim-input mt-1"
-            />
-          </div>
-          <div>
-            <label htmlFor="login-pass" className="grim-label">
-              Password
-            </label>
-            <input
-              id="login-pass"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="grim-input mt-1"
-            />
-          </div>
-          {error ? (
-            <p className="text-sm text-red-400/90" role="alert">
-              {error}
-            </p>
-          ) : null}
-          <button type="submit" className="grim-btn-primary w-full justify-center" disabled={pending}>
-            {pending ? 'Signing in…' : 'Sign in'}
-          </button>
-        </form>
-      </div>
+        {error ? (
+          <p className="text-sm text-red-400/90" role="alert">
+            {error}
+          </p>
+        ) : null}
+        <button type="submit" className="grim-btn-primary w-full justify-center" disabled={pending}>
+          {pending ? 'Signing in…' : 'Sign in'}
+        </button>
+      </form>
     </div>
   );
 }
