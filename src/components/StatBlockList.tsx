@@ -585,11 +585,14 @@ export default function StatBlockList({
   }
 
   return (
-    <div className="space-y-6 grim-page">
+    <div className="space-y-6 grim-page" aria-labelledby="bestiary-page-heading">
       <header className="flex flex-wrap items-end justify-between gap-4 print:hidden">
         <div className="min-w-0">
           <p className="grim-label mb-1">Warhammer Fantasy Roleplay 4e</p>
-          <h1 className="font-display text-display-lg sm:text-display-xl text-gold-400 tracking-wide leading-none">
+          <h1
+            id="bestiary-page-heading"
+            className="font-display text-display-lg sm:text-display-xl text-gold-400 tracking-wide leading-none"
+          >
             Bestiary
           </h1>
           <p className="text-parchment/70 mt-2 text-sm max-w-xl">
@@ -602,7 +605,11 @@ export default function StatBlockList({
           </p>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <div className="flex flex-wrap items-center justify-end gap-2">
+          <div
+            className="flex flex-wrap items-center justify-end gap-2"
+            role="toolbar"
+            aria-label="Build encounters from your selection, or create a new stat block"
+          >
             <AnimatePresence>
               {selectedIds.length > 0 && (
                 <motion.button
@@ -970,11 +977,15 @@ export default function StatBlockList({
           }
         />
       ) : shouldVirtualize ? (
-        <div
-          ref={listScrollParentRef}
-          className="max-h-[min(85vh,1500px)] overflow-y-auto pr-1 -mr-1"
-          aria-label="Stat block list"
-        >
+        <section aria-labelledby="bestiary-entries-heading">
+          <h2 id="bestiary-entries-heading" className="sr-only">
+            Creature cards matching the current filter
+          </h2>
+          <div
+            ref={listScrollParentRef}
+            className="max-h-[min(85vh,1500px)] overflow-y-auto pr-1 -mr-1"
+            aria-label="Scrollable list of stat block cards"
+          >
           <div
             className="relative w-full"
             style={{ height: virtualizer.getTotalSize() }}
@@ -1056,8 +1067,13 @@ export default function StatBlockList({
             })}
           </div>
         </div>
+        </section>
       ) : (
-        <motion.div layout className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <section aria-labelledby="bestiary-entries-heading">
+          <h2 id="bestiary-entries-heading" className="sr-only">
+            Creature cards matching the current filter
+          </h2>
+          <motion.div layout className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {filteredSorted.map(({ block }) => {
               const blockId = String(block.id ?? '');
@@ -1132,7 +1148,8 @@ export default function StatBlockList({
               );
             })}
           </AnimatePresence>
-        </motion.div>
+          </motion.div>
+        </section>
       )}
 
       <AnimatePresence>
