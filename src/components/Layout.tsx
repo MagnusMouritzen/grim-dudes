@@ -77,6 +77,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                   <Link
                     key={link.href}
                     href={link.href}
+                    title={
+                      link.href === '/view'
+                        ? 'Run a session: multiple stat blocks, initiative, notes, and dice in one place'
+                        : link.href === '/'
+                          ? 'Browse your library, select creatures, and build encounters'
+                          : undefined
+                    }
                     aria-current={active ? 'page' : undefined}
                     className={`relative px-2 sm:px-3 py-1.5 text-xs uppercase tracking-wider transition-colors duration-fast ease-grim ${
                       active ? 'text-gold-400' : 'text-parchment/80 hover:text-parchment'

@@ -365,25 +365,60 @@ export default function StatBlockMultiView() {
   if (resolvedIds !== null && ids.length === 0) {
     return (
       <div className="grim-page max-w-xl mx-auto">
-        <div className="grim-card p-8 text-center flex flex-col items-center gap-4 w-full">
-          <ScrollIcon className="w-12 h-12 text-gold-500" />
-          <div>
-            <h2 className="font-display text-xl text-gold-400 tracking-wide">
-              No stat blocks in this view
-            </h2>
-            <p className="text-parchment/80 mt-1 max-w-md mx-auto text-sm">
-              From the bestiary, tick the circles next to entries and choose{' '}
-              <strong className="text-gold-400">View together</strong>, save a{' '}
-              <strong className="text-gold-400">roster</strong>, or open{' '}
-              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
-                /view?ids=id1,id2
-              </code>{' '}
-              or <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">/view?roster=…</code>.
+        <div className="grim-card p-8 sm:p-10 text-left flex flex-col gap-5 w-full">
+          <div className="text-center">
+            <ScrollIcon className="w-12 h-12 text-gold-500 mx-auto" aria-hidden="true" />
+            <p className="grim-label mt-3">Encounter</p>
+            <h1 className="font-display text-xl sm:text-2xl text-gold-400 tracking-wide">
+              Add creatures to this view
+            </h1>
+            <p className="text-parchment/75 mt-2 max-w-md mx-auto text-sm">
+              This page is for the table: once loaded, you get stat blocks, initiative, the combat log, and
+              other tools together. Start from the bestiary, or use a link someone sent you.
             </p>
           </div>
-          <Link href="/" className="grim-btn-ghost">
-            <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
-          </Link>
+          <ol className="list-decimal pl-5 space-y-2 text-sm text-parchment/85 max-w-md mx-auto">
+            <li>
+              <span className="text-parchment">Pick entries on the </span>
+              <Link href="/" className="text-gold-400 hover:underline">
+                bestiary
+              </Link>
+              <span className="text-parchment">, then </span>
+              <strong className="text-gold-400 font-normal">View together</strong>
+              <span className="text-parchment"> (or </span>
+              <strong className="text-gold-400 font-normal">Save roster</strong>
+              <span className="text-parchment"> for a bookmarkable link).</span>
+            </li>
+            <li>
+              <span className="text-parchment">Open a </span>
+              <strong className="text-gold-400 font-normal">saved encounter roster</strong>
+              <span className="text-parchment"> from the bestiary&rsquo;s roster list, if you have any.</span>
+            </li>
+            <li>
+              <span className="text-parchment">Or paste a URL with </span>
+              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+                ?ids=…
+              </code>
+              <span className="text-parchment">, </span>
+              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+                ?roster=…
+              </code>
+              <span className="text-parchment">, or a share </span>
+              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+                ?pack=…
+              </code>
+              <span className="text-parchment">.</span>
+            </li>
+          </ol>
+          <p className="text-center text-[0.7rem] text-parchment/50 max-w-sm mx-auto">
+            If you&rsquo;ve been here before, use <strong className="text-parchment/65 font-normal">Last: …</strong>{' '}
+            in the header to resume.
+          </p>
+          <div className="flex justify-center pt-1">
+            <Link href="/" className="grim-btn-primary text-center justify-center w-full sm:w-auto">
+              Open bestiary
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -441,6 +476,24 @@ export default function StatBlockMultiView() {
         </table>
         <p className="text-xs text-ink-600 mt-3">Grim Dudes — WFRP 4e</p>
       </div>
+
+      <header className="print:hidden mb-4 min-w-0 space-y-1">
+        <p className="grim-label">Encounter</p>
+        <h1 className="font-display text-2xl sm:text-3xl text-gold-400 tracking-wide break-words pr-2">
+          {encounterTitle}
+        </h1>
+        {playerMode ? (
+          <p className="text-parchment/60 text-sm max-w-2xl">
+            Player view: stat cards only. Ask the GM to disable player view to show tools on their
+            screen.
+          </p>
+        ) : (
+          <p className="text-parchment/60 text-sm max-w-2xl">
+            Stat blocks and wounds above; session tools&mdash;initiative, notes, log, and dice&mdash;below
+            the grid.
+          </p>
+        )}
+      </header>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5 print:hidden">
         <Link href="/" className="grim-back-link">
@@ -626,7 +679,20 @@ export default function StatBlockMultiView() {
       </motion.div>
 
       {!playerMode && (
-        <div className="print:hidden space-y-3 mt-8 w-full border-t border-iron-800/50 pt-6">
+        <section
+          className="print:hidden space-y-3 mt-8 w-full border-t border-iron-800/50 pt-6"
+          aria-labelledby="encounter-table-tools-heading"
+        >
+          <h2
+            id="encounter-table-tools-heading"
+            className="font-display text-lg sm:text-xl text-gold-400/95 tracking-wide"
+          >
+            Session &amp; table tools
+          </h2>
+          <p className="text-parchment/55 text-sm -mt-0.5 mb-1 max-w-2xl">
+            Run order, notes, the combat log, and dice live here&mdash;below the stat blocks, so the
+            page reads top to bottom: <span className="text-parchment/70">creatures &rarr; tools</span>.
+          </p>
           <ViewInitiativeList viewKey={viewKey} blocks={blocks} />
           <ViewSessionNotes viewKey={viewKey} />
           <ViewCombatLog viewKey={viewKey} />
@@ -645,7 +711,7 @@ export default function StatBlockMultiView() {
             <ViewGmQuickRef />
             <ViewConditionRef />
           </div>
-        </div>
+        </section>
       )}
     </div>
   );

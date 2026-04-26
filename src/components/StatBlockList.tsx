@@ -695,7 +695,14 @@ export default function StatBlockList({
 
       {totalCount > 0 && (
         <div className="grim-card p-3 sm:p-4 print:hidden">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+          <p id="bestiary-filters-label" className="grim-label mb-3">
+            Find &amp; sort
+          </p>
+          <div
+            className="flex flex-col sm:flex-row sm:items-end gap-3"
+            role="search"
+            aria-labelledby="bestiary-filters-label"
+          >
             <div className="flex-1 min-w-[12rem]">
               <label
                 htmlFor="bestiary-search"
