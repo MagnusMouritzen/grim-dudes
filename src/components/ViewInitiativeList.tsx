@@ -179,18 +179,29 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
 
   if (!hydrated) {
     return (
-      <div className="grim-card p-4 print:hidden min-h-[4rem] border-iron-700/50 bg-ink-900/30">
+      <div
+        className="grim-card p-4 print:hidden min-h-[4rem] border-iron-700/50 bg-ink-900/30"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
         <p className="text-parchment/50 text-xs">Initiative…</p>
       </div>
     );
   }
 
   return (
-    <div className="grim-card p-4 print:hidden border-gold-800/30 bg-ink-900/40">
+    <section
+      className="grim-card p-4 print:hidden border-gold-800/30 bg-ink-900/40"
+      aria-labelledby="view-initiative-heading"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div className="flex flex-wrap items-center gap-3 min-w-0">
-          <h2 className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2">
-            <SwordsIcon className="w-4 h-4" />
+          <h2
+            id="view-initiative-heading"
+            className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2"
+          >
+            <SwordsIcon className="w-4 h-4" aria-hidden="true" />
             Initiative (this page)
           </h2>
           <ViewRoundCounter viewKey={viewKey} />
@@ -201,7 +212,11 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
           <ViewAdvantageCounter viewKey={viewKey} />
           <ViewSceneTimeChips viewKey={viewKey} />
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <div
+          className="flex flex-wrap gap-1.5"
+          role="toolbar"
+          aria-label="Initiative list: rows, import, turns, and copy"
+        >
           <button
             type="button"
             onClick={() => persist([...rows, newRow({})])}
@@ -430,6 +445,6 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
           ))}
         </ul>
       )}
-    </div>
+    </section>
   );
 }
