@@ -64,25 +64,25 @@ export default function ViewCombatLog({ viewKey }: Props) {
   if (!ready) {
     return (
       <div
-        className="grim-card p-4 print:hidden min-h-[4rem] border-iron-700/50"
+        className="grim-card p-4 print:hidden min-h-[4rem] border-stone-700/65"
         role="status"
         aria-live="polite"
         aria-busy="true"
       >
-        <p className="text-parchment/50 text-xs">Log…</p>
+        <p className="text-parchment-300/75 text-xs">Log…</p>
       </div>
     );
   }
 
   return (
     <section
-      className="grim-card p-4 print:hidden border-iron-700/50 bg-ink-900/20"
+      className="grim-card p-4 print:hidden border-stone-700/65 bg-ink-900/25 transition-[border-color,box-shadow,background-color] duration-base ease-grim"
       aria-labelledby="view-combat-log-heading"
     >
       <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
         <h2
           id="view-combat-log-heading"
-          className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2"
+          className="font-display text-gold-300 text-sm uppercase tracking-wider flex items-center gap-2"
         >
           <SkullIcon className="w-4 h-4" aria-hidden="true" />
           Combat &amp; scene log
@@ -93,7 +93,7 @@ export default function ViewCombatLog({ viewKey }: Props) {
           aria-label="Combat log: copy and clear"
         >
           {copyHint && (
-            <span className="text-[0.65rem] uppercase text-gold-400" role="status">
+            <span className="text-[0.65rem] uppercase text-gold-300" role="status">
               Copied
             </span>
           )}
@@ -110,13 +110,13 @@ export default function ViewCombatLog({ viewKey }: Props) {
             type="button"
             onClick={clearLog}
             disabled={!text.trim()}
-            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment/60"
+            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment-300/85"
           >
             Clear
           </button>
         </div>
       </div>
-      <p className="text-parchment/50 text-xs mb-2">
+      <p className="text-parchment-300/80 text-xs mb-2">
         Timestamped lines (Append)—crits, conditions, who fell. Editable; this tab only.
       </p>
       <label htmlFor="combat-log-body" className="sr-only">
@@ -124,7 +124,7 @@ export default function ViewCombatLog({ viewKey }: Props) {
       </label>
       <textarea
         id="combat-log-body"
-        className="grim-input w-full min-h-[4.5rem] text-sm text-parchment/90 resize-y mb-2"
+        className="grim-input w-full min-h-[4.5rem] text-sm text-parchment-50/95 resize-y mb-2"
         value={text}
         onChange={onChange}
         placeholder="[09:30] Ogre proned…"
@@ -136,7 +136,7 @@ export default function ViewCombatLog({ viewKey }: Props) {
         aria-label="Append a line to the log"
       >
         <div className="min-w-0 flex-1">
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="combat-log-append">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="combat-log-append">
             Add line
           </label>
           <input

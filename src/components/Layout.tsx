@@ -37,17 +37,17 @@ export default function Layout({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <header className="sticky top-0 z-20 print:hidden">
-        <div className="bg-ink-900/80 backdrop-blur-md">
+        <div className="bg-ink-900/92 backdrop-blur-md backdrop-saturate-150 border-b border-stone-800/80 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.65)] transition-[background-color,box-shadow] duration-slow ease-grim">
           <div className="grim-content-max px-3 sm:px-4 h-[72px] flex items-center justify-between gap-2 min-w-0">
             <Link
               href="/"
-              className="group inline-flex items-baseline gap-1.5 sm:gap-2 transition-colors duration-fast ease-grim min-w-0"
+              className="group inline-flex items-baseline gap-1.5 sm:gap-2 transition-colors duration-base ease-grim min-w-0"
               aria-label="Grim Dudes home"
             >
-              <span className="font-display text-xl sm:text-2xl md:text-3xl text-gold-400 tracking-wide group-hover:text-parchment truncate">
+              <span className="font-display text-xl sm:text-2xl md:text-3xl text-gold-300 tracking-wide group-hover:text-parchment-50 truncate shadow-textGold transition-colors duration-base ease-grim">
                 Grim Dudes
               </span>
-              <span className="hidden sm:inline font-mono text-[0.65rem] uppercase tracking-[0.3em] text-iron-500 group-hover:text-gold-400 transition-colors">
+              <span className="hidden sm:inline font-mono text-[0.65rem] uppercase tracking-[0.3em] text-stone-500 group-hover:text-gold-400 transition-colors duration-base ease-grim">
                 WFRP 4e
               </span>
             </Link>
@@ -86,16 +86,16 @@ export default function Layout({ children }: { children: ReactNode }) {
                           : undefined
                     }
                     aria-current={active ? 'page' : undefined}
-                    className={`relative px-2 sm:px-3 py-1.5 text-xs uppercase tracking-wider transition-colors duration-fast ease-grim ${
-                      active ? 'text-gold-400' : 'text-parchment/80 hover:text-parchment'
+                    className={`relative px-2 sm:px-3 py-1.5 text-xs uppercase tracking-wider transition-colors duration-base ease-grim ${
+                      active ? 'text-gold-300 font-semibold' : 'text-parchment-200/90 hover:text-parchment-50'
                     }`}
                   >
                     {link.label}
                     {active && (
                       <motion.span
                         layoutId="navUnderline"
-                        className="absolute left-2 right-2 sm:left-3 sm:right-3 -bottom-0.5 h-[2px] bg-gold-500"
-                        transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                        className="absolute left-2 right-2 sm:left-3 sm:right-3 -bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-gold-700 via-gold-400 to-gold-700 shadow-[0_0_12px_rgba(224,182,74,0.35)]"
+                        transition={{ type: 'spring', stiffness: 440, damping: 32 }}
                       />
                     )}
                   </Link>
@@ -105,8 +105,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             </nav>
           </div>
           {/* Double underline: blood thick + gold hair-line */}
-          <div className="h-[2px] bg-blood-700/60" />
-          <div className="h-px bg-gradient-to-r from-transparent via-gold-600/50 to-transparent" />
+          <div className="h-[2px] bg-gradient-to-r from-transparent via-blood-600/85 to-transparent" />
+          <div className="h-px bg-gradient-to-r from-transparent via-gold-500/55 to-transparent" />
         </div>
       </header>
       <main
@@ -119,11 +119,11 @@ export default function Layout({ children }: { children: ReactNode }) {
       <footer className="print:hidden relative z-[1] pb-8 pt-6">
         <div className="grim-content-max px-3 sm:px-4 flex items-center justify-center gap-4">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-700/40" />
-          <Heraldry className="w-5 h-5 text-gold-500/80" />
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment/50 whitespace-nowrap">
+          <Heraldry className="w-5 h-5 text-gold-500/90 motion-safe:animate-grim-glow" />
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment-300/70 whitespace-nowrap">
             For the Old World
           </p>
-          <Heraldry className="w-5 h-5 text-gold-500/80" />
+          <Heraldry className="w-5 h-5 text-gold-500/90 motion-safe:animate-grim-glow motion-safe:[animation-delay:2.25s]" />
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-700/40" />
         </div>
         <nav className="mt-3 text-center" aria-label="Site footer">

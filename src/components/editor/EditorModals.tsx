@@ -125,14 +125,14 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
               </div>
               <div className="p-4 overflow-y-auto max-h-96 space-y-1">
                 {templates.length === 0 ? (
-                  <p className="text-parchment/70">No templates available.</p>
+                  <p className="text-parchment-200/85">No templates available.</p>
                 ) : (
                   templates.map((t) => (
                     <button
                       key={t.id}
                       type="button"
                       onClick={() => onPickTemplate(t)}
-                      className="w-full text-left px-3 py-2 rounded border border-iron-700 bg-ink-800/60 text-parchment transition-all duration-fast ease-grim hover:border-gold-600 hover:bg-ink-700 hover:translate-x-0.5"
+                      className="w-full text-left px-3 py-2 rounded border border-stone-700 bg-ink-800/60 text-parchment transition-all duration-base ease-grim hover:border-gold-600 hover:bg-ink-700 hover:translate-x-0.5"
                     >
                       {t.name || t.id}
                     </button>
@@ -180,7 +180,7 @@ const EditorModals = forwardRef<HTMLDivElement, EditorModalsProps>(
               </div>
               <div className="p-4 overflow-y-auto max-h-[70vh] space-y-4">
                 {!(Array.isArray(careers.classes) && careers.classes.length) ? (
-                  <p className="text-parchment/70 text-sm">No careers available.</p>
+                  <p className="text-parchment-200/85 text-sm">No careers available.</p>
                 ) : (
                   careers.classes.map((cls) => (
                     <div key={cls.name}>

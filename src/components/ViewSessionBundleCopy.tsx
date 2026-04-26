@@ -62,9 +62,9 @@ export default function ViewSessionBundleCopy({ viewKey, encounterPreamble }: Pr
   }, [viewKey, encounterPreamble, runCopy]);
 
   return (
-    <div className="grim-card p-3 print:hidden border-iron-700/50 border-dashed border-iron-600/50 bg-ink-900/20">
+    <div className="grim-card p-3 print:hidden border-stone-700/65 border-dashed border-stone-600/60 bg-ink-900/20">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-parchment/60 text-xs min-w-0">
+        <p className="text-parchment-200/88 text-xs min-w-0">
           <ScrollIcon className="w-3.5 h-3.5 inline -mt-0.5 mr-1 opacity-80" />
           One paste:{' '}
           {encounterPreamble != null && encounterPreamble.trim() ? (

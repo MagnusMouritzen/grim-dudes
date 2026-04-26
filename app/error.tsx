@@ -17,16 +17,16 @@ export default function GlobalError({
 
   return (
     <div className="grim-page max-w-xl mx-auto text-center py-12 sm:py-16">
-      <div className="grim-card p-10 flex flex-col items-center gap-5 border-blood-700/60">
+      <div className="grim-card p-10 flex flex-col items-center gap-5 border-blood-700/60 ring-1 ring-stone-800/40 motion-safe:animate-fade-in">
         <div className="rounded-full border border-blood-700/50 bg-blood-900/40 p-5">
           <SwordsIcon className="w-14 h-14 text-blood-400" />
         </div>
         <div>
           <p className="grim-label mb-1 text-blood-400/90">Something is grimly amiss</p>
-          <h1 className="font-display text-display-md text-blood-400 tracking-wide">
+          <h1 className="font-display text-display-md text-blood-300 tracking-wide">
             A cursed error
           </h1>
-          <p className="text-parchment/80 mt-3 max-w-sm mx-auto text-sm">
+          <p className="text-parchment-200/90 mt-3 max-w-sm mx-auto text-sm">
             {error.message || 'An unexpected error occurred.'}
           </p>
         </div>

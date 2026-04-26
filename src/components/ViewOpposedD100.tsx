@@ -59,7 +59,7 @@ export default function ViewOpposedD100({ compact = false, logKey }: Props) {
 
   return (
     <div
-      className={`grim-card print:hidden border-iron-700/50 ${
+      className={`grim-card print:hidden border-stone-700/65 ${
         compact ? 'p-3' : 'p-4'
       }`}
     >
@@ -71,13 +71,13 @@ export default function ViewOpposedD100({ compact = false, logKey }: Props) {
         <DiceIcon className="w-4 h-4" />
         Opposed d100
       </h2>
-      <p className={`text-parchment/55 mb-2 ${compact ? 'text-[0.65rem] leading-snug' : 'text-xs'}`}>
+      <p className={`text-parchment-200/85 mb-2 ${compact ? 'text-[0.65rem] leading-snug' : 'text-xs'}`}>
         Two rolls for contests; optional 1–100 targets for a quick pass/fail read. Your book still
         handles Success Levels, crits, and two-fail opposed steps.
       </p>
       <div className="flex flex-wrap items-end gap-2">
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="opp-ta">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="opp-ta">
             A target
           </label>
           <input
@@ -92,7 +92,7 @@ export default function ViewOpposedD100({ compact = false, logKey }: Props) {
           />
         </div>
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="opp-tb">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="opp-tb">
             B target
           </label>
           <input
@@ -138,19 +138,19 @@ export default function ViewOpposedD100({ compact = false, logKey }: Props) {
       </div>
       {a != null && b != null && dA != null && dB != null && (
         <div
-          className={`mt-2 border-t border-iron-800/50 pt-2 space-y-1 ${
+          className={`mt-2 border-t border-stone-800/55 pt-2 space-y-1 ${
             compact ? 'text-xs' : 'text-sm'
           }`}
         >
           <p className="font-mono text-gold-300/95 tabular-nums">
             A: {a}{' '}
-            <span className="text-parchment/50 text-[0.7rem]">
+            <span className="text-parchment-300/80 text-[0.7rem]">
               (tens/ones {dA.tens}/{dA.ones})
             </span>
           </p>
           <p className="font-mono text-gold-300/95 tabular-nums">
             B: {b}{' '}
-            <span className="text-parchment/50 text-[0.7rem]">
+            <span className="text-parchment-300/80 text-[0.7rem]">
               (tens/ones {dB.tens}/{dB.ones})
             </span>
           </p>

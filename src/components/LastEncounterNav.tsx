@@ -63,12 +63,15 @@ export default function LastEncounterNav() {
   return (
     <Link
       href={h}
-      className="inline-flex max-w-[10rem] sm:max-w-[14rem] items-center gap-1 rounded border border-iron-700/70 bg-ink-900/40 px-2 py-1 text-[0.6rem] uppercase tracking-wider text-parchment/65 hover:text-gold-400/90 hover:border-gold-700/50 transition-colors"
+      className="group inline-flex max-w-[10rem] sm:max-w-[14rem] items-center gap-1 rounded border border-stone-700/90 bg-ink-900/55 px-2 py-1 text-[0.6rem] uppercase tracking-wider text-parchment-300/90 hover:text-gold-300 hover:border-gold-600/55 hover:bg-ink-900/75 hover:shadow-[0_0_16px_-8px_rgba(184,134,11,0.35)] transition-all duration-base ease-grim"
       title={`Open last encounter (${kindHint}): ${lb}`}
     >
-      <ScrollIcon className="w-3 h-3 shrink-0 opacity-80" />
+      <ScrollIcon className="w-3 h-3 shrink-0 text-gold-600/80 group-hover:text-gold-400 transition-colors duration-base ease-grim" />
       <span className="truncate">
-        Last: <span className="text-parchment/80 normal-case tracking-normal">{trunc(lb)}</span>
+        Last:{' '}
+        <span className="text-parchment-100/95 normal-case tracking-normal font-medium">
+          {trunc(lb)}
+        </span>
       </span>
     </Link>
   );

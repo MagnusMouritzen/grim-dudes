@@ -68,12 +68,12 @@ export default function MultiViewWoundBar({ viewKey, block, traitsRef, dense }: 
           : 'flex flex-wrap items-center gap-2 justify-end text-sm print:hidden'
       }
     >
-      <span className="text-parchment/60 font-mono uppercase tracking-wider text-[0.65rem]">
+      <span className="text-parchment-300/85 font-mono uppercase tracking-wider text-[0.65rem]">
         Wounds
       </span>
       <button
         type="button"
-        className="rounded border border-iron-600 px-2 py-0.5 text-parchment/90 hover:border-gold-500 hover:text-gold-300"
+        className="rounded border border-stone-600 px-2 py-0.5 text-parchment-50/95 hover:border-gold-500 hover:text-gold-300 transition-[border-color,color,background-color] duration-base ease-grim"
         aria-label="Reduce wounds"
         onClick={() => persist(current - 1)}
       >
@@ -84,7 +84,7 @@ export default function MultiViewWoundBar({ viewKey, block, traitsRef, dense }: 
       </span>
       <button
         type="button"
-        className="rounded border border-iron-600 px-2 py-0.5 text-parchment/90 hover:border-gold-500 hover:text-gold-300"
+        className="rounded border border-stone-600 px-2 py-0.5 text-parchment-50/95 hover:border-gold-500 hover:text-gold-300 transition-[border-color,color,background-color] duration-base ease-grim"
         aria-label="Increase wounds"
         onClick={() => persist(current + 1)}
         disabled={current >= max}

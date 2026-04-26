@@ -7,11 +7,12 @@
     color-scheme: dark;
   }
   body {
-    @apply bg-ink-900 text-parchment font-body antialiased min-h-screen;
+    @apply bg-ink-900 text-parchment-100 font-body antialiased min-h-screen;
     background-image:
-      radial-gradient(ellipse 120% 80% at 50% -10%, rgba(184, 134, 11, 0.08), transparent 60%),
-      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(139, 0, 0, 0.06), transparent 70%),
-      radial-gradient(ellipse 120% 100% at 50% 40%, #15110b, #0a0805 75%);
+      radial-gradient(ellipse 120% 80% at 50% -10%, rgba(184, 134, 11, 0.11), transparent 58%),
+      radial-gradient(ellipse 90% 55% at 80% 0%, rgba(61, 107, 91, 0.07), transparent 55%),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(139, 0, 0, 0.08), transparent 70%),
+      radial-gradient(ellipse 120% 100% at 50% 40%, #16120d, #070605 78%);
     background-attachment: fixed;
   }
 
@@ -26,9 +27,10 @@
   }
 
   *:focus-visible {
-    outline: 2px dashed theme('colors.gold.400');
+    outline: 2px solid theme('colors.gold.400');
     outline-offset: 3px;
     border-radius: 3px;
+    box-shadow: 0 0 0 4px rgba(209, 163, 58, 0.12);
   }
 
   ::selection {
@@ -49,12 +51,12 @@
     background: theme('colors.ink.800');
   }
   *::-webkit-scrollbar-thumb {
-    background: theme('colors.iron.700');
+    background: theme('colors.stone.700');
     border: 2px solid theme('colors.ink.800');
     border-radius: 8px;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.gold.700');
+    background: theme('colors.gold.600');
   }
 }
 
@@ -68,11 +70,11 @@
   }
   /** Subtle back-to-list nav (stat pages, admin, login). */
   .grim-back-link {
-    @apply inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast;
+    @apply inline-flex items-center gap-1.5 text-parchment-300/85 hover:text-gold-300 text-xs uppercase tracking-wider transition-colors duration-base ease-grim;
   }
   /** In-header “New stat block” CTA (inactive). Active state uses `.grim-btn-primary` in the nav. */
   .grim-header-new-stat {
-    @apply inline-flex items-center gap-1.5 rounded border border-gold-700 bg-ink-800/70 px-2.5 sm:px-3 py-1.5 text-xs uppercase tracking-wider text-gold-400 transition-all duration-fast ease-grim hover:border-gold-500 hover:text-parchment hover:bg-blood-700/50;
+    @apply inline-flex items-center gap-1.5 rounded border border-gold-700 bg-ink-800/75 px-2.5 sm:px-3 py-1.5 text-xs uppercase tracking-wider text-gold-300 transition-all duration-base ease-grim hover:border-gold-500 hover:text-parchment-50 hover:bg-blood-700/55 hover:shadow-[0_0_20px_-6px_rgba(139,0,0,0.55)];
   }
   /**
    * Root wrapper for route content inside `<main>`: prevents flex children from overflowing
@@ -83,15 +85,21 @@
   }
 
   .grim-card {
-    @apply relative rounded-card border border-iron-700 bg-ink-800 shadow-card;
-    background-image: linear-gradient(180deg, rgba(232, 220, 196, 0.02), transparent 40%);
+    @apply relative rounded-card border border-stone-700 bg-ink-800 shadow-card;
+    background-image:
+      linear-gradient(145deg, rgba(61, 107, 91, 0.06) 0%, transparent 42%),
+      linear-gradient(180deg, rgba(232, 220, 196, 0.035), transparent 45%);
+    transition:
+      border-color theme('transitionDuration.base') theme('transitionTimingFunction.grim'),
+      box-shadow theme('transitionDuration.base') theme('transitionTimingFunction.grim'),
+      transform theme('transitionDuration.base') theme('transitionTimingFunction.grim');
   }
   .grim-card-hover {
     @apply transition-all duration-base ease-grim;
   }
   .grim-card-hover:hover {
     @apply -translate-y-0.5 shadow-cardHover;
-    border-color: theme('colors.gold.700');
+    border-color: theme('colors.gold.600');
   }
 
   .grim-divider {
@@ -107,7 +115,7 @@
   }
 
   .grim-pill {
-    @apply inline-flex items-center gap-1 rounded-full border border-iron-700 bg-ink-800/80 px-2 py-0.5 text-parchment/95 transition-all duration-fast ease-grim;
+    @apply inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/85 px-2 py-0.5 text-parchment/95 transition-all duration-base ease-grim;
   }
   .grim-pill:hover,
   .grim-pill[data-pinned='true'] {
@@ -125,7 +133,7 @@
   }
 
   .grim-input {
-    @apply w-full rounded border border-iron-700 bg-ink-800/80 px-3 py-2 text-parchment placeholder-parchment/40 transition-colors duration-fast ease-grim;
+    @apply w-full rounded border border-stone-700 bg-ink-800/85 px-3 py-2 text-parchment-50 placeholder-parchment-400/55 transition-colors duration-base ease-grim;
     box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.4);
   }
   .grim-input:focus {
@@ -144,14 +152,14 @@
   }
 
   .grim-btn-ghost {
-    @apply inline-flex items-center gap-2 rounded border border-iron-700 bg-ink-800/80 px-3 py-1.5 text-parchment/95 text-sm uppercase tracking-wider transition-all duration-fast ease-grim;
+    @apply inline-flex items-center gap-2 rounded border border-stone-700 bg-ink-800/85 px-3 py-1.5 text-parchment-50/95 text-sm uppercase tracking-wider transition-all duration-base ease-grim;
   }
   .grim-btn-ghost:hover {
     border-color: theme('colors.gold.600');
     color: theme('colors.parchment.DEFAULT');
   }
   .grim-btn-primary {
-    @apply inline-flex items-center gap-2 rounded border border-blood-500 bg-blood-600 px-4 py-2 text-parchment font-display uppercase tracking-wider text-sm transition-all duration-fast ease-grim;
+    @apply inline-flex items-center gap-2 rounded border border-blood-500 bg-blood-600 px-4 py-2 text-parchment font-display uppercase tracking-wider text-sm transition-all duration-base ease-grim;
     box-shadow:
       inset 0 1px 0 rgba(232, 220, 196, 0.08),
       0 6px 18px -10px rgba(139, 0, 0, 0.9);
@@ -218,10 +226,11 @@
   .fx-card-header {
     background:
       linear-gradient(
-        180deg,
-        rgba(184, 134, 11, 0.18),
-        rgba(139, 0, 0, 0.22) 65%,
-        rgba(10, 8, 5, 0.2)
+        125deg,
+        rgba(61, 107, 91, 0.12) 0%,
+        rgba(184, 134, 11, 0.16) 35%,
+        rgba(139, 0, 0, 0.24) 72%,
+        rgba(10, 8, 5, 0.35) 100%
       );
   }
 }
@@ -234,6 +243,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0ms !important;
     scroll-behavior: auto !important;
+  }
+  .grim-card {
+    transition: none;
   }
 }
 

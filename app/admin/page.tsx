@@ -124,7 +124,7 @@ export default function AdminPage() {
         <h2 id="admin-site-heading" className="grim-label !mb-0">
           Library &amp; account
         </h2>
-        <p className="text-parchment/60 text-sm">
+        <p className="text-parchment-200/88 text-sm">
           Create entries in the app, download everything as JSON, or end your session.
         </p>
         <div className="flex flex-wrap gap-2">
@@ -159,7 +159,7 @@ export default function AdminPage() {
       )}
 
       <section
-        className="border-t border-iron-700/50 pt-5 space-y-3"
+        className="border-t border-stone-700/60 pt-5 space-y-3"
         aria-labelledby="admin-import-heading"
       >
         <h2 id="admin-import-heading" className="grim-label !mb-0">
@@ -170,7 +170,7 @@ export default function AdminPage() {
           Zod must validate each entry (no unknown keys in strict mode).
         </p>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <span className="text-xs uppercase tracking-wider text-parchment/60">If id exists</span>
+          <span className="text-xs uppercase tracking-wider text-parchment-300/80">If id exists</span>
           <label className="inline-flex items-center gap-2 text-sm text-parchment/90">
             <input
               type="radio"

@@ -29,11 +29,11 @@ export default function GlobalError({
 
   return (
     <html lang="en" className={`${cinzel.variable} ${crimson.variable}`}>
-      <body className="bg-ink-900 text-parchment min-h-screen flex items-center justify-center p-6">
-        <div className="grim-page w-full max-w-md">
-          <div className="grim-card p-10 w-full text-center space-y-4 border-blood-700/60">
-            <h1 className="font-display text-2xl text-blood-400">Catastrophe</h1>
-            <p className="text-parchment/80 text-sm">
+      <body className="bg-ink-900 text-parchment-100 min-h-screen flex items-center justify-center p-6">
+        <div className="grim-page w-full max-w-md motion-safe:animate-fade-in">
+          <div className="grim-card p-10 w-full text-center space-y-4 border-blood-700/60 ring-1 ring-stone-800/40">
+            <h1 className="font-display text-2xl text-blood-300 tracking-wide">Catastrophe</h1>
+            <p className="text-parchment-200/90 text-sm">
               {error.message || 'A fatal error felled the application.'}
             </p>
             <button type="button" onClick={reset} className="grim-btn-primary">

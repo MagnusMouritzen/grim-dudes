@@ -38,17 +38,17 @@ export default function ViewGmImprov() {
   }, [last]);
 
   return (
-    <div className="grim-card p-4 print:hidden border-iron-700/50">
+    <div className="grim-card p-4 print:hidden border-stone-700/65">
       <h2 className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2 mb-2">
         <ScrollIcon className="w-4 h-4" />
         Improv (original)
       </h2>
-      <p className="text-parchment/55 text-xs mb-2">
+      <p className="text-parchment-200/85 text-xs mb-2">
         Random prompts for NPCs and scenes—pair with your rulebook for tests and consequences.
       </p>
       <div className="flex flex-wrap items-end gap-2">
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="gm-improv-table">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="gm-improv-table">
             Table
           </label>
           <select
@@ -79,7 +79,7 @@ export default function ViewGmImprov() {
         )}
       </div>
       {last && (
-        <p className="mt-2 text-parchment/90 text-sm leading-snug border-t border-iron-800/50 pt-2">
+        <p className="mt-2 text-parchment/90 text-sm leading-snug border-t border-stone-800/55 pt-2">
           {last}
         </p>
       )}

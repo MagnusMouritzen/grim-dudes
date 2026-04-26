@@ -36,7 +36,7 @@ export default function ViewSceneTimeChips({ viewKey, compact = false }: Props) 
   );
 
   if (!ready) {
-    return <span className="text-parchment/50 text-[0.65rem]">Time…</span>;
+    return <span className="text-parchment-300/80 text-[0.65rem]">Time…</span>;
   }
 
   const title =
@@ -45,11 +45,11 @@ export default function ViewSceneTimeChips({ viewKey, compact = false }: Props) 
   if (compact) {
     return (
       <div
-        className="grim-card p-3 print:hidden border-iron-700/50 w-full"
+        className="grim-card p-3 print:hidden border-stone-700/65 w-full"
         title={title}
       >
         <h2 className="font-display text-gold-400/95 text-xs uppercase tracking-wider mb-2">Scene time</h2>
-        <label htmlFor="view-scene-time-compact" className="text-[0.6rem] uppercase text-parchment/45 block mb-1">
+        <label htmlFor="view-scene-time-compact" className="text-[0.6rem] uppercase text-parchment-300/80 block mb-1">
           When (fiction)
         </label>
         <select
@@ -64,17 +64,17 @@ export default function ViewSceneTimeChips({ viewKey, compact = false }: Props) 
             </option>
           ))}
         </select>
-        <p className="text-parchment/50 text-[0.65rem] mt-1.5 leading-snug">Included in session copy for this page.</p>
+        <p className="text-parchment-300/80 text-[0.65rem] mt-1.5 leading-snug">Included in session copy for this page.</p>
       </div>
     );
   }
 
   return (
     <div
-      className="inline-flex flex-wrap items-center gap-1 rounded border border-iron-600/80 bg-ink-900/50 px-2 py-1 text-[0.65rem] text-parchment/90"
+      className="inline-flex flex-wrap items-center gap-1 rounded border border-stone-600/85 bg-ink-900/50 px-2 py-1 text-[0.65rem] text-parchment/90"
       title={title}
     >
-      <span className="text-parchment/55 uppercase tracking-wider shrink-0">Time</span>
+      <span className="text-parchment-300/85 uppercase tracking-wider shrink-0">Time</span>
       {CHIPS.map(({ id, label }) => (
         <button
           key={id || 'off'}
@@ -83,7 +83,7 @@ export default function ViewSceneTimeChips({ viewKey, compact = false }: Props) 
           className={`rounded px-1.5 py-0.5 border ${
             v === id
               ? 'border-gold-600/50 text-gold-300/90 bg-ink-800/80'
-              : 'border-iron-700/60 text-parchment/55 hover:border-parchment/25'
+              : 'border-stone-700/65 text-parchment-300/80 hover:border-parchment/25'
           }`}
           aria-pressed={v === id}
         >

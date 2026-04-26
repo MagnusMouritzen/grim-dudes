@@ -344,7 +344,7 @@ function StatBlockViewInner() {
               onClick={() => setConfirmOpen((v) => !v)}
               aria-haspopup="dialog"
               aria-expanded={confirmOpen}
-              className="inline-flex items-center gap-1.5 rounded border border-blood-500/70 bg-blood-800/60 px-3 py-1.5 text-parchment text-xs uppercase tracking-wider transition-all duration-fast ease-grim hover:bg-blood-600"
+              className="inline-flex items-center gap-1.5 rounded border border-blood-500/70 bg-blood-800/60 px-3 py-1.5 text-parchment-50 text-xs uppercase tracking-wider transition-all duration-base ease-grim hover:bg-blood-600"
             >
               <TrashIcon className="w-3.5 h-3.5" />
               Delete
@@ -400,12 +400,12 @@ function StatBlockViewInner() {
           <h1 className="sr-only">{block.name || String(id ?? 'Stat block')}</h1>
           <p className="grim-label">Stat block</p>
           {playerMode ? (
-            <p className="text-parchment/60 text-sm max-w-2xl">
+            <p className="text-parchment-200/88 text-sm max-w-2xl">
               Player view: the card below is a reference. Switch to GM view for session tools, edit,
               and delete.
             </p>
           ) : (
-            <p className="text-parchment/60 text-sm max-w-2xl">
+            <p className="text-parchment-200/88 text-sm max-w-2xl">
               Session tools and quick dice are <span className="text-parchment/75">above</span> the
               card so you can roll or jot notes before scrolling the full block. The name and stats
               live on the card. For initiative across several creatures, build an encounter on the
@@ -430,7 +430,7 @@ function StatBlockViewInner() {
           >
             Session tools
           </h2>
-          <p className="text-parchment/55 text-sm -mt-1 max-w-2xl">
+          <p className="text-parchment-200/85 text-sm -mt-1 max-w-2xl">
             Notes, combat log, copy bundle, and dice for this page only&mdash;separate from a full
             table encounter.
           </p>

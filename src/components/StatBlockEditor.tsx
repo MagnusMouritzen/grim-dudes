@@ -961,7 +961,7 @@ export default function StatBlockEditor() {
                       type="checkbox"
                       checked={randomiseCharacteristics}
                       onChange={(e) => setRandomise(e.target.checked)}
-                      className="rounded border-iron-700 bg-ink-800 text-gold-500 focus:ring-gold-500/50"
+                      className="rounded border-stone-700 bg-ink-800 text-gold-500 focus:ring-gold-500/50"
                     />
                     <span className="text-parchment/90 text-sm">Randomise characteristics (2d10 per stat)</span>
                   </label>
@@ -1075,7 +1075,7 @@ export default function StatBlockEditor() {
                 {selectedCareers.map((c, idx) => (
                   <div
                     key={`${c.className}-${c.careerName}-${idx}`}
-                    className="inline-flex items-center gap-1 rounded-full border border-iron-700 bg-ink-800/80 px-2 py-1 text-xs"
+                    className="inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/80 px-2 py-1 text-xs"
                   >
                     <span className="text-parchment/95">
                       {c.careerName}
@@ -1091,7 +1091,7 @@ export default function StatBlockEditor() {
                           )
                         );
                       }}
-                      className="bg-ink-800 border border-iron-700 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold-500 focus:outline-none"
+                      className="bg-ink-800 border border-stone-700 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold-500 focus:outline-none"
                     >
                       {[1, 2, 3, 4].map((l) => (
                         <option key={l} value={l}>Level {l}</option>
@@ -1168,7 +1168,7 @@ export default function StatBlockEditor() {
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {selectedMeleeWeapons.map((w, i) => (
-                    <span key={`${w.category}-${w.name}-${i}`} className="inline-flex items-center gap-1 rounded-full border border-iron-700 bg-ink-800/80 px-2 py-1 text-xs text-parchment/95">
+                    <span key={`${w.category}-${w.name}-${i}`} className="inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/80 px-2 py-1 text-xs text-parchment/95">
                       {w.name} <span className="text-parchment/60">({w.category})</span>
                       <button type="button" onClick={() => setSelectedMeleeWeapons((prev) => prev.filter((x, j) => j !== i))} className="text-blood-400 hover:text-gold-400 px-1" aria-label={`Remove ${w.name}`}>×</button>
                     </span>
@@ -1209,12 +1209,12 @@ export default function StatBlockEditor() {
                     {selectedRangedWeapons.map((r, i) => {
                     const ammoList = (weaponsRef.ammunition?.categories || []).find((c) => c.name === r.category)?.ammunition || [];
                     return (
-                      <div key={`${r.category}-${r.name}-${i}`} className="inline-flex items-center gap-1 rounded border border-iron-700 bg-ink-800/80 px-2 py-1">
+                      <div key={`${r.category}-${r.name}-${i}`} className="inline-flex items-center gap-1 rounded border border-stone-700 bg-ink-800/80 px-2 py-1">
                         <span className="text-parchment/95 text-xs">{r.name}</span>
                         <select
                           value={r.ammunition || ''}
                           onChange={(e) => setSelectedRangedWeapons((prev) => prev.map((x, j) => j === i ? { ...x, ammunition: e.target.value } : x))}
-                          className="bg-ink-800 border border-iron-700 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold-500 focus:outline-none"
+                          className="bg-ink-800 border border-stone-700 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold-500 focus:outline-none"
                         >
                           <option value="">— Ammo —</option>
                           {ammoList.map((a) => (
@@ -1259,7 +1259,7 @@ export default function StatBlockEditor() {
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {selectedArmour.map((a, i) => (
-                    <span key={`${a.category}-${a.name}-${i}`} className="inline-flex items-center gap-1 rounded-full border border-iron-700 bg-ink-800/80 px-2 py-1 text-xs text-parchment/95">
+                    <span key={`${a.category}-${a.name}-${i}`} className="inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/80 px-2 py-1 text-xs text-parchment/95">
                       {a.name} <span className="text-parchment/60">({a.category})</span>
                       <button type="button" onClick={() => setSelectedArmour((prev) => prev.filter((_, j) => j !== i))} className="text-blood-400 hover:text-gold-400 px-1" aria-label={`Remove ${a.name}`}>×</button>
                     </span>
@@ -1289,7 +1289,7 @@ export default function StatBlockEditor() {
             </div>
           </section>
 
-          <div className="pt-4 border-t border-iron-700/50">
+          <div className="pt-4 border-t border-stone-700/60">
             <button
               type="button"
               onClick={handleSave}
@@ -1338,7 +1338,7 @@ export default function StatBlockEditor() {
                       .map((skill) => (
                         <div
                           key={skill.name}
-                          className="inline-flex items-center gap-1 rounded-full border border-iron-700 bg-ink-800/80 px-2 py-1"
+                          className="inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/80 px-2 py-1"
                         >
                           <span className="text-parchment/95 text-xs">{skill.name}</span>
                           <input
@@ -1346,7 +1346,7 @@ export default function StatBlockEditor() {
                             inputMode="numeric"
                             value={skill.advances}
                             onChange={(e) => updateSkillAdvances(skill.name, e.target.value)}
-                            className="w-8 bg-ink-900 border border-iron-700 rounded px-1 py-0.5 text-parchment text-xs text-center font-mono tabular-nums focus:border-gold-500 focus:outline-none"
+                            className="w-8 bg-ink-900 border border-stone-700 rounded px-1 py-0.5 text-parchment text-xs text-center font-mono tabular-nums focus:border-gold-500 focus:outline-none"
                           />
                           <button
                             type="button"
@@ -1375,13 +1375,13 @@ export default function StatBlockEditor() {
                       type="checkbox"
                       checked={skillsGroupByCharacteristic}
                       onChange={(e) => setSkillsGroupByCharacteristic(e.target.checked)}
-                      className="rounded border-iron-700 bg-ink-800 text-gold-500 focus:ring-gold-500/50"
+                      className="rounded border-stone-700 bg-ink-800 text-gold-500 focus:ring-gold-500/50"
                     />
                     By characteristic
                   </label>
                 </div>
                 <p className="text-parchment/80 text-xs mb-1">Available</p>
-                <div className="max-h-64 overflow-y-auto rounded border border-iron-700/80 bg-ink-900/60 p-2 space-y-1">
+                <div className="max-h-64 overflow-y-auto rounded border border-stone-700/80 bg-ink-900/60 p-2 space-y-1">
                   {allSkills.length === 0 ? (
                     <p className="text-parchment/60 text-xs">No skills loaded.</p>
                   ) : filteredSkillsForPicker.grouped ? (
@@ -1444,7 +1444,7 @@ export default function StatBlockEditor() {
                       return (
                         <div
                           key={name}
-                          className="inline-flex items-center gap-1 rounded-full border border-iron-700 bg-ink-800/80 px-2 py-1"
+                          className="inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/80 px-2 py-1"
                         >
                           <span className="text-parchment/95 text-xs">{name}</span>
                           {hasInput ? (
@@ -1453,7 +1453,7 @@ export default function StatBlockEditor() {
                               value={entry.inputValue || ''}
                               onChange={(e) => updateTraitInputValue(name, e.target.value)}
                               placeholder={typeof ref?.input === 'string' ? ref.input : ''}
-                              className="w-20 bg-ink-900 border border-iron-700 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold-500 focus:outline-none"
+                              className="w-20 bg-ink-900 border border-stone-700 rounded px-1 py-0.5 text-parchment text-xs focus:border-gold-500 focus:outline-none"
                             />
                           ) : null}
                           <button
@@ -1495,7 +1495,7 @@ export default function StatBlockEditor() {
                     return baseEntries.length > 0 ? (
                       <div>
                         <p className="text-gold/80 text-xs mb-1">Base (from template)</p>
-                        <div className="max-h-32 overflow-y-auto rounded border border-iron-700/80 bg-ink-900/60 p-2 space-y-1">
+                        <div className="max-h-32 overflow-y-auto rounded border border-stone-700/80 bg-ink-900/60 p-2 space-y-1">
                           {baseEntries.map(({ name, defaultInput }) => (
                             <button
                               type="button"
@@ -1533,7 +1533,7 @@ export default function StatBlockEditor() {
                     return optionalEntries.length > 0 ? (
                       <div>
                         <p className="text-parchment/80 text-xs mb-1">Optional (from template)</p>
-                        <div className="max-h-32 overflow-y-auto rounded border border-iron-700/80 bg-ink-900/60 p-2 space-y-1">
+                        <div className="max-h-32 overflow-y-auto rounded border border-stone-700/80 bg-ink-900/60 p-2 space-y-1">
                           {optionalEntries.map(({ name, defaultInput }) => (
                             <button
                               type="button"
@@ -1573,7 +1573,7 @@ export default function StatBlockEditor() {
                         {generic.length > 0 && (
                           <div>
                             <p className="text-parchment/80 text-xs mb-1">Generic traits</p>
-                            <div className="max-h-32 overflow-y-auto rounded border border-iron-700/80 bg-ink-900/60 p-2 space-y-1">
+                            <div className="max-h-32 overflow-y-auto rounded border border-stone-700/80 bg-ink-900/60 p-2 space-y-1">
                               {generic.map((trait) => (
                                 <button
                                   type="button"
@@ -1590,7 +1590,7 @@ export default function StatBlockEditor() {
                         {other.length > 0 && (
                           <div>
                             <p className="text-parchment/80 text-xs mb-1">Other traits</p>
-                            <div className="max-h-32 overflow-y-auto rounded border border-iron-700/80 bg-ink-900/60 p-2 space-y-1">
+                            <div className="max-h-32 overflow-y-auto rounded border border-stone-700/80 bg-ink-900/60 p-2 space-y-1">
                               {other.map((trait) => (
                                 <button
                                   type="button"
@@ -1612,7 +1612,7 @@ export default function StatBlockEditor() {
               {!template && (
                 <div>
                   <p className="text-parchment/80 text-xs mb-1">Available</p>
-                  <div className="max-h-64 overflow-y-auto rounded border border-iron-700/80 bg-ink-900/60 p-2 space-y-1">
+                  <div className="max-h-64 overflow-y-auto rounded border border-stone-700/80 bg-ink-900/60 p-2 space-y-1">
                     {(() => {
                       const selectedNames = new Set(
                         selectedTraits.map((t) => traitName(t))

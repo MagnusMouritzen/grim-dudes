@@ -9,7 +9,7 @@ import { ChevronIcon } from './icons';
 export default function ViewGmQuickRef() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="grim-card p-4 print:hidden border-iron-700/50">
+    <div className="grim-card p-4 print:hidden border-stone-700/65">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

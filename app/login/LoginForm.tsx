@@ -47,11 +47,13 @@ export default function LoginForm() {
         </Link>
       </div>
       <div>
-        <h1 className="font-display text-2xl text-gold-400 tracking-wide">Admin access</h1>
-        <p className="text-parchment/80 text-sm mt-1">
+        <h1 className="font-display text-2xl text-gold-300 tracking-wide shadow-textGold">
+          Admin access
+        </h1>
+        <p className="text-parchment-200/90 text-sm mt-1">
           Use the credentials configured for this deployment.
         </p>
-        <p className="text-parchment/60 text-sm mt-2 max-w-prose">
+        <p className="text-parchment-300/80 text-sm mt-2 max-w-prose">
           Sign in is only for hosts that require a session for write actions&mdash;the editor, Admin
           import/delete, and similar. Public bestiary and encounter pages are usually available without
           a password, unless the deployment is locked down.
@@ -60,7 +62,7 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className="space-y-3" aria-label="Sign-in credentials">
         <div>
           <label htmlFor="login-user" className="grim-label">
-            Username <span className="text-parchment/50 font-normal">(if required)</span>
+            Username <span className="text-parchment-300/75 font-normal">(if required)</span>
           </label>
           <input
             id="login-user"

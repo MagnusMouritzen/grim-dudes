@@ -27,22 +27,22 @@ export default function ViewFortuneCounter({ viewKey }: Props) {
 
   if (!ready) {
     return (
-      <div className="inline-flex items-center gap-1 text-parchment/50 text-xs">Fortune…</div>
+      <div className="inline-flex items-center gap-1 text-parchment-300/75 text-xs">Fortune…</div>
     );
   }
 
   return (
     <div
-      className="inline-flex items-center gap-1.5 rounded border border-iron-600/80 bg-ink-900/50 px-2 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90"
+      className="inline-flex items-center gap-1.5 rounded border border-stone-600/85 bg-ink-900/50 px-2 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90"
       role="group"
       aria-label="Fortune scratch counter (this tab only)"
       title="Scratch aid for who might still have Fortune (or similar)—not synced to character sheets. Your rulebook defines Fortune."
     >
-      <span className="text-parchment/55">Fortune</span>
+      <span className="text-parchment-300/85">Fortune</span>
       <button
         type="button"
         onClick={() => setN(nudgeFortune(viewKey, -1))}
-        className="w-6 h-6 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Decrease"
       >
         −
@@ -62,7 +62,7 @@ export default function ViewFortuneCounter({ viewKey }: Props) {
       <button
         type="button"
         onClick={() => setN(nudgeFortune(viewKey, 1))}
-        className="w-6 h-6 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Increase"
       >
         +

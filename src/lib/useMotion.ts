@@ -47,10 +47,10 @@ export function useGrimMotion(): {
       transition: { duration: 0.22, ease },
     },
     rise: {
-      initial: { opacity: 0, y: 8 },
+      initial: { opacity: 0, y: 10 },
       animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: -4 },
-      transition: { duration: 0.24, ease },
+      exit: { opacity: 0, y: -6 },
+      transition: { type: 'spring', stiffness: 380, damping: 36, mass: 0.78 },
     },
     stagger: { animate: { transition: { staggerChildren: 0.045 } } },
     ease,

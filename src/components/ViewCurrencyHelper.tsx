@@ -71,7 +71,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
 
   return (
     <div
-      className={`grim-card print:hidden border-iron-700/50 ${
+      className={`grim-card print:hidden border-stone-700/65 ${
         compact ? 'p-3' : 'p-4'
       }`}
     >
@@ -83,7 +83,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
         <ScrollIcon className="w-4 h-4" />
         Imperial coin
       </h2>
-      <p className={`text-parchment/55 mb-2 ${compact ? 'text-[0.65rem] leading-snug' : 'text-xs'}`}>
+      <p className={`text-parchment-200/85 mb-2 ${compact ? 'text-[0.65rem] leading-snug' : 'text-xs'}`}>
         {compact
           ? `Normalize: 1 GC = 20 ss = ${BRASS_PER_GOLD} bp.`
           : `Normalize loot or shopping totals: 1 GC = 20 ss = ${BRASS_PER_GOLD} bp. Book rules for
@@ -91,10 +91,10 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
       </p>
       <div className="flex flex-wrap items-end gap-2">
         {!compact && (
-          <span className="w-full text-[0.6rem] uppercase text-parchment/45 -mb-1">Pile 1</span>
+          <span className="w-full text-[0.6rem] uppercase text-parchment-300/80 -mb-1">Pile 1</span>
         )}
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-coin-gc">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-coin-gc">
             GC
           </label>
           <input
@@ -106,7 +106,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
           />
         </div>
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-coin-ss">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-coin-ss">
             ss
           </label>
           <input
@@ -118,7 +118,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
           />
         </div>
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-coin-bp">
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-coin-bp">
             bp
           </label>
           <input
@@ -141,13 +141,13 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
 
       {!compact && (
         <>
-          <details className="mt-2 border-t border-iron-800/50 pt-2">
-            <summary className="text-[0.65rem] uppercase text-parchment/50 cursor-pointer select-none">
+          <details className="mt-2 border-t border-stone-800/55 pt-2">
+            <summary className="text-[0.65rem] uppercase text-parchment-300/80 cursor-pointer select-none">
               Second pile (add)
             </summary>
             <div className="flex flex-wrap items-end gap-2 mt-2">
               <div>
-                <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-c2-gc">
+                <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-c2-gc">
                   GC
                 </label>
                 <input
@@ -159,7 +159,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
                 />
               </div>
               <div>
-                <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-c2-ss">
+                <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-c2-ss">
                   ss
                 </label>
                 <input
@@ -171,7 +171,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
                 />
               </div>
               <div>
-                <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-c2-bp">
+                <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-c2-bp">
                   bp
                 </label>
                 <input
@@ -187,7 +187,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
 
           <div className="mt-2 flex flex-wrap items-end gap-2">
             <div>
-              <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="wfrp-split-n">
+              <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="wfrp-split-n">
                 Split among
               </label>
               <input
@@ -200,7 +200,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
                 aria-describedby="wfrp-split-hint"
               />
             </div>
-            <span id="wfrp-split-hint" className="text-[0.65rem] text-parchment/45 pb-1.5">
+            <span id="wfrp-split-hint" className="text-[0.65rem] text-parchment-300/80 pb-1.5">
               people (equal shares)
             </span>
           </div>
@@ -208,7 +208,7 @@ export default function ViewCurrencyHelper({ compact = false }: Props) {
       )}
 
       <p
-        className={`mt-2 text-parchment/90 leading-snug border-t border-iron-800/50 pt-2 whitespace-pre-line ${
+        className={`mt-2 text-parchment/90 leading-snug border-t border-stone-800/55 pt-2 whitespace-pre-line ${
           compact ? 'text-xs' : 'text-sm'
         }`}
       >

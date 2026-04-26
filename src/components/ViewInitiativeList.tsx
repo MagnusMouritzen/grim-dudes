@@ -180,26 +180,26 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
   if (!hydrated) {
     return (
       <div
-        className="grim-card p-4 print:hidden min-h-[4rem] border-iron-700/50 bg-ink-900/30"
+        className="grim-card p-4 print:hidden min-h-[4rem] border-stone-700/65 bg-ink-900/30"
         role="status"
         aria-live="polite"
         aria-busy="true"
       >
-        <p className="text-parchment/50 text-xs">Initiative…</p>
+        <p className="text-parchment-300/75 text-xs">Initiative…</p>
       </div>
     );
   }
 
   return (
     <section
-      className="grim-card p-4 print:hidden border-gold-800/30 bg-ink-900/40"
+      className="grim-card p-4 print:hidden border-stone-700/70 bg-ink-900/35 ring-1 ring-gold-900/25 transition-[border-color,box-shadow,background-color] duration-base ease-grim"
       aria-labelledby="view-initiative-heading"
     >
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div className="flex flex-wrap items-center gap-3 min-w-0">
           <h2
             id="view-initiative-heading"
-            className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2"
+            className="font-display text-gold-300 text-sm uppercase tracking-wider flex items-center gap-2"
           >
             <SwordsIcon className="w-4 h-4" aria-hidden="true" />
             Initiative (this page)
@@ -312,14 +312,14 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
               setTurn(null);
               persist([]);
             }}
-            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment/60"
+            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment-300/85"
           >
             Clear
           </button>
         </div>
       </div>
       <div className="mb-3 max-w-xl">
-        <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor="encounter-label">
+        <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor="encounter-label">
           Encounter name (optional)
         </label>
         <input
@@ -338,27 +338,27 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
         />
       </div>
       {rows.length === 0 ? (
-        <p className="text-parchment/55 text-sm">
+        <p className="text-parchment-200/88 text-sm">
           Add rows for PCs and monsters, or import names from the stat blocks above. Use{' '}
-          <span className="text-parchment/70">Align to cards</span> after import to match the page order,
-          then edit Init to real values. Use <span className="text-parchment/70">Turn</span> and{' '}
-          <span className="text-parchment/70">Next / Prev</span> to track the acting creature, or{' '}
-          <span className="text-parchment/70">New round</span> after a full pass. Use{' '}
-          <span className="text-parchment/70">State</span> for quick condition reminders (prone, etc.). Session only.
+          <span className="text-parchment-50/95 font-medium">Align to cards</span> after import to match the page order,
+          then edit Init to real values. Use <span className="text-parchment-50/95 font-medium">Turn</span> and{' '}
+          <span className="text-parchment-50/95 font-medium">Next / Prev</span> to track the acting creature, or{' '}
+          <span className="text-parchment-50/95 font-medium">New round</span> after a full pass. Use{' '}
+          <span className="text-parchment-50/95 font-medium">State</span> for quick condition reminders (prone, etc.). Session only.
         </p>
       ) : (
         <ul className="space-y-2">
           {rows.map((r) => (
             <li
               key={r.key}
-              className={`flex flex-wrap items-end gap-2 border-b border-iron-800/50 pb-2 last:border-0 last:pb-0 rounded-sm pl-1 -ml-1 transition-colors ${
+              className={`flex flex-wrap items-end gap-2 border-b border-stone-800/55 pb-2 last:border-0 last:pb-0 rounded-sm pl-1 -ml-1 transition-[border-color,background-color,box-shadow] duration-base ease-grim ${
                 r.key === activeKey
-                  ? 'border-l-2 border-l-gold-500/90 bg-ink-900/50'
+                  ? 'border-l-2 border-l-gold-500/90 bg-ink-900/55 shadow-[inset_0_0_20px_-12px_rgba(184,134,11,0.12)]'
                   : 'border-l-2 border-l-transparent'
               }`}
             >
               <div className="flex-1 min-w-[8rem]">
-                <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor={`init-name-${r.key}`}>
+                <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor={`init-name-${r.key}`}>
                   Name
                 </label>
                 <input
@@ -371,7 +371,7 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
                 />
               </div>
               <div className="w-24">
-                <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor={`init-val-${r.key}`}>
+                <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor={`init-val-${r.key}`}>
                   Init
                 </label>
                 <input
@@ -390,7 +390,7 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
                 />
               </div>
               <div className="w-28 min-w-0 sm:w-32">
-                <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor={`init-state-${r.key}`}>
+                <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor={`init-state-${r.key}`}>
                   State
                 </label>
                 <input
@@ -418,7 +418,7 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
                   className={`text-[0.6rem] uppercase tracking-wider px-1.5 py-0.5 rounded border ${
                     r.key === activeKey
                       ? 'border-gold-500/80 text-gold-300 bg-ink-800/80'
-                      : 'border-iron-700/50 text-parchment/50 hover:border-parchment/30'
+                      : 'border-stone-600/70 text-parchment-300/85 hover:border-gold-600/45 hover:text-parchment-50 transition-colors duration-base ease-grim'
                   }`}
                   title={r.key === activeKey ? 'Clear as current turn' : 'Mark current turn'}
                 >
@@ -434,7 +434,7 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
                 )}
                 <button
                   type="button"
-                  className="p-1 text-parchment/40 hover:text-blood-400"
+                  className="p-1 text-parchment-400/70 hover:text-blood-400"
                   aria-label="Remove"
                   onClick={() => persist(rows.filter((x) => x.key !== r.key))}
                 >

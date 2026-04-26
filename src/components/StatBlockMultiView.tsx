@@ -357,7 +357,9 @@ export default function StatBlockMultiView() {
   if (resolvedIds === null && (rosterParam || packParam)) {
     return (
       <div className="grim-page max-w-md mx-auto">
-        <div className="grim-card p-12 text-center text-parchment/70 w-full">Loading encounter…</div>
+        <div className="grim-card p-12 text-center text-parchment-200/90 w-full motion-safe:animate-fade-in">
+          Loading encounter…
+        </div>
       </div>
     );
   }
@@ -369,10 +371,10 @@ export default function StatBlockMultiView() {
           <div className="text-center">
             <ScrollIcon className="w-12 h-12 text-gold-500 mx-auto" aria-hidden="true" />
             <p className="grim-label mt-3">Encounter</p>
-            <h1 className="font-display text-xl sm:text-2xl text-gold-400 tracking-wide">
+            <h1 className="font-display text-xl sm:text-2xl text-gold-300 tracking-wide shadow-textGold">
               Add creatures to this view
             </h1>
-            <p className="text-parchment/75 mt-2 max-w-md mx-auto text-sm">
+            <p className="text-parchment-200/90 mt-2 max-w-md mx-auto text-sm">
               This page is for the table: once loaded, you get stat blocks, initiative, the combat log, and
               other tools together. Start from the bestiary, or use a link someone sent you.
             </p>
@@ -396,22 +398,22 @@ export default function StatBlockMultiView() {
             </li>
             <li>
               <span className="text-parchment">Or paste a URL with </span>
-              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+              <code className="text-parchment/95 bg-ink-900/80 border border-stone-600 px-1 py-0.5 rounded font-mono text-xs">
                 ?ids=…
               </code>
               <span className="text-parchment">, </span>
-              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+              <code className="text-parchment/95 bg-ink-900/80 border border-stone-600 px-1 py-0.5 rounded font-mono text-xs">
                 ?roster=…
               </code>
               <span className="text-parchment">, or a share </span>
-              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+              <code className="text-parchment/95 bg-ink-900/80 border border-stone-600 px-1 py-0.5 rounded font-mono text-xs">
                 ?pack=…
               </code>
               <span className="text-parchment">.</span>
             </li>
           </ol>
-          <p className="text-center text-[0.7rem] text-parchment/50 max-w-sm mx-auto">
-            If you&rsquo;ve been here before, use <strong className="text-parchment/65 font-normal">Last: …</strong>{' '}
+          <p className="text-center text-[0.7rem] text-parchment-300/80 max-w-sm mx-auto">
+            If you&rsquo;ve been here before, use <strong className="text-parchment-200/90 font-medium">Last: …</strong>{' '}
             in the header to resume.
           </p>
           <div className="flex justify-center pt-1">
@@ -428,10 +430,14 @@ export default function StatBlockMultiView() {
     return (
       <div className="grim-page">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-6 w-full">
-          {ids.map((id) => (
-            <div key={id} className="grim-card shimmer h-64 p-6">
-              <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
-              <div className="h-32 w-full bg-ink-900/60 rounded" />
+          {ids.map((id, i) => (
+            <div
+              key={id}
+              className="grim-card shimmer h-64 p-6 motion-safe:animate-fade-in"
+              style={{ animationDelay: `${i * 50}ms` }}
+            >
+              <div className="h-6 w-1/2 rounded mb-3 bg-ink-900/85 ring-1 ring-stone-800/35" />
+              <div className="h-32 w-full rounded bg-ink-900/70 ring-1 ring-stone-800/30" />
             </div>
           ))}
         </div>
@@ -479,16 +485,16 @@ export default function StatBlockMultiView() {
 
       <header className="print:hidden mb-4 min-w-0 space-y-1">
         <p className="grim-label">Encounter</p>
-        <h1 className="font-display text-2xl sm:text-3xl text-gold-400 tracking-wide break-words pr-2">
+        <h1 className="font-display text-2xl sm:text-3xl text-gold-300 tracking-wide shadow-textGold break-words pr-2">
           {encounterTitle}
         </h1>
         {playerMode ? (
-          <p className="text-parchment/60 text-sm max-w-2xl">
+          <p className="text-parchment-200/85 text-sm max-w-2xl">
             Player view: stat cards only. Ask the GM to disable player view to show tools on their
             screen.
           </p>
         ) : (
-          <p className="text-parchment/60 text-sm max-w-2xl">
+          <p className="text-parchment-200/85 text-sm max-w-2xl">
             Stat blocks and wounds above; session tools&mdash;initiative, notes, log, and dice&mdash;below
             the grid.
           </p>
@@ -501,26 +507,34 @@ export default function StatBlockMultiView() {
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-2">
           {copyHint && (
-            <span className="text-[0.65rem] uppercase tracking-wider text-gold-400" role="status">
+            <span className="text-[0.65rem] uppercase tracking-wider text-gold-300" role="status">
               {copyHint}
             </span>
           )}
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment/50">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment-300/70">
             {blocks.length} {blocks.length === 1 ? 'stat block' : 'stat blocks'}
           </p>
-          <div className="hidden sm:flex items-center gap-1 text-[0.6rem] uppercase tracking-wider text-parchment/45 border border-iron-700/80 rounded px-1.5 py-0.5">
+          <div className="hidden sm:flex items-center gap-1 text-[0.6rem] uppercase tracking-wider text-parchment-300/80 border border-stone-600/85 rounded px-1.5 py-0.5 transition-colors duration-base ease-grim hover:border-gold-700/40">
             <span>Print</span>
             <button
               type="button"
-              className={printLayout === 'full' ? 'text-gold-400' : 'hover:text-parchment/80'}
+              className={
+                printLayout === 'full'
+                  ? 'text-gold-300 font-semibold'
+                  : 'hover:text-parchment-50 transition-colors duration-base ease-grim'
+              }
               onClick={() => setPrintLayout('full')}
             >
               Full
             </button>
-            <span className="text-parchment/30">|</span>
+            <span className="text-parchment-400/40">|</span>
             <button
               type="button"
-              className={printLayout === 'encounter' ? 'text-gold-400' : 'hover:text-parchment/80'}
+              className={
+                printLayout === 'encounter'
+                  ? 'text-gold-300 font-semibold'
+                  : 'hover:text-parchment-50 transition-colors duration-base ease-grim'
+              }
               onClick={() => setPrintLayout('encounter')}
             >
               Sheet
@@ -569,14 +583,14 @@ export default function StatBlockMultiView() {
             <div className="flex items-baseline justify-between gap-2 mb-0.5">
               <label
                 htmlFor="encounter-card-filter"
-                className="text-[0.6rem] uppercase text-parchment/45"
+                className="text-[0.6rem] uppercase text-parchment-300/80"
               >
                 Filter cards
               </label>
-              <span className="text-[0.6rem] text-parchment/40 hidden sm:inline">press /</span>
+              <span className="text-[0.6rem] text-parchment-400/55 hidden sm:inline">press /</span>
             </div>
             <div className="relative w-full">
-              <SearchIcon className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-parchment/40" />
+              <SearchIcon className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-parchment-400/55" />
               <input
                 ref={cardFilterInputRef}
                 id="encounter-card-filter"
@@ -599,7 +613,7 @@ export default function StatBlockMultiView() {
               Focus with slash. Escape clears. Does not change initiative or tools below.
             </p>
             {cardFilter.trim() ? (
-              <span className="text-[0.65rem] text-parchment/55 font-mono tabular-nums" aria-live="polite">
+              <span className="text-[0.65rem] text-parchment-300/82 font-mono tabular-nums" aria-live="polite">
                 {filteredBlocks.length}/{blocks.length} shown
               </span>
             ) : null}
@@ -616,7 +630,7 @@ export default function StatBlockMultiView() {
         } statblocks-print-grid`}
       >
         {cardFilter.trim() && filteredBlocks.length === 0 ? (
-          <p className="text-parchment/60 text-sm col-span-full text-center py-6 border border-iron-800/50 rounded border-dashed">
+          <p className="text-parchment-200/88 text-sm col-span-full text-center py-6 border border-stone-800/55 rounded border-dashed">
             No stat blocks match &ldquo;{cardFilter.trim()}&rdquo;. Clear the field to see everyone.
           </p>
         ) : (
@@ -680,7 +694,7 @@ export default function StatBlockMultiView() {
 
       {!playerMode && (
         <section
-          className="print:hidden space-y-3 mt-8 w-full border-t border-iron-800/50 pt-6"
+          className="print:hidden space-y-3 mt-8 w-full border-t border-stone-800/55 pt-6"
           aria-labelledby="encounter-table-tools-heading"
         >
           <h2
@@ -689,9 +703,9 @@ export default function StatBlockMultiView() {
           >
             Session &amp; table tools
           </h2>
-          <p className="text-parchment/55 text-sm -mt-0.5 mb-1 max-w-2xl">
+          <p className="text-parchment-200/85 text-sm -mt-0.5 mb-1 max-w-2xl">
             Run order, notes, the combat log, and dice live here&mdash;below the stat blocks, so the
-            page reads top to bottom: <span className="text-parchment/70">creatures &rarr; tools</span>.
+            page reads top to bottom: <span className="text-parchment-50/95 font-medium">creatures &rarr; tools</span>.
           </p>
           <ViewInitiativeList viewKey={viewKey} blocks={blocks} />
           <ViewSessionNotes viewKey={viewKey} />

@@ -46,7 +46,7 @@ export default function ViewD6Roller({ compact = false, logKey }: Props) {
 
   return (
     <div
-      className={`grim-card print:hidden border-iron-700/50 ${compact ? 'p-3' : 'p-4'}`}
+      className={`grim-card print:hidden border-stone-700/65 ${compact ? 'p-3' : 'p-4'}`}
     >
       <h2
         className={`font-display text-gold-400/95 uppercase tracking-wider flex items-center gap-2 ${compact ? 'text-xs mb-1.5' : 'text-sm mb-2'}`}
@@ -55,14 +55,14 @@ export default function ViewD6Roller({ compact = false, logKey }: Props) {
         Nd6 + mod
       </h2>
       {!compact && (
-        <p className="text-parchment/55 text-xs mb-3">
+        <p className="text-parchment-200/85 text-xs mb-3">
           Sum d6s for ad-hoc tables or house rules. Use your rulebook for anything that specifies a
           procedure (e.g. Fortune, structured miscasts).
         </p>
       )}
       <div className="flex flex-wrap items-end gap-2">
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor={nid}>
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor={nid}>
             # d6
           </label>
           <input
@@ -77,7 +77,7 @@ export default function ViewD6Roller({ compact = false, logKey }: Props) {
           />
         </div>
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor={mid}>
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor={mid}>
             + mod
           </label>
           <input

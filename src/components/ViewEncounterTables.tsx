@@ -66,12 +66,12 @@ export default function ViewEncounterTables({ logKey }: Props) {
   );
 
   return (
-    <div className="grim-card p-4 print:hidden border-iron-700/50">
+    <div className="grim-card p-4 print:hidden border-stone-700/65">
       <h2 className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2 mb-2">
         <SwordsIcon className="w-4 h-4" />
         Encounter beats
       </h2>
-      <p className="text-parchment/55 text-xs mb-3">
+      <p className="text-parchment-200/85 text-xs mb-3">
         Quick <strong className="text-parchment/80">d6 / d8 / d10</strong> prompts for social reads, stumbles, chases, and
         what is at stake—original text, not your rulebook. Use official tables for tests, fear, fumbles, and crits.
       </p>
@@ -81,13 +81,13 @@ export default function ViewEncounterTables({ logKey }: Props) {
           const sides = rows.length;
           const last = byId[id];
           return (
-            <li key={id} className="border border-iron-800/60 rounded-md p-2.5 bg-ink-900/20">
+            <li key={id} className="border border-stone-800/65 rounded-md p-2.5 bg-ink-900/20">
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-x-2">
                 <div>
-                  <span className="text-[0.65rem] uppercase text-parchment/50 font-display tracking-wide">{label}</span>
+                  <span className="text-[0.65rem] uppercase text-parchment-300/80 font-display tracking-wide">{label}</span>
                   <span className="text-parchment/35 text-xs ml-1">d{sides}</span>
                 </div>
-                <p className="text-[0.65rem] text-parchment/45 leading-snug sm:text-right sm:max-w-[60%]">{help}</p>
+                <p className="text-[0.65rem] text-parchment-300/80 leading-snug sm:text-right sm:max-w-[60%]">{help}</p>
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <button

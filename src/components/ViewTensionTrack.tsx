@@ -29,20 +29,20 @@ export default function ViewTensionTrack({ viewKey }: Props) {
 
   if (!ready) {
     return (
-      <div className="inline-flex items-center gap-1 text-parchment/50 text-xs">Tension…</div>
+      <div className="inline-flex items-center gap-1 text-parchment-300/75 text-xs">Tension…</div>
     );
   }
 
   return (
     <div
-      className="inline-flex items-center gap-2 rounded border border-iron-600/80 bg-ink-900/50 px-2 py-1 text-[0.65rem] text-parchment/90"
+      className="inline-flex items-center gap-2 rounded border border-stone-600/85 bg-ink-900/50 px-2 py-1 text-[0.65rem] text-parchment/90"
       title="Narrative pressure for this scene (0=calm, 8=peak)—your group decides when it matters."
     >
-      <span className="text-parchment/55 uppercase tracking-wider">Tension</span>
+      <span className="text-parchment-300/85 uppercase tracking-wider">Tension</span>
       <button
         type="button"
         onClick={() => setN(nudgeTension(viewKey, -1))}
-        className="w-6 h-6 shrink-0 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 shrink-0 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Decrease tension"
       >
         −
@@ -65,7 +65,7 @@ export default function ViewTensionTrack({ viewKey }: Props) {
       <button
         type="button"
         onClick={() => setN(nudgeTension(viewKey, 1))}
-        className="w-6 h-6 shrink-0 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 shrink-0 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Increase tension"
       >
         +

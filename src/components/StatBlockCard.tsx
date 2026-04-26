@@ -179,7 +179,7 @@ export default function StatBlockCard({
               {read}
             </p>
           ) : (
-            <p className="text-parchment/55 text-sm italic">No player-facing description yet.</p>
+            <p className="text-parchment-300/85 text-sm italic">No player-facing description yet.</p>
           )}
         </div>
       </article>
@@ -440,7 +440,7 @@ export default function StatBlockCard({
               {weaponsDisplay.melee.map((w, i) => (
                 <div
                   key={`melee-${i}`}
-                  className={`relative rounded border border-iron-700 bg-ink-800/70 ${
+                  className={`relative rounded border border-stone-700 bg-ink-800/70 ${
                     d ? 'p-2 pl-3' : 'p-3 pl-4'
                   }`}
                 >
@@ -461,7 +461,7 @@ export default function StatBlockCard({
                     }`}
                   >
                     <span className="text-gold-400/80">DMG</span> {w.totalDamage}
-                    <span className="text-iron-500 mx-1.5">·</span>
+                    <span className="text-stone-500 mx-1.5">·</span>
                     <span className="text-gold-400/80">REACH</span>{' '}
                     <span className="font-body">{w.reach ?? '—'}</span>
                   </div>
@@ -487,7 +487,7 @@ export default function StatBlockCard({
               {weaponsDisplay.ranged.map((w, i) => (
                 <div
                   key={`ranged-${i}`}
-                  className={`relative rounded border border-iron-700 bg-ink-800/70 ${
+                  className={`relative rounded border border-stone-700 bg-ink-800/70 ${
                     d ? 'p-2 pl-3' : 'p-3 pl-4'
                   }`}
                 >
@@ -511,7 +511,7 @@ export default function StatBlockCard({
                     }`}
                   >
                     <span className="text-gold-400/80">DMG</span> {w.totalDamage}
-                    <span className="text-iron-500 mx-1.5">·</span>
+                    <span className="text-stone-500 mx-1.5">·</span>
                     <span className="text-gold-400/80">RNG</span> {w.range}
                   </div>
                   {w.qualities.length > 0 && (
@@ -541,7 +541,7 @@ export default function StatBlockCard({
           <section>
             <SectionHeading dense={d}>Armour</SectionHeading>
             {armourTable.length > 0 && (
-              <div className="rounded overflow-hidden border border-iron-700/70 mb-3">
+              <div className="rounded overflow-hidden border border-stone-700/70 mb-3">
                 <table
                   className={
                     d ? 'w-full text-xs border-collapse' : 'w-full text-sm border-collapse'
@@ -573,7 +573,7 @@ export default function StatBlockCard({
                     {armourTable.map((row, idx) => (
                       <tr
                         key={row.location}
-                        className={`border-t border-iron-700/50 ${
+                        className={`border-t border-stone-700/60 ${
                           idx % 2 === 0 ? 'bg-ink-800/30' : 'bg-transparent'
                         }`}
                       >
@@ -608,7 +608,7 @@ export default function StatBlockCard({
                 {armourListDisplay.map((a) => (
                   <div
                     key={a.name}
-                    className={`rounded border border-iron-700 bg-ink-800/70 ${
+                    className={`rounded border border-stone-700 bg-ink-800/70 ${
                       d ? 'px-2 py-1.5' : 'px-3 py-2'
                     }`}
                   >
@@ -657,7 +657,7 @@ export default function StatBlockCard({
         )}
 
         {typeof block.notes === 'string' && block.notes.trim() ? (
-          <section className="pt-3 border-t border-iron-700/50">
+          <section className="pt-3 border-t border-stone-700/60">
             <SectionHeading dense={d}>Notes</SectionHeading>
             <p
               className={`whitespace-pre-line ${

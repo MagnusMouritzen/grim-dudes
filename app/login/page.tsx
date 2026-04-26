@@ -5,7 +5,9 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="grim-page max-w-md mx-auto grim-card p-6 text-parchment/70 text-sm">Loading…</div>
+        <div className="grim-page max-w-md mx-auto grim-card p-6 text-parchment-200/90 text-sm motion-safe:animate-fade-in">
+          Loading…
+        </div>
       }
     >
       <LoginForm />

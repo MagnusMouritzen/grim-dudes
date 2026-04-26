@@ -82,15 +82,19 @@ function useBestiaryColumnCount() {
 
 export function BestiaryListSkeleton() {
   return (
-    <div className="space-y-6 grim-page">
+    <div className="space-y-6 grim-page motion-safe:animate-fade-in">
       <HeroSkeleton />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="grim-card shimmer h-40 p-4">
-            <div className="h-5 w-2/3 bg-ink-900/80 rounded mb-3" />
-            <div className="h-3 w-full bg-ink-900/60 rounded mb-2" />
-            <div className="h-3 w-5/6 bg-ink-900/60 rounded mb-2" />
-            <div className="h-3 w-4/6 bg-ink-900/60 rounded" />
+          <div
+            key={i}
+            className="grim-card shimmer h-40 p-4 motion-safe:animate-fade-in"
+            style={{ animationDelay: `${i * 45}ms` }}
+          >
+            <div className="h-5 w-2/3 rounded mb-3 bg-ink-900/85 ring-1 ring-stone-800/35" />
+            <div className="h-3 w-full rounded mb-2 bg-ink-900/70 ring-1 ring-stone-800/25" />
+            <div className="h-3 w-5/6 rounded mb-2 bg-ink-900/70 ring-1 ring-stone-800/25" />
+            <div className="h-3 w-4/6 rounded bg-ink-900/70 ring-1 ring-stone-800/25" />
           </div>
         ))}
       </div>
@@ -595,11 +599,11 @@ export default function StatBlockList({
           >
             Bestiary
           </h1>
-          <p className="text-parchment/70 mt-2 text-sm max-w-xl">
+          <p className="text-parchment-200/88 mt-2 text-sm max-w-xl">
             Foes, friends and fell creatures of the Old World.
             <span className="text-iron-500"> · </span>
             <span className="font-mono tabular-nums text-parchment/85">{totalCount}</span>{' '}
-            <span className="text-parchment/60">
+            <span className="text-parchment-300/82">
               {totalCount === 1 ? 'entry' : 'entries'}
             </span>
           </p>
@@ -690,7 +694,7 @@ export default function StatBlockList({
             </Link>
           </div>
           {selectedIds.length > 5 && (
-            <p className="text-xs text-parchment/55 text-right max-w-sm">
+            <p className="text-xs text-parchment-200/85 text-right max-w-sm">
               More than five selections use a short share link so the address bar does not become
               too long.
             </p>
@@ -719,7 +723,7 @@ export default function StatBlockList({
                 className="grim-label flex items-center gap-1.5"
               >
                 <SearchIcon className="w-3 h-3" /> Search
-                <span className="hidden sm:inline ml-auto text-[0.6rem] text-parchment/40">
+                <span className="hidden sm:inline ml-auto text-[0.6rem] text-parchment-400/60">
                   press /
                 </span>
               </label>
@@ -776,7 +780,7 @@ export default function StatBlockList({
               <label className="inline-flex items-center gap-2 cursor-pointer text-parchment/80 text-sm select-none pb-0.5">
                 <input
                   type="checkbox"
-                  className="rounded border-iron-600 bg-ink-900 text-gold-500 focus:ring-gold-500/50"
+                  className="rounded border-stone-600 bg-ink-900 text-gold-500 focus:ring-gold-500/50"
                   checked={favoritesOnly}
                   onChange={(e) => setFavoritesOnly(e.target.checked)}
                 />
@@ -795,14 +799,14 @@ export default function StatBlockList({
               </button>
             )}
           </div>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[0.7rem] uppercase tracking-wider text-parchment/50 font-mono">
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[0.7rem] uppercase tracking-wider text-parchment-300/78 font-mono">
             <div className="flex flex-wrap items-center gap-2 justify-between">
               <span>
                 Showing <span className="text-gold-400">{filteredCount}</span> / {totalCount}
                 {favoriteIds.size > 0 && (
                   <>
                     {' '}
-                    · <span className="text-parchment/55">{favoriteIds.size}</span> starred
+                    · <span className="text-parchment-200/90">{favoriteIds.size}</span> starred
                   </>
                 )}
               </span>
@@ -821,7 +825,7 @@ export default function StatBlockList({
                   <button
                     type="button"
                     onClick={copyStarredAsMarkdown}
-                    className="inline-flex items-center gap-1.5 rounded border border-gold-700/50 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-gold-200/90 transition-colors duration-fast hover:border-gold-500/70"
+                    className="inline-flex items-center gap-1.5 rounded border border-gold-700/50 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-gold-200/90 transition-colors duration-base ease-grim hover:border-gold-500/70"
                     title="All starred stat blocks as markdown (name order), ignoring filters"
                     aria-label="Copy starred list as markdown"
                   >
@@ -834,7 +838,7 @@ export default function StatBlockList({
                   onClick={copyFilteredAsMarkdown}
                   disabled={filteredCount === 0}
                   title="Copy filtered entries as markdown links (one per line) for session notes or docs."
-                  className="inline-flex items-center gap-1.5 rounded border border-iron-600/80 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90 transition-colors duration-fast hover:border-gold-600 hover:text-gold-300 disabled:opacity-40 disabled:pointer-events-none"
+                  className="inline-flex items-center gap-1.5 rounded border border-stone-600/85 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90 transition-colors duration-base ease-grim hover:border-gold-600 hover:text-gold-300 disabled:opacity-40 disabled:pointer-events-none"
                   aria-label="Copy filtered list as markdown"
                 >
                   <ScrollIcon className="w-3.5 h-3.5" />
@@ -845,7 +849,7 @@ export default function StatBlockList({
                   onClick={viewFilteredTogether}
                   disabled={filteredCount === 0 || packBusy}
                   title="Open every entry that matches the current filter in the multi stat view (short link if the list is long)."
-                  className="inline-flex items-center gap-1.5 rounded border border-iron-600/80 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90 transition-colors duration-fast hover:border-gold-600 hover:text-gold-300 disabled:opacity-40 disabled:pointer-events-none"
+                  className="inline-flex items-center gap-1.5 rounded border border-stone-600/85 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90 transition-colors duration-base ease-grim hover:border-gold-600 hover:text-gold-300 disabled:opacity-40 disabled:pointer-events-none"
                   aria-label="View filtered list together"
                 >
                   {packBusy ? '…' : 'View filtered'}
@@ -855,7 +859,7 @@ export default function StatBlockList({
                   onClick={pickRandomFromFilter}
                   disabled={filteredCount === 0}
                   title="Picks at random from entries matching the current search and tag filter."
-                  className="inline-flex items-center gap-1.5 rounded border border-iron-600/80 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90 transition-colors duration-fast hover:border-gold-600 hover:text-gold-300 disabled:opacity-40 disabled:pointer-events-none"
+                  className="inline-flex items-center gap-1.5 rounded border border-stone-600/85 bg-ink-900/50 px-2.5 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90 transition-colors duration-base ease-grim hover:border-gold-600 hover:text-gold-300 disabled:opacity-40 disabled:pointer-events-none"
                   aria-label="Open a random stat block from the current list"
                 >
                   <DiceIcon className="w-3.5 h-3.5" />
@@ -863,7 +867,7 @@ export default function StatBlockList({
                 </button>
               </div>
             </div>
-            <span className="text-parchment/40 normal-case tracking-normal sm:text-right">
+            <span className="text-parchment-400/65 normal-case tracking-normal sm:text-right">
               <span className="hidden sm:inline">Select multiple, then open them side by side with </span>
               <span className="sm:hidden">Select multiple, then </span>
               View together.
@@ -884,7 +888,7 @@ export default function StatBlockList({
           <h2 id="bestiary-rosters-heading" className="grim-label mb-1">
             Saved encounter rosters
           </h2>
-          <p className="text-parchment/55 text-sm mb-2 max-w-2xl">
+          <p className="text-parchment-200/85 text-sm mb-2 max-w-2xl">
             These open in{' '}
             <Link href="/view" className="text-gold-500/90 hover:underline">
               Encounter
@@ -896,7 +900,7 @@ export default function StatBlockList({
             {rosters.map((r) => (
               <li
                 key={r.slug}
-                className="flex flex-wrap items-center justify-between gap-2 border-b border-iron-800/50 pb-1.5 last:border-0 last:pb-0"
+                className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-800/55 pb-1.5 last:border-0 last:pb-0"
               >
                 <Link
                   href={`/view?roster=${encodeURIComponent(r.slug)}`}
@@ -908,13 +912,13 @@ export default function StatBlockList({
                   {rosterCopyHint === r.slug && (
                     <span className="text-[0.6rem] text-gold-400 mr-1">Copied</span>
                   )}
-                  <span className="font-mono text-[0.65rem] text-parchment/45 tabular-nums">
+                  <span className="font-mono text-[0.65rem] text-parchment-300/80 tabular-nums">
                     {r.count} ids
                   </span>
                   <button
                     type="button"
                     onClick={() => void copyRosterViewUrl(r.slug)}
-                    className="p-1 rounded text-parchment/50 hover:text-gold-400 hover:bg-ink-800/60"
+                    className="p-1 rounded text-parchment-300/75 hover:text-gold-300 hover:bg-ink-800/60 transition-colors duration-base ease-grim"
                     aria-label={`Copy link to ${r.name}`}
                     title="Copy /view?roster= link"
                   >
@@ -923,7 +927,7 @@ export default function StatBlockList({
                   <button
                     type="button"
                     onClick={() => openRosterEdit(r.slug)}
-                    className="p-1 rounded text-parchment/50 hover:text-gold-400 hover:bg-ink-800/60"
+                    className="p-1 rounded text-parchment-300/75 hover:text-gold-300 hover:bg-ink-800/60 transition-colors duration-base ease-grim"
                     aria-label={`Edit roster ${r.name}`}
                     disabled={editRosterBusy}
                   >
@@ -932,7 +936,7 @@ export default function StatBlockList({
                   <button
                     type="button"
                     onClick={() => void deleteEncounterRoster(r.slug)}
-                    className="p-1 rounded text-parchment/50 hover:text-blood-400 hover:bg-blood-900/40"
+                    className="p-1 rounded text-parchment-300/75 hover:text-blood-400 hover:bg-blood-900/40 transition-colors duration-base ease-grim"
                     aria-label={`Delete roster ${r.name}`}
                   >
                     <TrashIcon className="w-3.5 h-3.5" />
@@ -1024,10 +1028,10 @@ export default function StatBlockList({
                                 : 'Star for quick access in this browser'
                             }
                             onClick={(e) => toggleFavorite(e, blockId)}
-                            className={`absolute -top-2 -right-2 z-20 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-fast ease-grim ${
+                            className={`absolute -top-2 -right-2 z-20 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-base ease-grim ${
                               favoriteIds.has(blockId)
                                 ? 'border-gold-500/90 bg-ink-900/95 text-gold-400'
-                                : 'bg-ink-900/90 border-iron-600 text-parchment/40 group-hover:border-gold-500/50 group-hover:text-gold-400/90'
+                                : 'bg-ink-900/90 border-stone-600 text-parchment/40 group-hover:border-gold-500/50 group-hover:text-gold-400/90'
                             }`}
                           >
                             <StarIcon className="w-3.5 h-3.5" active={favoriteIds.has(blockId)} />
@@ -1040,10 +1044,10 @@ export default function StatBlockList({
                               e.preventDefault();
                               toggleSelected(blockId);
                             }}
-                            className={`absolute -top-2 -left-2 z-10 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-fast ease-grim ${
+                            className={`absolute -top-2 -left-2 z-10 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-base ease-grim ${
                               selected
                                 ? 'bg-gold-500 border-gold-300 text-ink-900 shadow-gold'
-                                : 'bg-ink-900/90 border-iron-600 text-transparent group-hover:border-gold-500 group-hover:text-gold-400'
+                                : 'bg-ink-900/90 border-stone-600 text-transparent group-hover:border-gold-500 group-hover:text-gold-400'
                             }`}
                           >
                             {selected && <CheckIcon className="w-4 h-4" strokeWidth={2.5} />}
@@ -1097,10 +1101,10 @@ export default function StatBlockList({
                         : 'Star for quick access in this browser'
                     }
                     onClick={(e) => toggleFavorite(e, blockId)}
-                    className={`absolute -top-2 -right-2 z-20 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-fast ease-grim ${
+                    className={`absolute -top-2 -right-2 z-20 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-base ease-grim ${
                       favoriteIds.has(blockId)
                         ? 'border-gold-500/90 bg-ink-900/95 text-gold-400'
-                        : 'bg-ink-900/90 border-iron-600 text-parchment/40 group-hover:border-gold-500/50 group-hover:text-gold-400/90'
+                        : 'bg-ink-900/90 border-stone-600 text-parchment/40 group-hover:border-gold-500/50 group-hover:text-gold-400/90'
                     }`}
                   >
                     <StarIcon className="w-3.5 h-3.5" active={favoriteIds.has(blockId)} />
@@ -1113,10 +1117,10 @@ export default function StatBlockList({
                       e.preventDefault();
                       toggleSelected(blockId);
                     }}
-                    className={`absolute -top-2 -left-2 z-10 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-fast ease-grim ${
+                    className={`absolute -top-2 -left-2 z-10 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-base ease-grim ${
                       selected
                         ? 'bg-gold-500 border-gold-300 text-ink-900 shadow-gold'
-                        : 'bg-ink-900/90 border-iron-600 text-transparent group-hover:border-gold-500 group-hover:text-gold-400'
+                        : 'bg-ink-900/90 border-stone-600 text-transparent group-hover:border-gold-500 group-hover:text-gold-400'
                     }`}
                   >
                     <AnimatePresence>
@@ -1185,7 +1189,7 @@ export default function StatBlockList({
               >
                 Save encounter roster
               </h2>
-              <p className="text-parchment/70 text-sm mb-3">
+              <p className="text-parchment-200/88 text-sm mb-3">
                 Name this set of {selectedIds.length} stat block{selectedIds.length === 1 ? '' : 's'}.
                 Open it anytime from the list below.
               </p>
@@ -1319,9 +1323,9 @@ export default function StatBlockList({
 function HeroSkeleton() {
   return (
     <div className="space-y-3">
-      <div className="h-3 w-40 bg-ink-800 rounded shimmer" />
-      <div className="h-12 w-64 bg-ink-800 rounded shimmer" />
-      <div className="h-3 w-80 bg-ink-800 rounded shimmer" />
+      <div className="h-3 w-40 rounded shimmer bg-ink-800 ring-1 ring-stone-800/40" />
+      <div className="h-12 w-64 rounded shimmer bg-ink-800 ring-1 ring-stone-800/40" />
+      <div className="h-3 w-80 rounded shimmer bg-ink-800 ring-1 ring-stone-800/40" />
     </div>
   );
 }
@@ -1342,8 +1346,8 @@ function EmptyState({
       <div className="grim-card p-10 text-center flex flex-col items-center gap-4">
         <div className="rounded-full border border-gold-700/40 bg-ink-900/80 p-4">{icon}</div>
         <div>
-          <h2 className="font-display text-xl text-gold-400 tracking-wide">{title}</h2>
-          <p className="text-parchment/80 mt-1 max-w-md mx-auto">{description}</p>
+          <h2 className="font-display text-xl text-gold-300 tracking-wide shadow-textGold">{title}</h2>
+          <p className="text-parchment-200/90 mt-1 max-w-md mx-auto">{description}</p>
         </div>
         {action ? <div className="pt-1">{action}</div> : null}
       </div>

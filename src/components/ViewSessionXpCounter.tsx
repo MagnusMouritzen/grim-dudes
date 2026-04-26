@@ -27,22 +27,22 @@ export default function ViewSessionXpCounter({ viewKey }: Props) {
 
   if (!ready) {
     return (
-      <div className="inline-flex items-center gap-1 text-parchment/50 text-xs">XP…</div>
+      <div className="inline-flex items-center gap-1 text-parchment-300/75 text-xs">XP…</div>
     );
   }
 
   return (
     <div
-      className="inline-flex flex-wrap items-center gap-1 gap-y-0.5 rounded border border-iron-600/80 bg-ink-900/50 px-2 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90"
+      className="inline-flex flex-wrap items-center gap-1 gap-y-0.5 rounded border border-stone-600/85 bg-ink-900/50 px-2 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90"
       role="group"
       aria-label="Session XP scratch (this tab only)"
       title="XP you plan to award or have noted for this table session—not saved to a character sheet or stat block."
     >
-      <span className="text-parchment/55">XP</span>
+      <span className="text-parchment-300/85">XP</span>
       <button
         type="button"
         onClick={() => setN(nudgeSessionXp(viewKey, -5))}
-        className="rounded border border-iron-700/50 px-1 py-0.5 text-[0.55rem] text-parchment/55 hover:border-parchment/25"
+        className="rounded border border-stone-700/65 px-1 py-0.5 text-[0.55rem] text-parchment-300/80 hover:border-parchment/25"
         aria-label="Subtract 5"
       >
         −5
@@ -50,7 +50,7 @@ export default function ViewSessionXpCounter({ viewKey }: Props) {
       <button
         type="button"
         onClick={() => setN(nudgeSessionXp(viewKey, -1))}
-        className="w-6 h-6 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Decrease by 1"
       >
         −
@@ -70,7 +70,7 @@ export default function ViewSessionXpCounter({ viewKey }: Props) {
       <button
         type="button"
         onClick={() => setN(nudgeSessionXp(viewKey, 1))}
-        className="w-6 h-6 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Increase by 1"
       >
         +
@@ -78,7 +78,7 @@ export default function ViewSessionXpCounter({ viewKey }: Props) {
       <button
         type="button"
         onClick={() => setN(nudgeSessionXp(viewKey, 5))}
-        className="rounded border border-iron-700/50 px-1 py-0.5 text-[0.55rem] text-parchment/55 hover:border-parchment/25"
+        className="rounded border border-stone-700/65 px-1 py-0.5 text-[0.55rem] text-parchment-300/80 hover:border-parchment/25"
         aria-label="Add 5"
       >
         +5

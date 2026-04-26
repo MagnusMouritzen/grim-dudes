@@ -113,7 +113,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
 
   return (
     <div
-      className={`grim-card print:hidden border-iron-700/50 ${compact ? 'p-3' : 'p-4'}`}
+      className={`grim-card print:hidden border-stone-700/65 ${compact ? 'p-3' : 'p-4'}`}
     >
       <h2
         className={`font-display text-gold-400/95 uppercase tracking-wider flex items-center gap-2 ${compact ? 'text-xs mb-1.5' : 'text-sm mb-2'}`}
@@ -122,7 +122,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
         d100 test (simple)
       </h2>
       {!compact && (
-        <p className="text-parchment/55 text-xs mb-3">
+        <p className="text-parchment-200/85 text-xs mb-3">
           Quick roll: success if your roll is at or under the final target after modifiers. Your rulebook
           governs exact Success Levels, criticals, and 100s.
         </p>
@@ -132,7 +132,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
         role="group"
         aria-label="Optional roll context tag"
       >
-        <span className={`text-parchment/45 ${compact ? 'text-[0.55rem] w-full' : 'text-[0.6rem]'}`}>
+        <span className={`text-parchment-300/80 ${compact ? 'text-[0.55rem] w-full' : 'text-[0.6rem]'}`}>
           Tag
         </span>
         <button
@@ -141,7 +141,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
           className={`rounded border px-1.5 py-0.5 text-[0.6rem] uppercase tracking-wide ${
             contextTag === null
               ? 'border-gold-600/50 text-gold-300/90 bg-ink-800/80'
-              : 'border-iron-700/60 text-parchment/45 hover:border-parchment/25'
+              : 'border-stone-700/65 text-parchment-300/80 hover:border-parchment/25'
           }`}
         >
           Off
@@ -154,7 +154,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
             className={`rounded border px-1.5 py-0.5 text-[0.6rem] ${
               contextTag === tag
                 ? 'border-gold-600/50 text-gold-300/90 bg-ink-800/80'
-                : 'border-iron-700/60 text-parchment/55 hover:border-parchment/25'
+                : 'border-stone-700/65 text-parchment-300/80 hover:border-parchment/25'
             }`}
           >
             {tag}
@@ -163,7 +163,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
       </div>
       <div className="flex flex-wrap items-end gap-2">
         <div>
-          <label className="text-[0.6rem] uppercase text-parchment/45" htmlFor={tid}>
+          <label className="text-[0.6rem] uppercase text-parchment-300/80" htmlFor={tid}>
             Target (optional)
           </label>
           <input
@@ -198,7 +198,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
           <div className="min-w-0 flex-1 basis-full sm:basis-auto">
             {contextTag && (
               <p
-                className={`text-parchment/50 uppercase tracking-wider ${compact ? 'text-[0.55rem]' : 'text-[0.65rem]'}`}
+                className={`text-parchment-300/80 uppercase tracking-wider ${compact ? 'text-[0.55rem]' : 'text-[0.65rem]'}`}
               >
                 {contextTag}
               </p>
@@ -216,7 +216,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
         )}
       </div>
       {historyKey && rollHistory.length > 0 && (
-        <p className="text-parchment/50 text-[0.65rem] mt-2 font-mono flex flex-wrap items-baseline gap-x-2 gap-y-0">
+        <p className="text-parchment-300/80 text-[0.65rem] mt-2 font-mono flex flex-wrap items-baseline gap-x-2 gap-y-0">
           <span>
             Last d100: {rollHistory.map((e) => formatD100HistoryEntry(e)).join(' · ')}
           </span>
@@ -226,7 +226,7 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
               clearD100History(historyKey);
               setRollHistory([]);
             }}
-            className="text-parchment/40 hover:text-blood-400/90 underline underline-offset-2"
+            className="text-parchment-400/70 hover:text-blood-400/90 underline underline-offset-2"
           >
             Clear history
           </button>

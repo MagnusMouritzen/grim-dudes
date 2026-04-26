@@ -29,22 +29,22 @@ export default function ViewAdvantageCounter({ viewKey }: Props) {
 
   if (!ready) {
     return (
-      <div className="inline-flex items-center gap-1 text-parchment/50 text-xs">Adv…</div>
+      <div className="inline-flex items-center gap-1 text-parchment-300/75 text-xs">Adv…</div>
     );
   }
 
   return (
     <div
-      className="inline-flex items-center gap-1.5 rounded border border-iron-600/80 bg-ink-900/50 px-2 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90"
+      className="inline-flex items-center gap-1.5 rounded border border-stone-600/85 bg-ink-900/50 px-2 py-1 text-[0.65rem] uppercase tracking-wider text-parchment/90"
       role="group"
       aria-label="Advantage scratch (this tab only)"
       title="Rough combat Advantage for whichever side you are tracking—your rulebook defines caps and when it changes."
     >
-      <span className="text-parchment/55">Adv</span>
+      <span className="text-parchment-300/85">Adv</span>
       <button
         type="button"
         onClick={() => setN(nudgeAdvantage(viewKey, -1))}
-        className="w-6 h-6 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Decrease"
       >
         −
@@ -64,7 +64,7 @@ export default function ViewAdvantageCounter({ viewKey }: Props) {
       <button
         type="button"
         onClick={() => setN(nudgeAdvantage(viewKey, 1))}
-        className="w-6 h-6 rounded border border-iron-600/60 text-parchment/80 hover:border-gold-600/60"
+        className="w-6 h-6 rounded border border-stone-600/70 text-parchment/80 hover:border-gold-600/60"
         aria-label="Increase"
       >
         +

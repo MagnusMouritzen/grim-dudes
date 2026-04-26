@@ -47,25 +47,25 @@ export default function ViewSessionNotes({ viewKey }: Props) {
   if (!ready) {
     return (
       <div
-        className="grim-card p-4 print:hidden min-h-[5rem] border-iron-700/50"
+        className="grim-card p-4 print:hidden min-h-[5rem] border-stone-700/65"
         role="status"
         aria-live="polite"
         aria-busy="true"
       >
-        <p className="text-parchment/50 text-xs">Notes…</p>
+        <p className="text-parchment-300/75 text-xs">Notes…</p>
       </div>
     );
   }
 
   return (
     <section
-      className="grim-card p-4 print:hidden border-iron-700/50 bg-ink-900/20"
+      className="grim-card p-4 print:hidden border-stone-700/65 bg-ink-900/25 transition-[border-color,box-shadow,background-color] duration-base ease-grim"
       aria-labelledby="view-session-notes-heading"
     >
       <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
         <h2
           id="view-session-notes-heading"
-          className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2"
+          className="font-display text-gold-300 text-sm uppercase tracking-wider flex items-center gap-2"
         >
           <ScrollIcon className="w-4 h-4" aria-hidden="true" />
           Session notes
@@ -76,7 +76,7 @@ export default function ViewSessionNotes({ viewKey }: Props) {
           aria-label="Session notes: copy and clear"
         >
           {copyHint && (
-            <span className="text-[0.65rem] uppercase text-gold-400" role="status">
+            <span className="text-[0.65rem] uppercase text-gold-300" role="status">
               Copied
             </span>
           )}
@@ -93,19 +93,19 @@ export default function ViewSessionNotes({ viewKey }: Props) {
             type="button"
             onClick={clearNotes}
             disabled={!text.trim()}
-            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment/60"
+            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment-300/85"
           >
             Clear
           </button>
         </div>
       </div>
-      <p className="text-parchment/50 text-xs mb-2">Positions, mood, next beats — this tab only.</p>
+      <p className="text-parchment-300/80 text-xs mb-2">Positions, mood, next beats — this tab only.</p>
       <label htmlFor="session-notes-area" className="sr-only">
         Session notes
       </label>
       <textarea
         id="session-notes-area"
-        className="grim-input w-full min-h-[5rem] text-sm text-parchment/90 resize-y"
+        className="grim-input w-full min-h-[5rem] text-sm text-parchment-50/95 resize-y"
         value={text}
         onChange={onChange}
         placeholder="Rounds, reminders, read-aloud…"

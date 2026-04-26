@@ -41,7 +41,7 @@ export default function ViewHitLocationRoller({ compact = false, logKey }: Props
 
   return (
     <div
-      className={`grim-card print:hidden border-iron-700/50 ${compact ? 'p-3' : 'p-4'}`}
+      className={`grim-card print:hidden border-stone-700/65 ${compact ? 'p-3' : 'p-4'}`}
     >
       <h2
         className={`font-display text-gold-400/95 uppercase tracking-wider flex items-center gap-2 ${
@@ -52,7 +52,7 @@ export default function ViewHitLocationRoller({ compact = false, logKey }: Props
         Hit location
       </h2>
       {!compact && (
-        <p className="text-parchment/55 text-xs mb-3">
+        <p className="text-parchment-200/85 text-xs mb-3">
           Humanoid: roll d100, read the band. Check your <strong className="text-parchment/80">WFRP 4e</strong>{' '}
           book for the official table, armour at each location, and crit results—this is a table aid only.
         </p>
