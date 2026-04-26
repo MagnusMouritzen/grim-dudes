@@ -487,6 +487,12 @@ export default function StatBlockMultiView() {
                 type="search"
                 value={cardFilter}
                 onChange={(e) => setCardFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    e.preventDefault();
+                    setCardFilter('');
+                  }
+                }}
                 placeholder="Filter by name or id…"
                 className="grim-input !pl-8 !py-1.5 text-sm w-full"
                 autoComplete="off"

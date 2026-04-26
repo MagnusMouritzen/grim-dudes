@@ -38,6 +38,12 @@ export default function ViewSessionNotes({ viewKey }: Props) {
     );
   }, [text]);
 
+  const clearNotes = useCallback(() => {
+    if (!text.trim() || !window.confirm('Clear all session notes?')) return;
+    setText('');
+    saveSessionNotes(viewKey, '');
+  }, [text, viewKey]);
+
   if (!ready) {
     return (
       <div className="grim-card p-4 print:hidden min-h-[5rem] border-iron-700/50">
@@ -67,6 +73,14 @@ export default function ViewSessionNotes({ viewKey }: Props) {
             title="Copy all notes to the clipboard"
           >
             Copy
+          </button>
+          <button
+            type="button"
+            onClick={clearNotes}
+            disabled={!text.trim()}
+            className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem] text-parchment/60"
+          >
+            Clear
           </button>
         </div>
       </div>

@@ -103,9 +103,11 @@ export default function ViewGmQuickRef() {
             remainder bp)—prices, quality, and haggling still come from the book.
           </li>
           <li>
-            <strong className="text-parchment/95">d100 tags</strong> label what a roll was for (e.g. Lore,
-            Charm, Melee, Perception)—they do not set targets; you still choose the number after modifiers;
-            they appear in <strong className="text-parchment/95">Last d100</strong> for recent rolls.
+            <strong className="text-parchment/95">d100 tags</strong> label what a roll was for: skills
+            (e.g. Melee, Lore) and sheet abbreviations (e.g. <strong className="text-parchment/95">WS</strong>,{' '}
+            <strong className="text-parchment/95">AG</strong>, <strong className="text-parchment/95">Init</strong>)—they
+            do not set targets; you still apply modifiers, then the target number. Tags appear in{' '}
+            <strong className="text-parchment/95">Last d100</strong> for recent rolls.
           </li>
           <li>
             <strong className="text-parchment/95">Opposed d100</strong> rolls two dice with optional

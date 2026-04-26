@@ -27,6 +27,16 @@ const ROLL_CONTEXT_TAGS = [
   'Pray',
   'Ranged',
   'Stealth',
+  /** Characteristics (final target still from sheet + modifiers). */
+  'WS',
+  'BS',
+  'S',
+  'T',
+  'AG',
+  'INT',
+  'WP',
+  'FEL',
+  'Init',
 ] as const;
 
 type Props = {
