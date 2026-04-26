@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronIcon, QuillIcon, ScrollIcon } from '@/components/icons';
+import { ChevronIcon, PlusIcon, QuillIcon, ScrollIcon } from '@/components/icons';
 
 type ImportResult = {
   created: number;
@@ -122,7 +122,9 @@ export default function AdminPage() {
       </div>
       <div className="flex flex-wrap gap-2">
         <Link href="/new" className="grim-btn-primary">
-          New stat block
+          <PlusIcon className="w-3.5 h-3.5 shrink-0" />
+          <span className="sm:hidden">New</span>
+          <span className="hidden sm:inline">New stat block</span>
         </Link>
         <button
           type="button"

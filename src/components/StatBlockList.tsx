@@ -585,7 +585,7 @@ export default function StatBlockList({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full min-w-0">
       <header className="flex flex-wrap items-end justify-between gap-4 print:hidden">
         <div className="min-w-0">
           <p className="grim-label mb-1">Warhammer Fantasy Roleplay 4e</p>

@@ -399,7 +399,7 @@ export default function StatBlockMultiView() {
   }
 
   return (
-    <div>
+    <div className="w-full min-w-0">
       <div
         className={
           printLayout === 'encounter'

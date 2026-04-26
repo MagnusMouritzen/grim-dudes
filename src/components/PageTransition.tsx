@@ -16,7 +16,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         animate={rise.animate}
         exit={rise.exit}
         transition={rise.transition}
-        className="relative"
+        className="relative w-full min-w-0"
       >
         {children}
       </motion.div>

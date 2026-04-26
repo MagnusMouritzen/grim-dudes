@@ -235,7 +235,7 @@ function StatBlockViewInner() {
   }
 
   return (
-    <div>
+    <div className="w-full min-w-0">
       <div className="flex items-center justify-between mb-5 print:hidden">
         <Link href="/" className="grim-back-link">
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />
