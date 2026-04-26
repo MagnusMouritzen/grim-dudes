@@ -7,6 +7,21 @@ import { loadSessionNotes } from './viewSessionNotes';
 import { formatSceneTimeMdLine, formatSceneTimePlainLine } from './viewSceneTimeSession';
 
 /**
+ * When copying “session + roster” for a paste: prepend encounter text (e.g. from
+ * `buildEncounterPlainText` in `encounterSheet.ts`) before the session bundle.
+ */
+export function mergeEncounterPreambleIntoSessionCopy(
+  encounterPreamble: string | undefined,
+  sessionBundle: string
+): string {
+  const p = (encounterPreamble ?? '').trim();
+  const b = sessionBundle.trim();
+  if (!p) return sessionBundle;
+  if (!b) return p;
+  return `${p}\n\n---\n\n${b}`;
+}
+
+/**
  * One plain-text block for “everything on this /view or stat page tab”: initiative (if any), session notes, combat log.
  * Sections only appear if they have content.
  */

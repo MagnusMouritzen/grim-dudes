@@ -1,7 +1,11 @@
 /** @vitest-environment jsdom */
 
 import { afterEach, describe, expect, it } from 'vitest';
-import { buildViewSessionBundleMarkdown, buildViewSessionBundlePlain } from './buildViewSessionBundle';
+import {
+  buildViewSessionBundleMarkdown,
+  buildViewSessionBundlePlain,
+  mergeEncounterPreambleIntoSessionCopy,
+} from './buildViewSessionBundle';
 import { saveCombatLog } from './viewCombatLog';
 import { saveInitiativeSession } from './viewInitiativeSession';
 import { saveSessionNotes } from './viewSessionNotes';
@@ -9,6 +13,19 @@ import { saveSceneTime } from './viewSceneTimeSession';
 import type { InitiativeRow } from './viewInitiativeSession';
 
 const key = 'bundle-test';
+
+describe('mergeEncounterPreambleIntoSessionCopy', () => {
+  it('returns session only when preamble is empty', () => {
+    expect(mergeEncounterPreambleIntoSessionCopy(undefined, 'b\n\nc')).toBe('b\n\nc');
+    expect(mergeEncounterPreambleIntoSessionCopy('   ', 'x')).toBe('x');
+  });
+  it('returns preamble only when session is empty', () => {
+    expect(mergeEncounterPreambleIntoSessionCopy('Roster', '')).toBe('Roster');
+  });
+  it('joins with a horizontal rule', () => {
+    expect(mergeEncounterPreambleIntoSessionCopy('A', 'B')).toBe('A\n\n---\n\nB');
+  });
+});
 
 describe('buildViewSessionBundlePlain', () => {
   afterEach(() => {

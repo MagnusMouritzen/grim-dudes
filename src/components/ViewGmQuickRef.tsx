@@ -32,6 +32,14 @@ export default function ViewGmQuickRef() {
             target 10s minus roll 10s; 100 always fails). Criticals and full outcomes still use your book.
           </li>
           <li>
+            <strong className="text-parchment/95">Fear &amp; Terror:</strong> your book names which
+            tests apply (commonly <strong className="text-parchment/95">Cool</strong> and{' '}
+            <strong className="text-parchment/95">Willpower</strong> for the relevant reactions). On the
+            d100 card, set the <strong className="text-parchment/95">Cool</strong> (or other) tag and the
+            final target, then use published tables for the results—this app does not roll Fear/Terror
+            outcomes for you.
+          </li>
+          <li>
             <strong className="text-parchment/95">Advantage &amp; outnumbering:</strong> your rulebook
             covers how the outnumbered side takes penalties and how groups build or spend Advantage in
             combat—keep the book or a cheat-sheet within reach.
@@ -59,12 +67,14 @@ export default function ViewGmQuickRef() {
             shortcuts for recurring characters—kept in this browser only, not in your account or export.
           </li>
           <li>
-            <strong className="text-parchment/95">Session notes</strong> on /view and stat pages are a
-            scratchpad; use <strong className="text-parchment/95">Copy</strong> to paste threads,
-            handouts, or next-session prep elsewhere.             <strong className="text-parchment/95">Copy
-            session</strong> bundles initiative (if any), notes, and the combat log in one paste—plain
-            or <strong className="text-parchment/95">Copy MD</strong> for markdown (linked initiative when
-            block-linked).
+            <strong className="text-parchment/95">Session notes</strong> on <strong className="text-parchment/95">/view</strong> and stat
+            pages are a scratchpad; use <strong className="text-parchment/95">Copy</strong> to paste threads,
+            handouts, or next-session prep elsewhere. <strong className="text-parchment/95">Copy
+            session</strong> combines initiative (if any), notes, and the combat log—plain
+            or <strong className="text-parchment/95">Copy MD</strong> (linked initiative on /view). On{' '}
+            <strong className="text-parchment/95">/view</strong>, the same copy can{' '}
+            <strong className="text-parchment/95">lead with the encounter roster</strong> (wounds, move, blurb, view
+            link) so one paste is ready for Discord or a VTT.
           </li>
           <li>
             <strong className="text-parchment/95">Text</strong> on a stat page copies a short

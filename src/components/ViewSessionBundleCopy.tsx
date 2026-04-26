@@ -1,18 +1,27 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { buildViewSessionBundleMarkdown, buildViewSessionBundlePlain } from '@/lib/buildViewSessionBundle';
+import {
+  buildViewSessionBundleMarkdown,
+  buildViewSessionBundlePlain,
+  mergeEncounterPreambleIntoSessionCopy,
+} from '@/lib/buildViewSessionBundle';
 import { LinkIcon, ScrollIcon } from './icons';
 
 type Props = {
   viewKey: string;
+  /**
+   * When set (e.g. on /view with loaded stat blocks), prepended to session copy so one paste
+   * includes encounter roster, view link, then initiative, notes, and log.
+   */
+  encounterPreamble?: string;
 };
 
 /**
  * Stitches initiative (if any), session notes, and combat log into one plain-text copy for pasting
  * to Obsidian, email, or a VTT.
  */
-export default function ViewSessionBundleCopy({ viewKey }: Props) {
+export default function ViewSessionBundleCopy({ viewKey, encounterPreamble }: Props) {
   const [hint, setHint] = useState<'copied' | 'copiedMd' | 'empty' | null>(null);
 
   const runCopy = useCallback(
@@ -37,19 +46,33 @@ export default function ViewSessionBundleCopy({ viewKey }: Props) {
   );
 
   const copyPlain = useCallback(() => {
-    runCopy(buildViewSessionBundlePlain(viewKey), 'copied');
-  }, [viewKey, runCopy]);
+    const text = mergeEncounterPreambleIntoSessionCopy(
+      encounterPreamble,
+      buildViewSessionBundlePlain(viewKey)
+    );
+    runCopy(text, 'copied');
+  }, [viewKey, encounterPreamble, runCopy]);
 
   const copyMd = useCallback(() => {
-    runCopy(buildViewSessionBundleMarkdown(viewKey), 'copiedMd');
-  }, [viewKey, runCopy]);
+    const text = mergeEncounterPreambleIntoSessionCopy(
+      encounterPreamble,
+      buildViewSessionBundleMarkdown(viewKey)
+    );
+    runCopy(text, 'copiedMd');
+  }, [viewKey, encounterPreamble, runCopy]);
 
   return (
     <div className="grim-card p-3 print:hidden border-iron-700/50 border-dashed border-iron-600/50 bg-ink-900/20">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-parchment/60 text-xs min-w-0">
           <ScrollIcon className="w-3.5 h-3.5 inline -mt-0.5 mr-1 opacity-80" />
-          One paste: <span className="text-parchment/80">initiative</span> (if you use it),{' '}
+          One paste:{' '}
+          {encounterPreamble != null && encounterPreamble.trim() ? (
+            <>
+              <span className="text-parchment/80">encounter roster</span>, then{' '}
+            </>
+          ) : null}
+          <span className="text-parchment/80">initiative</span> (if you use it),{' '}
           <span className="text-parchment/80">session notes</span>, and{' '}
           <span className="text-parchment/80">combat &amp; scene log</span>.
         </p>
@@ -68,7 +91,11 @@ export default function ViewSessionBundleCopy({ viewKey }: Props) {
             type="button"
             onClick={copyPlain}
             className="grim-btn-ghost !py-1.5 !px-2.5 !text-[0.7rem] inline-flex items-center gap-1.5"
-            title="Plain text: initiative (if any) + session notes + combat log, separated by ---"
+            title={
+              encounterPreamble?.trim()
+                ? 'Plain text: encounter roster, then initiative (if any) + session notes + combat log, sections separated by ---'
+                : 'Plain text: initiative (if any) + session notes + combat log, separated by ---'
+            }
           >
             <LinkIcon className="w-3.5 h-3.5" />
             Copy session
@@ -77,7 +104,11 @@ export default function ViewSessionBundleCopy({ viewKey }: Props) {
             type="button"
             onClick={copyMd}
             className="grim-btn-ghost !py-1.5 !px-2.5 !text-[0.7rem] inline-flex items-center gap-1.5"
-            title="Markdown: initiative with links, then notes and log, separated by ---"
+            title={
+              encounterPreamble?.trim()
+                ? 'Markdown: encounter roster, then initiative with links, notes, and log, separated by ---'
+                : 'Markdown: initiative with links, then notes and log, separated by ---'
+            }
           >
             <ScrollIcon className="w-3.5 h-3.5" />
             Copy MD

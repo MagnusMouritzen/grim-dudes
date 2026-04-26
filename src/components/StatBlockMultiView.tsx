@@ -242,6 +242,17 @@ export default function StatBlockMultiView() {
     [idsKey]
   );
 
+  const sessionEncounterPreamble = useMemo(
+    () =>
+      buildEncounterPlainText({
+        title: encounterTitle,
+        blocks,
+        traitsRef,
+        viewUrl: currentViewUrl,
+      }),
+    [blocks, currentViewUrl, encounterTitle, traitsRef]
+  );
+
   const filteredBlocks = useMemo(() => {
     if (!deferredFilter) return blocks;
     return blocks.filter((b) => {
@@ -616,7 +627,7 @@ export default function StatBlockMultiView() {
           <ViewInitiativeList viewKey={viewKey} blocks={blocks} />
           <ViewSessionNotes viewKey={viewKey} />
           <ViewCombatLog viewKey={viewKey} />
-          <ViewSessionBundleCopy viewKey={viewKey} />
+          <ViewSessionBundleCopy viewKey={viewKey} encounterPreamble={sessionEncounterPreamble} />
           <div className="grid gap-3 lg:grid-cols-3">
             <div className="space-y-3 min-w-0">
               <ViewDiceRoller historyKey={viewKey} />
