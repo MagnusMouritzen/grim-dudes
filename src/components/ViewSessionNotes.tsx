@@ -46,20 +46,35 @@ export default function ViewSessionNotes({ viewKey }: Props) {
 
   if (!ready) {
     return (
-      <div className="grim-card p-4 print:hidden min-h-[5rem] border-iron-700/50">
+      <div
+        className="grim-card p-4 print:hidden min-h-[5rem] border-iron-700/50"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
         <p className="text-parchment/50 text-xs">Notes…</p>
       </div>
     );
   }
 
   return (
-    <div className="grim-card p-4 print:hidden border-iron-700/50 bg-ink-900/20">
+    <section
+      className="grim-card p-4 print:hidden border-iron-700/50 bg-ink-900/20"
+      aria-labelledby="view-session-notes-heading"
+    >
       <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-        <h2 className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2">
-          <ScrollIcon className="w-4 h-4" />
+        <h2
+          id="view-session-notes-heading"
+          className="font-display text-gold-400/95 text-sm uppercase tracking-wider flex items-center gap-2"
+        >
+          <ScrollIcon className="w-4 h-4" aria-hidden="true" />
           Session notes
         </h2>
-        <div className="flex items-center gap-2">
+        <div
+          className="flex items-center gap-2"
+          role="toolbar"
+          aria-label="Session notes: copy and clear"
+        >
           {copyHint && (
             <span className="text-[0.65rem] uppercase text-gold-400" role="status">
               Copied
@@ -96,6 +111,6 @@ export default function ViewSessionNotes({ viewKey }: Props) {
         placeholder="Rounds, reminders, read-aloud…"
         spellCheck
       />
-    </div>
+    </section>
   );
 }
