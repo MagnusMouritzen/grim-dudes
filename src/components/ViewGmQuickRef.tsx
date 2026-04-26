@@ -96,6 +96,11 @@ export default function ViewGmQuickRef() {
             tables—use them as sparks, then resolve with the book.
           </li>
           <li>
+            <strong className="text-parchment/95">Encounter beats</strong> (d6, d8, d10) give short
+            read-on-disposition, mishap, chase, and social-stake prompts—also original, not official fumble
+            or fear rules; copy or send to the combat log.
+          </li>
+          <li>
             <strong className="text-parchment/95">Imperial coin:</strong> on a stat page you get
             compact normalize + copy. On <strong className="text-parchment/95">/view</strong>, the same
             tool can add a <strong className="text-parchment/95">second pile</strong> and{' '}

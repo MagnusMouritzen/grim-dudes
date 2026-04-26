@@ -41,6 +41,7 @@ import ViewDamageRoller from './ViewDamageRoller';
 import ViewDiceRoller from './ViewDiceRoller';
 import ViewOpposedD100 from './ViewOpposedD100';
 import ViewCurrencyHelper from './ViewCurrencyHelper';
+import ViewEncounterTables from './ViewEncounterTables';
 import ViewGmImprov from './ViewGmImprov';
 import ViewGmQuickRef from './ViewGmQuickRef';
 import ViewHitLocationRoller from './ViewHitLocationRoller';
@@ -623,6 +624,7 @@ export default function StatBlockMultiView() {
               <ViewD6Roller logKey={viewKey} />
               <ViewOpposedD100 logKey={viewKey} />
               <ViewHitLocationRoller logKey={viewKey} />
+              <ViewEncounterTables logKey={viewKey} />
               <ViewGmImprov />
               <ViewCurrencyHelper />
             </div>
