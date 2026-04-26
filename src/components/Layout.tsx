@@ -60,6 +60,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     <Link
                       key={link.href}
                       href={link.href}
+                      title="Create a new stat block in the editor"
                       aria-current={active ? 'page' : undefined}
                       className={
                         active

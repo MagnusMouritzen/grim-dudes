@@ -120,38 +120,51 @@ export default function AdminPage() {
           in.
         </p>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <Link href="/new" className="grim-btn-primary">
-          <PlusIcon className="w-3.5 h-3.5 shrink-0" />
-          <span className="sm:hidden">New</span>
-          <span className="hidden sm:inline">New stat block</span>
-        </Link>
-        <button
-          type="button"
-          onClick={exportAllJson}
-          className="grim-btn-ghost"
-          disabled={exporting}
-        >
-          <ScrollIcon className="w-3.5 h-3.5" />
-          {exporting ? 'Exporting…' : 'Export all (JSON)'}
-        </button>
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="grim-btn-ghost"
-          disabled={pending}
-        >
-          {pending ? 'Signing out…' : 'Sign out'}
-        </button>
-      </div>
+      <section className="space-y-2" aria-labelledby="admin-site-heading">
+        <h2 id="admin-site-heading" className="grim-label !mb-0">
+          Library &amp; account
+        </h2>
+        <p className="text-parchment/60 text-sm">
+          Create entries in the app, download everything as JSON, or end your session.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/new" className="grim-btn-primary">
+            <PlusIcon className="w-3.5 h-3.5 shrink-0" />
+            <span className="sm:hidden">New</span>
+            <span className="hidden sm:inline">New stat block</span>
+          </Link>
+          <button
+            type="button"
+            onClick={exportAllJson}
+            className="grim-btn-ghost"
+            disabled={exporting}
+          >
+            <ScrollIcon className="w-3.5 h-3.5" />
+            {exporting ? 'Exporting…' : 'Export all (JSON)'}
+          </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="grim-btn-ghost"
+            disabled={pending}
+          >
+            {pending ? 'Signing out…' : 'Sign out'}
+          </button>
+        </div>
+      </section>
       {exportError && (
         <p className="text-blood-400/90 text-sm" role="alert">
           {exportError}
         </p>
       )}
 
-      <div className="border-t border-iron-700/50 pt-5 space-y-3">
-        <p className="grim-label">Import from JSON</p>
+      <section
+        className="border-t border-iron-700/50 pt-5 space-y-3"
+        aria-labelledby="admin-import-heading"
+      >
+        <h2 id="admin-import-heading" className="grim-label !mb-0">
+          Import from JSON
+        </h2>
         <p className="text-parchment/75 text-sm">
           Same format as <strong>Export all</strong> (array) or <code className="text-gold-400/90">{'{ items, mode }'}</code>.
           Zod must validate each entry (no unknown keys in strict mode).
@@ -199,7 +212,7 @@ export default function AdminPage() {
           <QuillIcon className="w-3.5 h-3.5" />
           {importing ? 'Importing…' : 'Choose JSON file…'}
         </button>
-      </div>
+      </section>
       {importError && (
         <p className="text-blood-400/90 text-sm" role="alert">
           {importError}

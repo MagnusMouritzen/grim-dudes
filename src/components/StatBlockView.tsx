@@ -395,8 +395,46 @@ function StatBlockViewInner() {
         </div>
       </div>
 
+      {block && (
+        <header className="print:hidden mb-4 min-w-0 max-w-xl lg:max-w-md xl:max-w-lg mx-auto w-full">
+          <p className="grim-label">Stat block</p>
+          <h1 className="font-display text-2xl sm:text-3xl text-gold-400 tracking-wide break-words pr-1">
+            {block.name || String(id ?? '')}
+          </h1>
+          {playerMode ? (
+            <p className="text-parchment/60 text-sm mt-1 max-w-2xl">
+              Player view: the card below is a reference. Switch to GM view for session tools, edit,
+              and delete.
+            </p>
+          ) : (
+            <p className="text-parchment/60 text-sm mt-1 max-w-2xl">
+              Session tools and quick dice are <span className="text-parchment/75">above</span> the
+              card so you can roll or jot notes before scrolling the full block. For initiative across
+              several creatures, build an encounter on the bestiary and open{' '}
+              <Link href="/view" className="text-gold-500/90 hover:underline">
+                Encounter
+              </Link>
+              .
+            </p>
+          )}
+        </header>
+      )}
+
       {block && !playerMode && id && (
-        <div className="max-w-xl lg:max-w-md xl:max-w-lg mx-auto mb-4 print:hidden w-full space-y-3">
+        <section
+          className="max-w-xl lg:max-w-md xl:max-w-lg mx-auto mb-4 print:hidden w-full space-y-3"
+          aria-labelledby="statblock-page-tools-heading"
+        >
+          <h2
+            id="statblock-page-tools-heading"
+            className="font-display text-lg sm:text-xl text-gold-400/95 tracking-wide"
+          >
+            Session tools
+          </h2>
+          <p className="text-parchment/55 text-sm -mt-1 max-w-2xl">
+            Notes, combat log, copy bundle, and dice for this page only&mdash;separate from a full
+            table encounter.
+          </p>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <ViewDiceRoller compact historyKey={id ? `statblock:${String(id)}` : undefined} />
             <ViewDamageRoller compact logKey={id ? `statblock:${String(id)}` : undefined} />
@@ -409,7 +447,7 @@ function StatBlockViewInner() {
           <ViewSessionNotes viewKey={`statblock:${String(id)}`} />
           <ViewCombatLog viewKey={`statblock:${String(id)}`} />
           <ViewSessionBundleCopy viewKey={`statblock:${String(id)}`} />
-        </div>
+        </section>
       )}
 
       <motion.article
@@ -417,6 +455,7 @@ function StatBlockViewInner() {
         animate={rise.animate}
         transition={rise.transition}
         className="statblock-print-root max-w-xl lg:max-w-md xl:max-w-lg mx-auto"
+        aria-label="Stat block card"
       >
         {block && !playerMode && (
           <div className="mb-2 flex justify-end print:hidden">
