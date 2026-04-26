@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { d100TensOnes, rollD100, simpleTestVsTarget } from '@/lib/wfrpRoll';
+import { d100TensOnes, rollD100, simpleTestVsTarget, wfrp4SuccessLevel } from '@/lib/wfrpRoll';
 import { appendCombatLogOneLine } from '@/lib/viewCombatLog';
 import {
   clearD100History,
@@ -65,15 +65,17 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
       details = `${ctxLead}${digitLine} Target must be 1–100 (or clear the field to roll only).`;
     } else {
       const o = simpleTestVsTarget(r, t);
+      const sl = wfrp4SuccessLevel(r, t);
+      const slStr = sl.sl >= 0 ? `+${sl.sl}` : `${sl.sl}`;
       const crit =
         r === 1
           ? ' (many tables: critical success on 01)'
           : r === 100
-            ? ' (many tables: check fumble / crit fail on 100)'
+            ? ' (natural 100: standard test always fails; many tables: fumble)'
             : '';
       details = `${ctxLead}${digitLine} ${o.success
-        ? `vs ${o.target} — success${crit}. Rough margin: ${o.marginTens >= 0 ? '+' : ''}${o.marginTens} (tens).`
-        : `vs ${o.target} — failure${crit}.`}`;
+        ? `vs ${o.target} — success${crit}. Success Level: ${slStr} (core rulebook: target 10s minus roll 10s).`
+        : `vs ${o.target} — failure${crit}. Success Level: ${slStr}.`}`;
     }
 
     setLast({ result: r, details });
@@ -92,7 +94,9 @@ export default function ViewDiceRoller({ compact = false, historyKey }: Props) {
     const t = trimmed === '' ? null : parseInt(trimmed, 10);
     if (t != null && Number.isFinite(t) && t >= 1 && t <= 100) {
       const o = simpleTestVsTarget(last.result, t);
-      line += ` — vs ${t} — ${o.success ? 'success' : 'failure'}`;
+      const sl = wfrp4SuccessLevel(last.result, t);
+      const sgn = sl.sl >= 0 ? '+' : '';
+      line += ` — vs ${t} — ${o.success ? 'success' : 'failure'} (SL ${sgn}${sl.sl})`;
     }
     appendCombatLogOneLine(historyKey, line);
   }, [historyKey, last, contextTag, targetStr]);

@@ -21,6 +21,7 @@ import { loadEncounterLabel, saveEncounterLabel } from '@/lib/viewEncounterLabel
 import { bumpRound, loadRound } from '@/lib/viewRoundSession';
 import { loadSceneTime, sceneTimeDisplayLabel } from '@/lib/viewSceneTimeSession';
 import ViewAdvantageCounter from './ViewAdvantageCounter';
+import ViewCorruptionCounter from './ViewCorruptionCounter';
 import ViewSceneTimeChips from './ViewSceneTimeChips';
 import ViewFortuneCounter from './ViewFortuneCounter';
 import ViewRoundCounter from './ViewRoundCounter';
@@ -196,6 +197,7 @@ export default function ViewInitiativeList({ viewKey, blocks }: Props) {
           <ViewFortuneCounter viewKey={viewKey} />
           <ViewSessionXpCounter viewKey={viewKey} />
           <ViewTensionTrack viewKey={viewKey} />
+          <ViewCorruptionCounter viewKey={viewKey} />
           <ViewAdvantageCounter viewKey={viewKey} />
           <ViewSceneTimeChips viewKey={viewKey} />
         </div>

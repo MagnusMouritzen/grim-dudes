@@ -24,6 +24,7 @@ import {
 } from '@/lib/apiSchemas';
 import { statblockBodySchemaBase } from '@/lib/validateStatblock';
 import { z } from 'zod';
+import { rememberRosterView } from '@/lib/lastEncounterStorage';
 import { getPublicSiteBase } from '@/lib/siteUrl';
 import { buildEncounterPlainText, encounterSummaryLine } from '@/lib/encounterSheet';
 import MultiViewWoundBar from './MultiViewWoundBar';
@@ -35,6 +36,7 @@ import ViewOpposedD100 from './ViewOpposedD100';
 import ViewCurrencyHelper from './ViewCurrencyHelper';
 import ViewGmImprov from './ViewGmImprov';
 import ViewGmQuickRef from './ViewGmQuickRef';
+import ViewHitLocationRoller from './ViewHitLocationRoller';
 import ViewCombatLog from './ViewCombatLog';
 import ViewSessionBundleCopy from './ViewSessionBundleCopy';
 import ViewSessionNotes from './ViewSessionNotes';
@@ -88,7 +90,10 @@ export default function StatBlockMultiView() {
         })
         .then((data: { ids?: string[]; name?: string }) => {
           setResolvedIds(Array.isArray(data.ids) ? data.ids : []);
-          setRosterLabel(typeof data.name === 'string' && data.name.trim() ? data.name : null);
+          const label =
+            typeof data.name === 'string' && data.name.trim() ? data.name.trim() : null;
+          setRosterLabel(label);
+          rememberRosterView(rosterParam, label ?? rosterParam);
         })
         .catch((e: unknown) => {
           setError(e instanceof Error ? e.message : 'Roster failed');
@@ -517,6 +522,7 @@ export default function StatBlockMultiView() {
               <ViewDamageRoller logKey={viewKey} />
               <ViewD6Roller logKey={viewKey} />
               <ViewOpposedD100 logKey={viewKey} />
+              <ViewHitLocationRoller logKey={viewKey} />
               <ViewGmImprov />
               <ViewCurrencyHelper />
             </div>

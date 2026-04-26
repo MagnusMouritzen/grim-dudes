@@ -8,6 +8,9 @@ import {
   rollNd6,
   resolveOpposedD100,
   simpleTestVsTarget,
+  wfrp4SuccessLevel,
+  wfrpRollTensColumn,
+  wfrpTargetTensColumn,
 } from './wfrpRoll';
 
 describe('rollD100', () => {
@@ -100,6 +103,43 @@ describe('simpleTestVsTarget', () => {
   it('fails when roll > target', () => {
     expect(simpleTestVsTarget(51, 50).success).toBe(false);
   });
+  it('treats 100 as automatic failure (WFRP 4e standard test)', () => {
+    expect(simpleTestVsTarget(100, 100).success).toBe(false);
+    expect(simpleTestVsTarget(100, 99).success).toBe(false);
+  });
+});
+
+describe('wfrpTargetTensColumn / wfrpRollTensColumn', () => {
+  it('maps target 1–100 to the 10s column for SL', () => {
+    expect(wfrpTargetTensColumn(1)).toBe(0);
+    expect(wfrpTargetTensColumn(45)).toBe(4);
+    expect(wfrpTargetTensColumn(100)).toBe(10);
+  });
+  it('maps roll 100 to 0 when not failed, 10 on failure (fumble)', () => {
+    expect(wfrpRollTensColumn(100, false)).toBe(0);
+    expect(wfrpRollTensColumn(100, true)).toBe(10);
+    expect(wfrpRollTensColumn(5, true)).toBe(0);
+    expect(wfrpRollTensColumn(50, true)).toBe(5);
+  });
+});
+
+describe('wfrp4SuccessLevel', () => {
+  it('matches core SL: target 55, roll 35 → +2', () => {
+    expect(wfrp4SuccessLevel(35, 55)).toEqual({ roll: 35, target: 55, success: true, sl: 2 });
+  });
+  it('fails 100 with strongly negative SL vs TN 50', () => {
+    const r = wfrp4SuccessLevel(100, 50);
+    expect(r.success).toBe(false);
+    expect(r.sl).toBe(-5);
+  });
+  it('fails 65 vs 50 with SL -1', () => {
+    const r = wfrp4SuccessLevel(65, 50);
+    expect(r.success).toBe(false);
+    expect(r.sl).toBe(-1);
+  });
+  it('01 vs 30 succeeds with +3', () => {
+    expect(wfrp4SuccessLevel(1, 30)).toEqual({ roll: 1, target: 30, success: true, sl: 3 });
+  });
 });
 
 describe('resolveOpposedD100', () => {
@@ -115,9 +155,12 @@ describe('resolveOpposedD100', () => {
     expect(r.b?.success).toBe(false);
     expect(r.summary).toMatch(/only A passes/);
   });
-  it('when both pass, points to SL in book', () => {
-    const r = resolveOpposedD100(20, 25, 50, 50);
-    expect(r.summary).toMatch(/Success Levels/);
+  it('when both pass, includes both SLs and a quick comparison', () => {
+    const r = resolveOpposedD100(10, 30, 50, 50);
+    expect(r.summary).toMatch(/Both pass/);
+    expect(r.summary).toMatch(/A SL \+4/);
+    expect(r.summary).toMatch(/B SL \+2/);
+    expect(r.summary).toMatch(/A is ahead/);
   });
   it('when both fail, points to book', () => {
     const r = resolveOpposedD100(80, 85, 50, 50);

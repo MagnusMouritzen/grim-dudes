@@ -72,13 +72,54 @@ export type SimpleTestResult = {
 };
 
 /**
+ * Tens "column" of a Target Number (1–100) for WFRP 4e Success Level: 1–9 → 0, 10–99 → 10s digit, 100 → 10.
+ */
+export function wfrpTargetTensColumn(target: number): number {
+  const t = Math.max(1, Math.min(100, Math.floor(target)));
+  if (t < 10) return 0;
+  if (t === 100) return 10;
+  return Math.floor(t / 10);
+}
+
+/**
+ * Tens column of a d100 roll (1–100) for SL. On a failed test, 100 counts as 10 (fumble / worst 10s).
+ * On a successful test, 100 never occurs; pass `failed: false` for 100 and it is unused.
+ */
+export function wfrpRollTensColumn(roll: number, failed: boolean): number {
+  const r = Math.max(1, Math.min(100, Math.floor(roll)));
+  if (r === 100) return failed ? 10 : 0;
+  if (r < 10) return 0;
+  return Math.floor(r / 10);
+}
+
+/**
+ * WFRP 4e standard test: success if roll &lt; 100 and roll ≤ target (roll 100 always fails). Success Level
+ * is the target 10s column minus the roll 10s column. Criticals / miscasts still use the rulebook and tables
+ * in this app—only the core SL number is provided.
+ */
+export function wfrp4SuccessLevel(roll: number, target: number): {
+  roll: number;
+  target: number;
+  success: boolean;
+  sl: number;
+} {
+  const t = Math.max(1, Math.min(100, Math.floor(target)));
+  const r = Math.max(1, Math.min(100, Math.floor(roll)));
+  const success = r < 100 && r <= t;
+  const tCol = wfrpTargetTensColumn(t);
+  const rCol = wfrpRollTensColumn(r, !success);
+  const sl = tCol - rCol;
+  return { roll: r, target: t, success, sl };
+}
+
+/**
  * Unmodified test: success if roll ≤ target (after the GM applies final target number).
  * 01 often treated as critical success; 100 as fumble in many tables — caller can style.
  */
 export function simpleTestVsTarget(roll: number, target: number): SimpleTestResult {
   const t = Math.max(0, Math.min(100, Math.floor(target)));
   const r = Math.max(1, Math.min(100, Math.floor(roll)));
-  const success = r <= t;
+  const success = r < 100 && r <= t;
   const marginTens = success
     ? Math.floor((t - r) / 10)
     : -Math.floor((r - t) / 10);
@@ -131,7 +172,21 @@ export function resolveOpposedD100(
     return { a, b, summary: 'Clear read: only B passes—B leads before crits and SL steps.' };
   }
   if (a!.success && b!.success) {
-    return { a, b, summary: 'Both pass the simple test—compare Success Levels in your book.' };
+    const sLa = wfrp4SuccessLevel(rollA, targetA!);
+    const sLb = wfrp4SuccessLevel(rollB, targetB!);
+    const fa = sLa.sl >= 0 ? `+${sLa.sl}` : String(sLa.sl);
+    const fb = sLb.sl >= 0 ? `+${sLb.sl}` : String(sLb.sl);
+    const cmp =
+      sLa.sl > sLb.sl
+        ? 'A is ahead (higher SL).'
+        : sLb.sl > sLa.sl
+          ? 'B is ahead (higher SL).'
+          : 'Tie on SL—use your book (e.g. attacker wins or re-roll).';
+    return {
+      a,
+      b,
+      summary: `Both pass—A SL ${fa}, B SL ${fb}. ${cmp}`,
+    };
   }
   return { a, b, summary: 'Both fail the simple test—use opposed rules for two failures in your book.' };
 }

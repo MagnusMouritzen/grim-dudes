@@ -27,7 +27,9 @@ export default function ViewGmQuickRef() {
         <ul className="mt-3 space-y-2 text-parchment/85 text-sm list-disc pl-4">
           <li>
             <strong className="text-parchment/95">Tests:</strong> apply difficulty, help, and other
-            modifiers at the table, then use your final target number for this roller.
+            modifiers at the table, then use your final target number for this roller. With a target set,
+            the d100 card shows <strong className="text-parchment/95">Success Level</strong> (core rulebook:
+            target 10s minus roll 10s; 100 always fails). Criticals and full outcomes still use your book.
           </li>
           <li>
             <strong className="text-parchment/95">Advantage &amp; outnumbering:</strong> your rulebook
@@ -71,7 +73,7 @@ export default function ViewGmQuickRef() {
             <strong className="text-parchment/95">/view</strong> initiative and on a stat page’s GM tools
             strip; it is included in list copies and in <strong className="text-parchment/95">Copy turn</strong>;
             if there is no initiative, time still appears in <strong className="text-parchment/95">Copy session</strong>. If any
-            scratch counters (Fortune, XP, Tension, Advantage) are above zero, copy also appends a short{' '}
+            scratch counters (Fortune, XP, Tension, Corruption, Advantage) are above zero, copy also appends a short{' '}
             <strong className="text-parchment/95">Table (scratch)</strong> line. Set an{' '}
             <strong className="text-parchment/95">Encounter name</strong> to prefix pasted text. Per-row{' '}
             <strong className="text-parchment/95">State</strong> (optional) is included in those copies and in
@@ -103,7 +105,11 @@ export default function ViewGmQuickRef() {
           <li>
             <strong className="text-parchment/95">Opposed d100</strong> rolls two dice with optional
             1–100 targets; if only one side passes the simple test, the card says who leads, otherwise it
-            points to Success Levels (both pass) or your book (both fail, crits, etc.).
+            compares Success Levels (both pass) or your book (both fail, crits, etc.).
+          </li>
+          <li>
+            <strong className="text-parchment/95">Hit location</strong> is a humanoid d100 band table for
+            quick direction—use the book for official zones, armour by location, and criticals.
           </li>
           <li>
             <strong className="text-parchment/95">Fortune (scratch):</strong> the small counter by the
@@ -122,10 +128,15 @@ export default function ViewGmQuickRef() {
             whichever side you are tracking—your book rules when it accrues and caps.
           </li>
           <li>
+            <strong className="text-parchment/95">Corruption (scratch):</strong> scene pressure or a
+            loose party taint tally—your book defines Corruption; this does not write to stat blocks.
+          </li>
+          <li>
             <strong className="text-parchment/95">Combat &amp; scene log</strong> adds timestamped lines
             without replacing your session notes—handy for tracking what happened in a fight. After a d100
             roll,             <strong className="text-parchment/95">To log</strong> appends that result (with tag and
-            optional vs target) to the log. <strong className="text-parchment/95">Opposed d100</strong>,{' '}
+            optional vs target) to the log.             <strong className="text-parchment/95">Opposed d100</strong>,{' '}
+            <strong className="text-parchment/95">Hit location</strong>,{' '}
             <strong className="text-parchment/95">Nd6</strong>, and <strong className="text-parchment/95">Nd10</strong>{' '}
             can append the same way when present.
           </li>

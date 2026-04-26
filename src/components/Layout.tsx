@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import PageTransition from './PageTransition';
+import LastEncounterNav from './LastEncounterNav';
 import { Heraldry, PlusIcon } from './icons';
 
 type NavLink = {
@@ -15,6 +16,7 @@ type NavLink = {
 
 const links: NavLink[] = [
   { href: '/', label: 'Bestiary', matchExact: true },
+  { href: '/view', label: 'Encounter' },
   { href: '/new', label: 'New Stat Block' },
 ];
 
@@ -90,6 +92,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   </Link>
                 );
               })}
+              <LastEncounterNav />
             </nav>
           </div>
           {/* Double underline: blood thick + gold hair-line */}

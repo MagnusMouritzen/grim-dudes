@@ -11,6 +11,7 @@ import ViewDamageRoller from './ViewDamageRoller';
 import ViewDiceRoller from './ViewDiceRoller';
 import ViewCombatLog from './ViewCombatLog';
 import ViewCurrencyHelper from './ViewCurrencyHelper';
+import ViewHitLocationRoller from './ViewHitLocationRoller';
 import ViewOpposedD100 from './ViewOpposedD100';
 import ViewSceneTimeChips from './ViewSceneTimeChips';
 import ViewSessionBundleCopy from './ViewSessionBundleCopy';
@@ -402,6 +403,7 @@ function StatBlockViewInner() {
           </div>
           <ViewCurrencyHelper compact />
           <ViewOpposedD100 compact logKey={id ? `statblock:${String(id)}` : undefined} />
+          <ViewHitLocationRoller compact logKey={id ? `statblock:${String(id)}` : undefined} />
           <ViewSceneTimeChips compact viewKey={`statblock:${String(id)}`} />
           <ViewSessionNotes viewKey={`statblock:${String(id)}`} />
           <ViewCombatLog viewKey={`statblock:${String(id)}`} />
