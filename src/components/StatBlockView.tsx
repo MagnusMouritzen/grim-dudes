@@ -397,20 +397,19 @@ function StatBlockViewInner() {
 
       {block && (
         <header className="print:hidden mb-4 min-w-0 max-w-xl lg:max-w-md xl:max-w-lg mx-auto w-full">
+          <h1 className="sr-only">{block.name || String(id ?? 'Stat block')}</h1>
           <p className="grim-label">Stat block</p>
-          <h1 className="font-display text-2xl sm:text-3xl text-gold-400 tracking-wide break-words pr-1">
-            {block.name || String(id ?? '')}
-          </h1>
           {playerMode ? (
-            <p className="text-parchment/60 text-sm mt-1 max-w-2xl">
+            <p className="text-parchment/60 text-sm max-w-2xl">
               Player view: the card below is a reference. Switch to GM view for session tools, edit,
               and delete.
             </p>
           ) : (
-            <p className="text-parchment/60 text-sm mt-1 max-w-2xl">
+            <p className="text-parchment/60 text-sm max-w-2xl">
               Session tools and quick dice are <span className="text-parchment/75">above</span> the
-              card so you can roll or jot notes before scrolling the full block. For initiative across
-              several creatures, build an encounter on the bestiary and open{' '}
+              card so you can roll or jot notes before scrolling the full block. The name and stats
+              live on the card. For initiative across several creatures, build an encounter on the
+              bestiary and open{' '}
               <Link href="/view" className="text-gold-500/90 hover:underline">
                 Encounter
               </Link>
