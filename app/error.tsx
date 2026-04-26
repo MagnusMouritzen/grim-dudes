@@ -16,7 +16,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="max-w-xl mx-auto text-center py-12 sm:py-16">
+    <div className="grim-page max-w-xl mx-auto text-center py-12 sm:py-16">
       <div className="grim-card p-10 flex flex-col items-center gap-5 border-blood-700/60">
         <div className="rounded-full border border-blood-700/50 bg-blood-900/40 p-5">
           <SwordsIcon className="w-14 h-14 text-blood-400" />

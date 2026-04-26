@@ -3,7 +3,7 @@ import { ChevronIcon, TombstoneIcon } from '@/components/icons';
 
 export default function NotFound() {
   return (
-    <div className="max-w-xl mx-auto text-center py-12 sm:py-16">
+    <div className="grim-page max-w-xl mx-auto text-center py-12 sm:py-16">
       <div className="grim-card p-10 flex flex-col items-center gap-5">
         <div className="rounded-full border border-gold-700/40 bg-ink-900/80 p-5">
           <TombstoneIcon className="w-14 h-14 text-blood-500" />

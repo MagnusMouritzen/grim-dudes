@@ -104,7 +104,7 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto grim-card p-6 space-y-5">
+    <div className="grim-page max-w-lg mx-auto grim-card p-6 space-y-5">
       <div className="flex items-center justify-between">
         <p className="grim-label">Admin</p>
         <Link href="/" className="grim-back-link">

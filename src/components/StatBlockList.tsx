@@ -82,7 +82,7 @@ function useBestiaryColumnCount() {
 
 export function BestiaryListSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 grim-page">
       <HeroSkeleton />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
@@ -1298,13 +1298,15 @@ function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="grim-card p-10 text-center flex flex-col items-center gap-4">
-      <div className="rounded-full border border-gold-700/40 bg-ink-900/80 p-4">{icon}</div>
-      <div>
-        <h2 className="font-display text-xl text-gold-400 tracking-wide">{title}</h2>
-        <p className="text-parchment/80 mt-1 max-w-md mx-auto">{description}</p>
+    <div className="grim-page max-w-xl mx-auto">
+      <div className="grim-card p-10 text-center flex flex-col items-center gap-4">
+        <div className="rounded-full border border-gold-700/40 bg-ink-900/80 p-4">{icon}</div>
+        <div>
+          <h2 className="font-display text-xl text-gold-400 tracking-wide">{title}</h2>
+          <p className="text-parchment/80 mt-1 max-w-md mx-auto">{description}</p>
+        </div>
+        {action ? <div className="pt-1">{action}</div> : null}
       </div>
-      {action ? <div className="pt-1">{action}</div> : null}
     </div>
   );
 }

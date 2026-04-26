@@ -39,7 +39,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto grim-card p-6 space-y-5">
+    <div className="grim-page max-w-md mx-auto grim-card p-6 space-y-5">
       <div className="flex items-center justify-between">
         <p className="grim-label">Sign in</p>
         <Link href="/" className="grim-back-link">
