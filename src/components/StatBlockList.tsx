@@ -675,7 +675,7 @@ export default function StatBlockList({
             </AnimatePresence>
             <Link
               href="/new"
-              className="inline-flex items-center gap-1.5 rounded border border-gold-700 bg-ink-800/70 px-2.5 sm:px-3 py-1.5 text-xs uppercase tracking-wider text-gold-400 transition-all duration-fast ease-grim hover:border-gold-500 hover:text-parchment hover:bg-blood-700/50"
+              className="grim-header-new-stat"
             >
               <PlusIcon className="w-3.5 h-3.5 shrink-0" />
               <span className="sm:hidden">New</span>
