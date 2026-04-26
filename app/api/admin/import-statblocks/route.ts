@@ -10,6 +10,8 @@ import type { StatblockRecord } from '@/lib/statblockRedis';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+/** Hobby legacy hard ceiling (60s); safe on Fluid Compute. */
+export const maxDuration = 60;
 
 const MAX_BODY = 8 * 1024 * 1024;
 const MAX_ITEMS = 500;
