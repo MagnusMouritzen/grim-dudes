@@ -50,6 +50,11 @@ export default function ViewGmQuickRef() {
             a target.
           </li>
           <li>
+            <strong className="text-parchment/95">Range steps:</strong> the book orders ranges from
+            Engaged through to Extreme for movement and who can target whom. Your stat blocks list weapon
+            Ranges, but the exact span of each step and who counts as Engaged is still in the rulebook.
+          </li>
+          <li>
             <strong className="text-parchment/95">Bestiary:</strong> stars on the home page are
             shortcuts for recurring characters—kept in this browser only, not in your account or export.
           </li>

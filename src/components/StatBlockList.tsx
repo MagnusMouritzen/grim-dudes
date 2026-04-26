@@ -136,6 +136,7 @@ export default function StatBlockList({
   const [editRosterBusy, setEditRosterBusy] = useState(false);
   const [editRosterErr, setEditRosterErr] = useState<string | null>(null);
   const [rosterCopyHint, setRosterCopyHint] = useState<string | null>(null);
+  const [viewUrlCopyHint, setViewUrlCopyHint] = useState(false);
   const [mdFilterCopyHint, setMdFilterCopyHint] = useState(false);
   const [starsMdHint, setStarsMdHint] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
@@ -188,6 +189,41 @@ export default function StatBlockList({
       setPackBusy(false);
     }
   };
+
+  const copyEncounterViewUrl = useCallback(async () => {
+    if (selectedIds.length === 0) return;
+    const base = getPublicSiteBase();
+    let url: string;
+    if (selectedIds.length <= 5) {
+      url = `${base}/view?ids=${selectedIds.map(encodeURIComponent).join(',')}`;
+    } else {
+      setPackBusy(true);
+      try {
+        const res = await fetch(`${API}/sharepacks`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ids: selectedIds }),
+        });
+        if (res.ok) {
+          const body = (await res.json()) as { id: string };
+          url = `${base}/view?pack=${encodeURIComponent(body.id)}`;
+        } else {
+          url = `${base}/view?ids=${selectedIds.map(encodeURIComponent).join(',')}`;
+        }
+      } catch {
+        url = `${base}/view?ids=${selectedIds.map(encodeURIComponent).join(',')}`;
+      } finally {
+        setPackBusy(false);
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setViewUrlCopyHint(true);
+      window.setTimeout(() => setViewUrlCopyHint(false), 2000);
+    } catch {
+      setViewUrlCopyHint(false);
+    }
+  }, [selectedIds]);
 
   const refreshRosters = useCallback(() => {
     fetch(`${API}/encounter-rosters`)
@@ -584,6 +620,24 @@ export default function StatBlockList({
                   <span className="font-mono tabular-nums text-[0.7rem] opacity-80">
                     ({selectedIds.length})
                   </span>
+                </motion.button>
+              )}
+              {selectedIds.length > 0 && (
+                <motion.button
+                  key="copy-view-url"
+                  type="button"
+                  onClick={() => void copyEncounterViewUrl()}
+                  disabled={packBusy}
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 8 }}
+                  transition={{ duration: 0.18, ease }}
+                  className="grim-btn-ghost inline-flex items-center gap-1.5"
+                  title="Copy the same /view link you get from View together (uses a short share link for more than five picks)"
+                  aria-label="Copy encounter view URL"
+                >
+                  <LinkIcon className="w-3.5 h-3.5" />
+                  {viewUrlCopyHint ? 'Copied' : 'Copy link'}
                 </motion.button>
               )}
               {selectedIds.length > 0 && (
