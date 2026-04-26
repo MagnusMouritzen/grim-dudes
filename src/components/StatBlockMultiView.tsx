@@ -1,6 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback, useDeferredValue } from 'react';
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useDeferredValue,
+  useRef,
+} from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -87,6 +94,7 @@ export default function StatBlockMultiView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cardFilter, setCardFilter] = useState('');
+  const cardFilterInputRef = useRef<HTMLInputElement>(null);
   const deferredFilter = useDeferredValue(cardFilter.trim().toLowerCase());
 
   useEffect(() => {
@@ -241,6 +249,19 @@ export default function StatBlockMultiView() {
       return name.includes(deferredFilter) || id.includes(deferredFilter);
     });
   }, [blocks, deferredFilter]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== '/') return;
+      if (playerMode || blocks.length < 2) return;
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      e.preventDefault();
+      cardFilterInputRef.current?.focus();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [playerMode, blocks.length]);
 
   const playerTogglePath = useMemo(() => {
     const sp = new URLSearchParams(searchParams.toString());
@@ -476,13 +497,20 @@ export default function StatBlockMultiView() {
 
       {!playerMode && blocks.length >= 2 && (
         <div className="mb-4 print:hidden w-full max-w-5xl">
-          <label htmlFor="encounter-card-filter" className="sr-only">
-            Filter stat blocks by name or id
-          </label>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative flex-1 min-w-[8rem] max-w-sm">
+          <div className="w-full min-w-0 max-w-sm">
+            <div className="flex items-baseline justify-between gap-2 mb-0.5">
+              <label
+                htmlFor="encounter-card-filter"
+                className="text-[0.6rem] uppercase text-parchment/45"
+              >
+                Filter cards
+              </label>
+              <span className="text-[0.6rem] text-parchment/40 hidden sm:inline">press /</span>
+            </div>
+            <div className="relative w-full">
               <SearchIcon className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-parchment/40" />
               <input
+                ref={cardFilterInputRef}
                 id="encounter-card-filter"
                 type="search"
                 value={cardFilter}
@@ -493,11 +521,15 @@ export default function StatBlockMultiView() {
                     setCardFilter('');
                   }
                 }}
-                placeholder="Filter by name or id…"
+                placeholder="Name or id…"
                 className="grim-input !pl-8 !py-1.5 text-sm w-full"
                 autoComplete="off"
+                aria-describedby="encounter-card-filter-hint"
               />
             </div>
+            <p className="sr-only" id="encounter-card-filter-hint">
+              Focus with slash. Escape clears. Does not change initiative or tools below.
+            </p>
             {cardFilter.trim() ? (
               <span className="text-[0.65rem] text-parchment/55 font-mono tabular-nums" aria-live="polite">
                 {filteredBlocks.length}/{blocks.length} shown

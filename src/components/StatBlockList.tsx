@@ -711,6 +711,12 @@ export default function StatBlockList({
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape' && search) {
+                    e.preventDefault();
+                    setSearch('');
+                  }
+                }}
                 placeholder="Name or id…"
                 className="grim-input"
                 autoComplete="off"

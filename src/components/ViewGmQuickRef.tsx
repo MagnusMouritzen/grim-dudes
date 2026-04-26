@@ -127,8 +127,11 @@ export default function ViewGmQuickRef() {
           </li>
           <li>
             <strong className="text-parchment/95">Large encounters:</strong> on <strong className="text-parchment/95">/view</strong>,
-            the filter above the stat cards only hides them on screen—initiative, notes, and copy tools still
-            use the full cast.
+            the <strong className="text-parchment/95">Filter cards</strong> field only hides stat cards on
+            screen (press <strong className="text-parchment/95">/</strong> to focus,{' '}
+            <strong className="text-parchment/95">Escape</strong> to clear). Initiative, notes, and copy tools
+            still use the full cast. On the bestiary, <strong className="text-parchment/95">Escape</strong> in
+            the main search also clears the query.
           </li>
           <li>
             <strong className="text-parchment/95">Condition hints</strong> can{' '}
