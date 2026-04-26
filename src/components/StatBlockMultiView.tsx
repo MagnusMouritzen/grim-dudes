@@ -508,7 +508,7 @@ export default function StatBlockMultiView() {
       </div>
 
       {!playerMode && blocks.length >= 2 && (
-        <div className="mb-4 print:hidden w-full max-w-5xl">
+        <div className="mb-4 print:hidden w-full max-w-6xl">
           <div className="w-full min-w-0 max-w-sm">
             <div className="flex items-baseline justify-between gap-2 mb-0.5">
               <label
@@ -623,7 +623,7 @@ export default function StatBlockMultiView() {
       </motion.div>
 
       {!playerMode && (
-        <div className="print:hidden space-y-3 mt-8 w-full max-w-5xl mx-auto border-t border-iron-800/50 pt-6">
+        <div className="print:hidden space-y-3 mt-8 w-full max-w-6xl mx-auto border-t border-iron-800/50 pt-6">
           <ViewInitiativeList viewKey={viewKey} blocks={blocks} />
           <ViewSessionNotes viewKey={viewKey} />
           <ViewCombatLog viewKey={viewKey} />
