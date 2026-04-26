@@ -823,13 +823,17 @@ export default function StatBlockEditor() {
   }, [handleSave]);
 
   return (
-    <div className="grim-page">
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
+    <div className="grim-page" aria-labelledby="editor-page-heading">
+      <header className="flex flex-wrap items-center justify-between gap-2 mb-5">
         <Link href="/" className="grim-back-link">
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />
           Bestiary
         </Link>
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div
+          className="flex flex-wrap items-center justify-end gap-2"
+          role="toolbar"
+          aria-label="Editor: duplicate or mode"
+        >
           {id ? (
             <button
               type="button"
@@ -846,10 +850,20 @@ export default function StatBlockEditor() {
             {id ? 'Editing' : 'Forging new'}
           </p>
         </div>
-      </div>
-      <h1 className="font-display text-display-lg text-gold-400 mb-6 tracking-wide leading-none">
+      </header>
+      <h1
+        id="editor-page-heading"
+        className="font-display text-display-lg text-gold-400 mb-2 tracking-wide leading-none"
+      >
         {id ? 'Edit Stat Block' : 'New Stat Block'}
       </h1>
+      <p className="text-parchment/60 text-sm mb-6 max-w-2xl">
+        Work here stays in the editor until you save. The bestiary lists what is stored; use{' '}
+        <Link href="/view" className="text-gold-500/90 hover:underline">
+          Encounter
+        </Link>{' '}
+        in the header for a table session, not this form.
+      </p>
 
       <EditorModals
         templateOpen={templateModalOpen}
@@ -889,7 +903,11 @@ export default function StatBlockEditor() {
             )}
           </AnimatePresence>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div
+            className="flex flex-wrap items-center gap-2"
+            role="toolbar"
+            aria-label="Start from a template or pick careers"
+          >
             <button
               type="button"
               ref={templateButtonRef}

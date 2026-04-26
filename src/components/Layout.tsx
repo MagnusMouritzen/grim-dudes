@@ -126,14 +126,15 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Heraldry className="w-5 h-5 text-gold-500/80" />
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-700/40" />
         </div>
-        <div className="mt-3 text-center">
+        <nav className="mt-3 text-center" aria-label="Site footer">
           <Link
             href="/admin"
+            title="Data export, JSON import, and sign out (when the host enables auth)"
             className="inline-block font-mono text-[0.6rem] uppercase tracking-[0.3em] text-parchment/30 hover:text-gold-400/70 transition-colors py-1.5 px-2 -m-0.5 rounded-sm"
           >
             Admin
           </Link>
-        </div>
+        </nav>
       </footer>
     </div>
   );
