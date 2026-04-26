@@ -237,10 +237,7 @@ function StatBlockViewInner() {
   return (
     <div>
       <div className="flex items-center justify-between mb-5 print:hidden">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast"
-        >
+        <Link href="/" className="grim-back-link">
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />
           Bestiary
         </Link>

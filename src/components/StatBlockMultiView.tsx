@@ -437,10 +437,7 @@ export default function StatBlockMultiView() {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5 print:hidden">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast"
-        >
+        <Link href="/" className="grim-back-link">
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-2">
@@ -508,7 +505,7 @@ export default function StatBlockMultiView() {
       </div>
 
       {!playerMode && blocks.length >= 2 && (
-        <div className="mb-4 print:hidden w-full max-w-6xl">
+        <div className="mb-4 print:hidden grim-content-max">
           <div className="w-full min-w-0 max-w-sm">
             <div className="flex items-baseline justify-between gap-2 mb-0.5">
               <label
@@ -623,7 +620,7 @@ export default function StatBlockMultiView() {
       </motion.div>
 
       {!playerMode && (
-        <div className="print:hidden space-y-3 mt-8 w-full max-w-6xl mx-auto border-t border-iron-800/50 pt-6">
+        <div className="print:hidden space-y-3 mt-8 grim-content-max border-t border-iron-800/50 pt-6">
           <ViewInitiativeList viewKey={viewKey} blocks={blocks} />
           <ViewSessionNotes viewKey={viewKey} />
           <ViewCombatLog viewKey={viewKey} />

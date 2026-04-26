@@ -104,125 +104,124 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto grim-card p-6 space-y-5">
-      <div className="flex items-center justify-between">
-        <p className="grim-label">Admin</p>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider"
-        >
-          <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
-        </Link>
-      </div>
-      <div>
-        <h1 className="font-display text-2xl text-gold-400 tracking-wide">Dashboard</h1>
-        <p className="text-parchment/80 text-sm mt-1">
-          Editing routes require a signed-in session when{' '}
-          <code className="text-gold-400/90">AUTH_SECRET</code> and a password are configured.
-          Use <Link href="/login" className="text-gold-400 hover:underline">/login</Link> to sign
-          in.
-        </p>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <Link href="/new" className="grim-btn-primary">
-          New stat block
-        </Link>
-        <button
-          type="button"
-          onClick={exportAllJson}
-          className="grim-btn-ghost"
-          disabled={exporting}
-        >
-          <ScrollIcon className="w-3.5 h-3.5" />
-          {exporting ? 'Exporting…' : 'Export all (JSON)'}
-        </button>
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="grim-btn-ghost"
-          disabled={pending}
-        >
-          {pending ? 'Signing out…' : 'Sign out'}
-        </button>
-      </div>
-      {exportError && (
-        <p className="text-blood-400/90 text-sm" role="alert">
-          {exportError}
-        </p>
-      )}
-
-      <div className="border-t border-iron-700/50 pt-5 space-y-3">
-        <p className="grim-label">Import from JSON</p>
-        <p className="text-parchment/75 text-sm">
-          Same format as <strong>Export all</strong> (array) or <code className="text-gold-400/90">{'{ items, mode }'}</code>.
-          Zod must validate each entry (no unknown keys in strict mode).
-        </p>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <span className="text-xs uppercase tracking-wider text-parchment/60">If id exists</span>
-          <label className="inline-flex items-center gap-2 text-sm text-parchment/90">
-            <input
-              type="radio"
-              name="importMode"
-              checked={importMode === 'skip'}
-              onChange={() => setImportMode('skip')}
-              className="accent-blood-500"
-            />
-            Skip
-          </label>
-          <label className="inline-flex items-center gap-2 text-sm text-parchment/90">
-            <input
-              type="radio"
-              name="importMode"
-              checked={importMode === 'overwrite'}
-              onChange={() => setImportMode('overwrite')}
-              className="accent-blood-500"
-            />
-            Overwrite
-          </label>
+    <div className="grim-content-max px-3 sm:px-4">
+      <div className="max-w-lg mx-auto grim-card p-6 space-y-5">
+        <div className="flex items-center justify-between">
+          <p className="grim-label">Admin</p>
+          <Link href="/" className="grim-back-link">
+            <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
+          </Link>
         </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/json,.json"
-          className="sr-only"
-          aria-hidden
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) void runImport(f);
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="grim-btn-ghost"
-          disabled={importing}
-        >
-          <QuillIcon className="w-3.5 h-3.5" />
-          {importing ? 'Importing…' : 'Choose JSON file…'}
-        </button>
-      </div>
-      {importError && (
-        <p className="text-blood-400/90 text-sm" role="alert">
-          {importError}
-        </p>
-      )}
-      {importResult && (
-        <div className="text-sm text-parchment/85 space-y-1 font-mono" role="status">
-          <p>
-            Created <span className="text-gold-400">{importResult.created}</span>, updated{' '}
-            <span className="text-gold-400">{importResult.updated}</span>, skipped{' '}
-            <span className="text-gold-400">{importResult.skipped}</span>
+        <div>
+          <h1 className="font-display text-2xl text-gold-400 tracking-wide">Dashboard</h1>
+          <p className="text-parchment/80 text-sm mt-1">
+            Editing routes require a signed-in session when{' '}
+            <code className="text-gold-400/90">AUTH_SECRET</code> and a password are configured.
+            Use <Link href="/login" className="text-gold-400 hover:underline">/login</Link> to sign
+            in.
           </p>
-          {importResult.errors.length > 0 && (
-            <p className="text-blood-400/90">
-              {importResult.errors.length} row(s) failed validation
-              {importResult.errors.length <= 5
-                ? `: ${importResult.errors.map((e) => `[${e.index}]`).join(' ')}`
-                : ''}
-            </p>
-          )}
         </div>
-      )}
+        <div className="flex flex-wrap gap-2">
+          <Link href="/new" className="grim-btn-primary">
+            New stat block
+          </Link>
+          <button
+            type="button"
+            onClick={exportAllJson}
+            className="grim-btn-ghost"
+            disabled={exporting}
+          >
+            <ScrollIcon className="w-3.5 h-3.5" />
+            {exporting ? 'Exporting…' : 'Export all (JSON)'}
+          </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="grim-btn-ghost"
+            disabled={pending}
+          >
+            {pending ? 'Signing out…' : 'Sign out'}
+          </button>
+        </div>
+        {exportError && (
+          <p className="text-blood-400/90 text-sm" role="alert">
+            {exportError}
+          </p>
+        )}
+
+        <div className="border-t border-iron-700/50 pt-5 space-y-3">
+          <p className="grim-label">Import from JSON</p>
+          <p className="text-parchment/75 text-sm">
+            Same format as <strong>Export all</strong> (array) or <code className="text-gold-400/90">{'{ items, mode }'}</code>.
+            Zod must validate each entry (no unknown keys in strict mode).
+          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <span className="text-xs uppercase tracking-wider text-parchment/60">If id exists</span>
+            <label className="inline-flex items-center gap-2 text-sm text-parchment/90">
+              <input
+                type="radio"
+                name="importMode"
+                checked={importMode === 'skip'}
+                onChange={() => setImportMode('skip')}
+                className="accent-blood-500"
+              />
+              Skip
+            </label>
+            <label className="inline-flex items-center gap-2 text-sm text-parchment/90">
+              <input
+                type="radio"
+                name="importMode"
+                checked={importMode === 'overwrite'}
+                onChange={() => setImportMode('overwrite')}
+                className="accent-blood-500"
+              />
+              Overwrite
+            </label>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            aria-hidden
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void runImport(f);
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="grim-btn-ghost"
+            disabled={importing}
+          >
+            <QuillIcon className="w-3.5 h-3.5" />
+            {importing ? 'Importing…' : 'Choose JSON file…'}
+          </button>
+        </div>
+        {importError && (
+          <p className="text-blood-400/90 text-sm" role="alert">
+            {importError}
+          </p>
+        )}
+        {importResult && (
+          <div className="text-sm text-parchment/85 space-y-1 font-mono" role="status">
+            <p>
+              Created <span className="text-gold-400">{importResult.created}</span>, updated{' '}
+              <span className="text-gold-400">{importResult.updated}</span>, skipped{' '}
+              <span className="text-gold-400">{importResult.skipped}</span>
+            </p>
+            {importResult.errors.length > 0 && (
+              <p className="text-blood-400/90">
+                {importResult.errors.length} row(s) failed validation
+                {importResult.errors.length <= 5
+                  ? `: ${importResult.errors.map((e) => `[${e.index}]`).join(' ')}`
+                  : ''}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

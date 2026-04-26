@@ -825,10 +825,7 @@ export default function StatBlockEditor() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast"
-        >
+        <Link href="/" className="grim-back-link">
           <ChevronIcon className="w-3.5 h-3.5 rotate-180" />
           Bestiary
         </Link>

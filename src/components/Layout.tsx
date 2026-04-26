@@ -38,7 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </a>
       <header className="sticky top-0 z-20 print:hidden">
         <div className="bg-ink-900/80 backdrop-blur-md">
-          <div className="max-w-6xl mx-auto px-3 sm:px-4 h-[72px] flex items-center justify-between gap-2 min-w-0">
+          <div className="grim-content-max px-3 sm:px-4 h-[72px] flex items-center justify-between gap-2 min-w-0">
             <Link
               href="/"
               className="group inline-flex items-baseline gap-1.5 sm:gap-2 transition-colors duration-fast ease-grim min-w-0"
@@ -104,12 +104,12 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main
         id="main"
         tabIndex={-1}
-        className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-6 sm:py-8 lg:py-10 relative z-[1] focus:outline-none scroll-mt-20"
+        className="flex-1 grim-content-max px-3 sm:px-4 py-6 sm:py-8 lg:py-10 relative z-[1] focus:outline-none scroll-mt-20"
       >
         <PageTransition>{children}</PageTransition>
       </main>
       <footer className="print:hidden relative z-[1] pb-8 pt-6">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 flex items-center justify-center gap-4">
+        <div className="grim-content-max px-3 sm:px-4 flex items-center justify-center gap-4">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-700/40" />
           <Heraldry className="w-5 h-5 text-gold-500/80" />
           <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-parchment/50 whitespace-nowrap">

@@ -59,6 +59,15 @@
 }
 
 @layer components {
+  /** Matches the app shell: same max width as header/footer/main. */
+  .grim-content-max {
+    @apply w-full max-w-6xl mx-auto;
+  }
+  /** Subtle back-to-list nav (stat pages, admin, login). */
+  .grim-back-link {
+    @apply inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold-400 text-xs uppercase tracking-wider transition-colors duration-fast;
+  }
+
   .grim-card {
     @apply relative rounded-card border border-iron-700 bg-ink-800 shadow-card;
     background-image: linear-gradient(180deg, rgba(232, 220, 196, 0.02), transparent 40%);
