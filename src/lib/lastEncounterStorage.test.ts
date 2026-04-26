@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { clearRememberedRoster, getRememberedRoster, rememberRosterView } from './lastEncounterStorage';
+import {
+  clearLastEncounter,
+  getLastEncounter,
+  getRememberedRoster,
+  rememberIdsView,
+  rememberRosterView,
+} from './lastEncounterStorage';
+
+const LEGACY = 'grim-dudes:last-encounter-roster';
 
 const mem = new Map<string, string>();
 
@@ -26,7 +34,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  clearRememberedRoster();
+  clearLastEncounter();
   vi.unstubAllGlobals();
 });
 
@@ -48,5 +56,29 @@ describe('lastEncounterStorage', () => {
   it('ignores empty slug', () => {
     rememberRosterView('', 'x');
     expect(getRememberedRoster()).toBeNull();
+  });
+
+  it('rememberIdsView stores list view (getRememberedRoster null when last is ids)', () => {
+    rememberIdsView(['a', 'b'], 'Scuffle');
+    const e = getLastEncounter();
+    expect(e?.kind).toBe('ids');
+    if (e?.kind === 'ids') {
+      expect(e.ids).toEqual(['a', 'b']);
+      expect(e.title).toBe('Scuffle');
+    }
+    expect(getRememberedRoster()).toBeNull();
+  });
+
+  it('migrates legacy last-encounter-roster into unified key on read', () => {
+    mem.set(
+      LEGACY,
+      JSON.stringify({ slug: 'old-slug', name: 'Legacy name', at: 1 })
+    );
+    const e = getLastEncounter();
+    expect(e?.kind).toBe('roster');
+    if (e?.kind === 'roster') {
+      expect(e.slug).toBe('old-slug');
+      expect(e.name).toBe('Legacy name');
+    }
   });
 });

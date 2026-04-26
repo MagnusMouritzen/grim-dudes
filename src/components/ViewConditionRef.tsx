@@ -1,12 +1,23 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { getGmConditions, searchGmConditions } from '@/lib/gmConditions';
-import { SearchIcon, ScrollIcon } from './icons';
+import { LinkIcon, SearchIcon, ScrollIcon } from './icons';
 
 export default function ViewConditionRef() {
   const [q, setQ] = useState('');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const filtered = useMemo(() => (q.trim() ? searchGmConditions(q) : getGmConditions()), [q]);
+
+  const copyName = useCallback((id: string, name: string) => {
+    void navigator.clipboard.writeText(name).then(
+      () => {
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 1500);
+      },
+      () => {}
+    );
+  }, []);
 
   return (
     <div className="grim-card p-4 print:hidden border-iron-700/50">
@@ -40,7 +51,17 @@ export default function ViewConditionRef() {
         ) : (
           filtered.map((c) => (
             <li key={c.id} className="border-b border-iron-800/30 pb-1.5 last:border-0">
-              <span className="text-gold-400/90 font-medium">{c.name}</span>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <span className="text-gold-400/90 font-medium">{c.name}</span>
+                <button
+                  type="button"
+                  onClick={() => copyName(c.id, c.name)}
+                  className="shrink-0 inline-flex items-center gap-0.5 text-[0.6rem] uppercase tracking-wider text-parchment/45 hover:text-gold-400/90 transition-colors"
+                >
+                  <LinkIcon className="w-3 h-3" />
+                  {copiedId === c.id ? 'Copied' : 'Copy'}
+                </button>
+              </div>
               <span className="text-parchment/75 block text-xs mt-0.5 leading-snug">{c.hint}</span>
             </li>
           ))

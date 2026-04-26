@@ -112,6 +112,17 @@ export default function ViewGmQuickRef() {
             quick direction—use the book for official zones, armour by location, and criticals.
           </li>
           <li>
+            <strong className="text-parchment/95">Header “Last:”</strong> reopens the most recent{' '}
+            <strong className="text-parchment/95">/view</strong> on this device: either a saved encounter roster
+            or an ad-hoc <strong className="text-parchment/95">View together</strong> (ids) list, whichever
+            you opened last. This browser only, not an account.
+          </li>
+          <li>
+            <strong className="text-parchment/95">Condition hints</strong> can{' '}
+            <strong className="text-parchment/95">Copy</strong> the condition name to logs or a VTT; the hint
+            text is a reminder only—the book is authoritative.
+          </li>
+          <li>
             <strong className="text-parchment/95">Fortune (scratch):</strong> the small counter by the
             round is for quick table tracking only—not your official character record.
           </li>

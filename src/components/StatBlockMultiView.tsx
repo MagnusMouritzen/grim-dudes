@@ -24,7 +24,7 @@ import {
 } from '@/lib/apiSchemas';
 import { statblockBodySchemaBase } from '@/lib/validateStatblock';
 import { z } from 'zod';
-import { rememberRosterView } from '@/lib/lastEncounterStorage';
+import { rememberIdsView, rememberRosterView } from '@/lib/lastEncounterStorage';
 import { getPublicSiteBase } from '@/lib/siteUrl';
 import { buildEncounterPlainText, encounterSummaryLine } from '@/lib/encounterSheet';
 import MultiViewWoundBar from './MultiViewWoundBar';
@@ -123,6 +123,15 @@ export default function StatBlockMultiView() {
   useEffect(() => {
     if (!rosterParam) setRosterLabel(null);
   }, [rosterParam]);
+
+  useEffect(() => {
+    if (rosterParam || packParam) return;
+    if (error) return;
+    if (loading) return;
+    if (idsFromQuery.length === 0) return;
+    const title = titleParam?.trim() || null;
+    rememberIdsView(idsFromQuery, title);
+  }, [rosterParam, packParam, error, loading, idsFromQuery, titleParam]);
 
   const currentViewUrl = useMemo(() => {
     const base = getPublicSiteBase();
