@@ -118,9 +118,15 @@ export default function ViewGmQuickRef() {
           </li>
           <li>
             <strong className="text-parchment/95">Header “Last:”</strong> reopens the most recent{' '}
-            <strong className="text-parchment/95">/view</strong> on this device: either a saved encounter roster
-            or an ad-hoc <strong className="text-parchment/95">View together</strong> (ids) list, whichever
-            you opened last. This browser only, not an account.
+            <strong className="text-parchment/95">/view</strong> on this device: saved roster, ad-hoc{' '}
+            <strong className="text-parchment/95">View together</strong> (ids), or a{' '}
+            <strong className="text-parchment/95">share link</strong> (many picks), whichever you opened
+            last. This browser only, not an account.
+          </li>
+          <li>
+            <strong className="text-parchment/95">Large encounters:</strong> on <strong className="text-parchment/95">/view</strong>,
+            the filter above the stat cards only hides them on screen—initiative, notes, and copy tools still
+            use the full cast.
           </li>
           <li>
             <strong className="text-parchment/95">Condition hints</strong> can{' '}

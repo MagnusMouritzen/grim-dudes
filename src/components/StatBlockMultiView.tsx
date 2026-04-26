@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useDeferredValue } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -24,7 +24,7 @@ import {
 } from '@/lib/apiSchemas';
 import { statblockBodySchemaBase } from '@/lib/validateStatblock';
 import { z } from 'zod';
-import { rememberIdsView, rememberRosterView } from '@/lib/lastEncounterStorage';
+import { rememberIdsView, rememberPackView, rememberRosterView } from '@/lib/lastEncounterStorage';
 import { getPublicSiteBase } from '@/lib/siteUrl';
 import { buildEncounterPlainText, encounterSummaryLine } from '@/lib/encounterSheet';
 import MultiViewWoundBar from './MultiViewWoundBar';
@@ -41,7 +41,15 @@ import ViewCombatLog from './ViewCombatLog';
 import ViewSessionBundleCopy from './ViewSessionBundleCopy';
 import ViewSessionNotes from './ViewSessionNotes';
 import ViewInitiativeList from './ViewInitiativeList';
-import { ChevronIcon, EditIcon, LinkIcon, PrinterIcon, ScrollIcon, SkullIcon } from './icons';
+import {
+  ChevronIcon,
+  EditIcon,
+  LinkIcon,
+  PrinterIcon,
+  ScrollIcon,
+  SearchIcon,
+  SkullIcon,
+} from './icons';
 
 const API = '/api';
 
@@ -78,6 +86,8 @@ export default function StatBlockMultiView() {
   const [careersRef, setCareersRef] = useState<CareersRef | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cardFilter, setCardFilter] = useState('');
+  const deferredFilter = useDeferredValue(cardFilter.trim().toLowerCase());
 
   useEffect(() => {
     setError(null);
@@ -110,6 +120,7 @@ export default function StatBlockMultiView() {
         })
         .then((data: { ids?: string[] }) => {
           setResolvedIds(Array.isArray(data.ids) ? data.ids : []);
+          if (packParam) rememberPackView(packParam);
         })
         .catch((e: unknown) => {
           setError(e instanceof Error ? e.message : 'Share link failed');
@@ -221,6 +232,15 @@ export default function StatBlockMultiView() {
         .join('\0'),
     [idsKey]
   );
+
+  const filteredBlocks = useMemo(() => {
+    if (!deferredFilter) return blocks;
+    return blocks.filter((b) => {
+      const name = (b.name || '').toLowerCase();
+      const id = String(b.id ?? '').toLowerCase();
+      return name.includes(deferredFilter) || id.includes(deferredFilter);
+    });
+  }, [blocks, deferredFilter]);
 
   const playerTogglePath = useMemo(() => {
     const sp = new URLSearchParams(searchParams.toString());
@@ -454,6 +474,33 @@ export default function StatBlockMultiView() {
         </div>
       </div>
 
+      {!playerMode && blocks.length >= 2 && (
+        <div className="mb-4 print:hidden w-full max-w-5xl">
+          <label htmlFor="encounter-card-filter" className="sr-only">
+            Filter stat blocks by name or id
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative flex-1 min-w-[8rem] max-w-sm">
+              <SearchIcon className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-parchment/40" />
+              <input
+                id="encounter-card-filter"
+                type="search"
+                value={cardFilter}
+                onChange={(e) => setCardFilter(e.target.value)}
+                placeholder="Filter by name or id…"
+                className="grim-input !pl-8 !py-1.5 text-sm w-full"
+                autoComplete="off"
+              />
+            </div>
+            {cardFilter.trim() ? (
+              <span className="text-[0.65rem] text-parchment/55 font-mono tabular-nums" aria-live="polite">
+                {filteredBlocks.length}/{blocks.length} shown
+              </span>
+            ) : null}
+          </div>
+        </div>
+      )}
+
       <motion.div
         initial="initial"
         animate="animate"
@@ -462,61 +509,67 @@ export default function StatBlockMultiView() {
           printLayout === 'encounter' ? 'print:hidden' : ''
         } statblocks-print-grid`}
       >
-        <AnimatePresence>
-          {blocks.map((block) => {
-            const blockId = String(block.id ?? '');
-            return (
-              <motion.div
-                key={blockId}
-                variants={{
-                  initial: { opacity: 0, y: 8 },
-                  animate: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.24, ease }}
-                className="statblock-print-root min-w-0 flex flex-col gap-1"
-              >
-                {!playerMode && (
-                  <MultiViewWoundBar viewKey={viewKey} block={block} traitsRef={traitsRef} dense />
-                )}
-                <div className="flex flex-wrap justify-end gap-2 print:hidden">
+        {cardFilter.trim() && filteredBlocks.length === 0 ? (
+          <p className="text-parchment/60 text-sm col-span-full text-center py-6 border border-iron-800/50 rounded border-dashed">
+            No stat blocks match &ldquo;{cardFilter.trim()}&rdquo;. Clear the field to see everyone.
+          </p>
+        ) : (
+          <AnimatePresence>
+            {filteredBlocks.map((block) => {
+              const blockId = String(block.id ?? '');
+              return (
+                <motion.div
+                  key={blockId}
+                  variants={{
+                    initial: { opacity: 0, y: 8 },
+                    animate: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.24, ease }}
+                  className="statblock-print-root min-w-0 flex flex-col gap-1"
+                >
                   {!playerMode && (
-                    <>
-                      <Link
-                        href={`/statblock/${encodeURIComponent(blockId)}`}
-                        className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem]"
-                      >
-                        Full page
-                      </Link>
-                      <Link
-                        href={`/statblock/${encodeURIComponent(blockId)}/edit`}
-                        className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem]"
-                      >
-                        <EditIcon className="w-3 h-3" />
-                        Edit
-                      </Link>
-                    </>
+                    <MultiViewWoundBar viewKey={viewKey} block={block} traitsRef={traitsRef} dense />
                   )}
-                  <Link
-                    href={`/statblock/${encodeURIComponent(blockId)}?player=1`}
-                    className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem]"
-                  >
-                    Player
-                  </Link>
-                </div>
-                <StatBlockCard
-                  block={block}
-                  dense
-                  playerMode={playerMode}
-                  skillsRef={skillsRef}
-                  traitsRef={traitsRef}
-                  weaponsRef={weaponsRef}
-                  armourRef={armourRef}
-                  careersRef={careersRef}
-                />
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                  <div className="flex flex-wrap justify-end gap-2 print:hidden">
+                    {!playerMode && (
+                      <>
+                        <Link
+                          href={`/statblock/${encodeURIComponent(blockId)}`}
+                          className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem]"
+                        >
+                          Full page
+                        </Link>
+                        <Link
+                          href={`/statblock/${encodeURIComponent(blockId)}/edit`}
+                          className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem]"
+                        >
+                          <EditIcon className="w-3 h-3" />
+                          Edit
+                        </Link>
+                      </>
+                    )}
+                    <Link
+                      href={`/statblock/${encodeURIComponent(blockId)}?player=1`}
+                      className="grim-btn-ghost !py-1 !px-2 !text-[0.65rem]"
+                    >
+                      Player
+                    </Link>
+                  </div>
+                  <StatBlockCard
+                    block={block}
+                    dense
+                    playerMode={playerMode}
+                    skillsRef={skillsRef}
+                    traitsRef={traitsRef}
+                    weaponsRef={weaponsRef}
+                    armourRef={armourRef}
+                    careersRef={careersRef}
+                  />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
       </motion.div>
 
       {!playerMode && (

@@ -20,7 +20,8 @@ export const LAST_ENCOUNTER_EVENT = 'grim-dudes:last-encounter';
 
 export type LastEncounter =
   | { kind: 'roster'; slug: string; name: string; at: number }
-  | { kind: 'ids'; ids: string[]; title: string | null; at: number };
+  | { kind: 'ids'; ids: string[]; title: string | null; at: number }
+  | { kind: 'pack'; packId: string; at: number };
 
 export type RememberedRoster = { slug: string; name: string; at: number };
 
@@ -71,7 +72,7 @@ function migrateLegacyRoster(ls: Storage): LastEncounter | null {
 }
 
 /**
- * Browsers only — one “last opened” entry (saved roster or ad-hoc ids view). Not an account; local only.
+ * Browsers only — one “last opened” entry (roster, ids list, or share pack). Not an account; local only.
  */
 export function getLastEncounter(): LastEncounter | null {
   const ls = getLs();
@@ -117,6 +118,11 @@ export function getLastEncounter(): LastEncounter | null {
             : null;
       return { kind: 'ids', ids, title, at };
     }
+    if (kind === 'pack') {
+      const packId = (o as { packId?: unknown }).packId;
+      if (typeof packId !== 'string' || !packId.trim()) return null;
+      return { kind: 'pack', packId: packId.trim().slice(0, 120), at };
+    }
     return null;
   } catch {
     return null;
@@ -157,6 +163,13 @@ export function rememberIdsView(ids: string[], title: string | null): void {
       ? null
       : String(title).trim().slice(0, MAX_TITLE) || null;
   persist({ kind: 'ids', ids: out, title: t, at: Date.now() });
+}
+
+/** Short share-packs from “many selections” or pasted links. */
+export function rememberPackView(packId: string): void {
+  const s = String(packId).trim();
+  if (!s) return;
+  persist({ kind: 'pack', packId: s.slice(0, 120), at: Date.now() });
 }
 
 export function clearLastEncounter(): void {

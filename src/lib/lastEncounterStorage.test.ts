@@ -4,6 +4,7 @@ import {
   getLastEncounter,
   getRememberedRoster,
   rememberIdsView,
+  rememberPackView,
   rememberRosterView,
 } from './lastEncounterStorage';
 
@@ -56,6 +57,13 @@ describe('lastEncounterStorage', () => {
   it('ignores empty slug', () => {
     rememberRosterView('', 'x');
     expect(getRememberedRoster()).toBeNull();
+  });
+
+  it('rememberPackView stores share link', () => {
+    rememberPackView('abc12');
+    const e = getLastEncounter();
+    expect(e?.kind).toBe('pack');
+    if (e?.kind === 'pack') expect(e.packId).toBe('abc12');
   });
 
   it('rememberIdsView stores list view (getRememberedRoster null when last is ids)', () => {

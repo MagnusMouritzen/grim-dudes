@@ -18,6 +18,7 @@ function trunc(s: string): string {
 
 function label(e: LastEncounter): string {
   if (e.kind === 'roster') return e.name;
+  if (e.kind === 'pack') return 'Shared pack';
   if (e.title) return e.title;
   return `${e.ids.length} stat block${e.ids.length === 1 ? '' : 's'}`;
 }
@@ -26,6 +27,9 @@ function hrefFor(e: LastEncounter): string {
   if (e.kind === 'roster') {
     return `/view?roster=${encodeURIComponent(e.slug)}`;
   }
+  if (e.kind === 'pack') {
+    return `/view?pack=${encodeURIComponent(e.packId)}`;
+  }
   const q = e.ids.map(encodeURIComponent).join(',');
   const t = e.title;
   if (t) return `/view?ids=${q}&title=${encodeURIComponent(t)}`;
@@ -33,7 +37,7 @@ function hrefFor(e: LastEncounter): string {
 }
 
 /**
- * “Resume” for last opened saved roster or ad-hoc ids /view; reads localStorage (client only).
+ * “Resume” for last opened /view (roster, ids, or share pack); reads localStorage (client only).
  */
 export default function LastEncounterNav() {
   const [r, setR] = useState<LastEncounter | null>(null);
@@ -53,7 +57,8 @@ export default function LastEncounterNav() {
 
   const h = hrefFor(r);
   const lb = label(r);
-  const kindHint = r.kind === 'roster' ? 'saved roster' : 'ad-hoc list';
+  const kindHint =
+    r.kind === 'roster' ? 'saved roster' : r.kind === 'pack' ? 'share link' : 'ad-hoc list';
 
   return (
     <Link
