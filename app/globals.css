@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-ink-900 text-parchment-100 font-body antialiased min-h-screen;
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% -10%, rgba(184, 134, 11, 0.11), transparent 58%),
+      radial-gradient(ellipse 90% 55% at 80% 0%, rgba(61, 107, 91, 0.07), transparent 55%),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(139, 0, 0, 0.08), transparent 70%),
+      radial-gradient(ellipse 120% 100% at 50% 40%, #16120d, #070605 78%);
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 0;
+  }
+
+  *:focus-visible {
+    outline: 2px solid theme('colors.gold.400');
+    outline-offset: 3px;
+    border-radius: 3px;
+    box-shadow: 0 0 0 4px rgba(209, 163, 58, 0.12);
+  }
+
+  ::selection {
+    background: theme('colors.gold.500' / 35%);
+    color: theme('colors.parchment.50');
+  }
+
+  /* Scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gold.700') theme('colors.ink.800');
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: theme('colors.ink.800');
+  }
+  *::-webkit-scrollbar-thumb {
+    background: theme('colors.stone.700');
+    border: 2px solid theme('colors.ink.800');
+    border-radius: 8px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.gold.600');
+  }
+}
+
+@layer components {
+  /**
+   * App shell width (header, main, footer). Page children of `<main>` should not
+   * add a second `px-3`/`px-4`—horizontal padding is already on main.
+   */
+  .grim-content-max {
+    @apply w-full max-w-6xl mx-auto;
+  }
+  /** Subtle back-to-list nav (stat pages, admin, login). */
+  .grim-back-link {
+    @apply inline-flex items-center gap-1.5 text-parchment-300/85 hover:text-gold-300 text-xs uppercase tracking-wider transition-colors duration-base ease-grim;
+  }
+  /** In-header “New stat block” CTA (inactive). Active state uses `.grim-btn-primary` in the nav. */
+  .grim-header-new-stat {
+    @apply inline-flex items-center gap-1.5 rounded border border-gold-700 bg-ink-800/75 px-2.5 sm:px-3 py-1.5 text-xs uppercase tracking-wider text-gold-300 transition-all duration-base ease-grim hover:border-gold-500 hover:text-parchment-50 hover:bg-blood-700/55 hover:shadow-[0_0_20px_-6px_rgba(139,0,0,0.55)];
+  }
+  /**
+   * Root wrapper for route content inside `<main>`: prevents flex children from overflowing
+   * horizontally (wide tables, grids). Pair with `.grim-content-max` only when you need the max width.
+   */
+  .grim-page {
+    @apply w-full min-w-0;
+  }
+
+  .grim-card {
+    @apply relative rounded-card border border-stone-700 bg-ink-800 shadow-card;
+    background-image:
+      linear-gradient(145deg, rgba(61, 107, 91, 0.06) 0%, transparent 42%),
+      linear-gradient(180deg, rgba(232, 220, 196, 0.035), transparent 45%);
+    transition:
+      border-color theme('transitionDuration.base') theme('transitionTimingFunction.grim'),
+      box-shadow theme('transitionDuration.base') theme('transitionTimingFunction.grim'),
+      transform theme('transitionDuration.base') theme('transitionTimingFunction.grim');
+  }
+  .grim-card-hover {
+    @apply transition-all duration-base ease-grim;
+  }
+  .grim-card-hover:hover {
+    @apply -translate-y-0.5 shadow-cardHover;
+    border-color: theme('colors.gold.600');
+  }
+
+  .grim-divider {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      theme('colors.blood.600') 15%,
+      theme('colors.gold.600') 50%,
+      theme('colors.blood.600') 85%,
+      transparent
+    );
+    height: 1px;
+  }
+
+  .grim-pill {
+    @apply inline-flex items-center gap-1 rounded-full border border-stone-700 bg-ink-800/85 px-2 py-0.5 text-parchment/95 transition-all duration-base ease-grim;
+  }
+  .grim-pill:hover,
+  .grim-pill[data-pinned='true'] {
+    border-color: theme('colors.gold.600');
+    background: theme('colors.ink.700');
+  }
+  .grim-pill[data-pinned='true']::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: theme('colors.gold.400');
+    box-shadow: 0 0 6px theme('colors.gold.500');
+    margin-right: 2px;
+  }
+
+  .grim-input {
+    @apply w-full rounded border border-stone-700 bg-ink-800/85 px-3 py-2 text-parchment-50 placeholder-parchment-400/55 transition-colors duration-base ease-grim;
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  .grim-input:focus {
+    @apply outline-none;
+    border-color: theme('colors.gold.500');
+    box-shadow:
+      inset 0 1px 0 rgba(0, 0, 0, 0.4),
+      0 0 0 3px rgba(184, 134, 11, 0.18);
+  }
+  .grim-input-dense {
+    @apply grim-input text-sm py-1.5;
+  }
+
+  .grim-label {
+    @apply block text-eyebrow uppercase tracking-wider text-gold-400/90 font-semibold mb-1;
+  }
+
+  .grim-btn-ghost {
+    @apply inline-flex items-center gap-2 rounded border border-stone-700 bg-ink-800/85 px-3 py-1.5 text-parchment-50/95 text-sm uppercase tracking-wider transition-all duration-base ease-grim;
+  }
+  .grim-btn-ghost:hover {
+    border-color: theme('colors.gold.600');
+    color: theme('colors.parchment.DEFAULT');
+  }
+  .grim-btn-primary {
+    @apply inline-flex items-center gap-2 rounded border border-blood-500 bg-blood-600 px-4 py-2 text-parchment font-display uppercase tracking-wider text-sm transition-all duration-base ease-grim;
+    box-shadow:
+      inset 0 1px 0 rgba(232, 220, 196, 0.08),
+      0 6px 18px -10px rgba(139, 0, 0, 0.9);
+  }
+  .grim-btn-primary:hover {
+    background: theme('colors.blood.500');
+    box-shadow:
+      inset 0 1px 0 rgba(232, 220, 196, 0.14),
+      0 0 0 1px theme('colors.gold.600'),
+      0 10px 24px -10px rgba(139, 0, 0, 1);
+  }
+  .grim-btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .grim-chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-gold-700 bg-ink-800/80 px-2.5 py-0.5 text-[0.7rem] uppercase tracking-wider text-gold-400;
+  }
+
+  .grim-stat-cell {
+    @apply relative rounded bg-ink-900/70 px-2 py-1 text-center;
+    box-shadow:
+      inset 0 1px 0 rgba(232, 220, 196, 0.04),
+      inset 0 0 0 1px rgba(61, 61, 61, 0.5);
+  }
+  .grim-stat-cell::before {
+    content: '';
+    position: absolute;
+    inset: 0 10% auto 10%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, theme('colors.gold.600'), transparent);
+    opacity: 0.5;
+  }
+  .grim-stat-cell-modified::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: theme('colors.gold.400');
+    box-shadow: 0 0 6px theme('colors.gold.500');
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(232, 220, 196, 0.06) 50%,
+      transparent 100%
+    );
+    animation: shimmer-sweep 1.6s infinite;
+  }
+
+  .fx-card-header {
+    background:
+      linear-gradient(
+        125deg,
+        rgba(61, 107, 91, 0.12) 0%,
+        rgba(184, 134, 11, 0.16) 35%,
+        rgba(139, 0, 0, 0.24) 72%,
+        rgba(10, 8, 5, 0.35) 100%
+      );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grim-card {
+    transition: none;
+  }
+}
+
+@media print {
+  @page {
+    size: a4;
+    margin: 12mm 14mm;
+  }
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    background-image: none !important;
+  }
+  body::before {
+    display: none !important;
+  }
+  .print\:hidden,
+  [data-print-hide='true'] {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .grim-stat-cell {
+    background: #f3f3f3 !important;
+    color: #111 !important;
+    box-shadow: none !important;
+  }
+  .grim-card,
+  .statblock-print-root {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border-color: #888 !important;
+  }
+  .fx-card-header {
+    background: #e8e8e8 !important;
+  }
+  .encounter-print-sheet table {
+    color: #111;
+  }
+  .encounter-print-sheet h1,
+  .encounter-print-sheet th {
+    color: #111;
+  }
+}

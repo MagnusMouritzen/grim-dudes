@@ -4,6 +4,10 @@ node_modules/
 # Build outputs
 client/dist/
 build/
+.next/
+.vercel/
+next-env.d.ts
+*.tsbuildinfo
 
 # Environment
 .env

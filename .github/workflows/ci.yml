@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+        env:
+          # Build must not require live Upstash. Route handlers that need
+          # Redis are force-dynamic and only hit Redis at request time.
+          UPSTASH_REDIS_REST_URL: https://example-stub.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: stub

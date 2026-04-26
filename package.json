@@ -1,16 +1,58 @@
 {
   "name": "grim-dudes",
   "private": true,
-  "description": "WFRP 4e stat block editor",
+  "description": "WFRP 4e stat block editor — Next.js on Vercel + Upstash Redis",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node server/index.js",
-    "client": "cd client && npm run dev",
-    "build": "cd client && npm run build",
-    "start": "node server/index.js",
-    "preview": "npm run build && node server/index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "migrate:statblocks": "tsx scripts/migrate-statblocks-to-redis.ts",
+    "cleanup:orphans": "tsx scripts/cleanup-orphan-statblocks.ts",
+    "normalise:statblocks": "tsx scripts/normalise-statblocks.ts",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": "eslint --fix"
+  },
+  "dependencies": {
+    "@sentry/nextjs": "^10.50.0",
+    "@tanstack/react-virtual": "^3.13.24",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.34.3",
+    "@vercel/analytics": "^2.0.1",
+    "bcryptjs": "^3.0.3",
+    "framer-motion": "^12.38.0",
+    "jose": "^6.2.2",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@eslint/eslintrc": "^3.3.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.0",
+    "husky": "^9.1.7",
+    "jsdom": "^29.0.2",
+    "lint-staged": "^16.4.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.14",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.4"
   }
 }
