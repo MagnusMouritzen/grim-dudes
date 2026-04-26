@@ -51,8 +51,13 @@ export default function LoginForm() {
         <p className="text-parchment/80 text-sm mt-1">
           Use the credentials configured for this deployment.
         </p>
+        <p className="text-parchment/60 text-sm mt-2 max-w-prose">
+          Sign in is only for hosts that require a session for write actions&mdash;the editor, Admin
+          import/delete, and similar. Public bestiary and encounter pages are usually available without
+          a password, unless the deployment is locked down.
+        </p>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3" aria-label="Sign-in credentials">
         <div>
           <label htmlFor="login-user" className="grim-label">
             Username <span className="text-parchment/50 font-normal">(if required)</span>

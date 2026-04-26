@@ -694,10 +694,13 @@ export default function StatBlockList({
       <div className="grim-divider" />
 
       {totalCount > 0 && (
-        <div className="grim-card p-3 sm:p-4 print:hidden">
-          <p id="bestiary-filters-label" className="grim-label mb-3">
+        <section
+          className="grim-card p-3 sm:p-4 print:hidden"
+          aria-labelledby="bestiary-filters-label"
+        >
+          <h2 id="bestiary-filters-label" className="grim-label mb-3">
             Find &amp; sort
-          </p>
+          </h2>
           <div
             className="flex flex-col sm:flex-row sm:items-end gap-3"
             role="search"
@@ -859,7 +862,7 @@ export default function StatBlockList({
               View together.
             </span>
           </div>
-        </div>
+        </section>
       )}
 
       {totalCount > 0 && rosterListError && (
@@ -867,9 +870,22 @@ export default function StatBlockList({
       )}
 
       {totalCount > 0 && rosters.length > 0 && (
-        <div className="grim-card p-3 sm:p-4 print:hidden">
-          <p className="grim-label mb-2">Saved encounter rosters</p>
-          <ul className="space-y-1.5 text-sm" aria-label="Saved encounter rosters">
+        <section
+          className="grim-card p-3 sm:p-4 print:hidden"
+          aria-labelledby="bestiary-rosters-heading"
+        >
+          <h2 id="bestiary-rosters-heading" className="grim-label mb-1">
+            Saved encounter rosters
+          </h2>
+          <p className="text-parchment/55 text-sm mb-2 max-w-2xl">
+            These open in{' '}
+            <Link href="/view" className="text-gold-500/90 hover:underline">
+              Encounter
+            </Link>{' '}
+            with the same tools as &ldquo;View together&rdquo;—initiative, notes, and dice. Copy a link
+            or edit the list here.
+          </p>
+          <ul className="space-y-1.5 text-sm" aria-labelledby="bestiary-rosters-heading">
             {rosters.map((r) => (
               <li
                 key={r.slug}
@@ -918,7 +934,7 @@ export default function StatBlockList({
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
 
       {totalCount === 0 ? (
