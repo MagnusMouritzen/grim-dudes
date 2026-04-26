@@ -342,58 +342,64 @@ export default function StatBlockMultiView() {
 
   if (error) {
     return (
-      <div className="grim-card p-8 text-center flex flex-col items-center gap-3 border-blood-700/60 max-w-xl mx-auto">
-        <SkullIcon className="w-10 h-10 text-blood-400" />
-        <p className="text-parchment text-sm">{error}</p>
-        <Link href="/" className="grim-btn-ghost">
-          <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Back to bestiary
-        </Link>
+      <div className="grim-page max-w-xl mx-auto">
+        <div className="grim-card p-8 text-center flex flex-col items-center gap-3 border-blood-700/60 w-full">
+          <SkullIcon className="w-10 h-10 text-blood-400" />
+          <p className="text-parchment text-sm">{error}</p>
+          <Link href="/" className="grim-btn-ghost">
+            <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Back to bestiary
+          </Link>
+        </div>
       </div>
     );
   }
 
   if (resolvedIds === null && (rosterParam || packParam)) {
     return (
-      <div className="grim-card p-12 text-center text-parchment/70 max-w-md mx-auto">
-        Loading encounter…
+      <div className="grim-page max-w-md mx-auto">
+        <div className="grim-card p-12 text-center text-parchment/70 w-full">Loading encounter…</div>
       </div>
     );
   }
 
   if (resolvedIds !== null && ids.length === 0) {
     return (
-      <div className="grim-card p-8 text-center flex flex-col items-center gap-4 max-w-xl mx-auto">
-        <ScrollIcon className="w-12 h-12 text-gold-500" />
-        <div>
-          <h2 className="font-display text-xl text-gold-400 tracking-wide">
-            No stat blocks in this view
-          </h2>
-          <p className="text-parchment/80 mt-1 max-w-md mx-auto text-sm">
-            From the bestiary, tick the circles next to entries and choose{' '}
-            <strong className="text-gold-400">View together</strong>, save a{' '}
-            <strong className="text-gold-400">roster</strong>, or open{' '}
-            <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
-              /view?ids=id1,id2
-            </code>{' '}
-            or <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">/view?roster=…</code>.
-          </p>
+      <div className="grim-page max-w-xl mx-auto">
+        <div className="grim-card p-8 text-center flex flex-col items-center gap-4 w-full">
+          <ScrollIcon className="w-12 h-12 text-gold-500" />
+          <div>
+            <h2 className="font-display text-xl text-gold-400 tracking-wide">
+              No stat blocks in this view
+            </h2>
+            <p className="text-parchment/80 mt-1 max-w-md mx-auto text-sm">
+              From the bestiary, tick the circles next to entries and choose{' '}
+              <strong className="text-gold-400">View together</strong>, save a{' '}
+              <strong className="text-gold-400">roster</strong>, or open{' '}
+              <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">
+                /view?ids=id1,id2
+              </code>{' '}
+              or <code className="text-parchment/95 bg-ink-900/80 border border-iron-700 px-1 py-0.5 rounded font-mono text-xs">/view?roster=…</code>.
+            </p>
+          </div>
+          <Link href="/" className="grim-btn-ghost">
+            <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
+          </Link>
         </div>
-        <Link href="/" className="grim-btn-ghost">
-          <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Bestiary
-        </Link>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-6">
-        {ids.map((id) => (
-          <div key={id} className="grim-card shimmer h-64 p-6">
-            <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
-            <div className="h-32 w-full bg-ink-900/60 rounded" />
-          </div>
-        ))}
+      <div className="grim-page">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-6 w-full">
+          {ids.map((id) => (
+            <div key={id} className="grim-card shimmer h-64 p-6">
+              <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
+              <div className="h-32 w-full bg-ink-900/60 rounded" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

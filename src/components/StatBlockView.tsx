@@ -215,21 +215,25 @@ function StatBlockViewInner() {
 
   if (loading) {
     return (
-      <div className="max-w-xl lg:max-w-md xl:max-w-lg mx-auto grim-card shimmer h-80 p-6">
-        <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
-        <div className="h-40 w-full bg-ink-900/60 rounded" />
+      <div className="grim-page max-w-xl lg:max-w-md xl:max-w-lg mx-auto">
+        <div className="grim-card shimmer h-80 p-6 w-full">
+          <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
+          <div className="h-40 w-full bg-ink-900/60 rounded" />
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="grim-card p-8 text-center flex flex-col items-center gap-3 border-blood-700/60 max-w-xl mx-auto">
-        <SkullIcon className="w-10 h-10 text-blood-400" />
-        <p className="text-parchment text-sm">{error}</p>
-        <Link href="/" className="grim-btn-ghost">
-          <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Back to bestiary
-        </Link>
+      <div className="grim-page max-w-xl mx-auto">
+        <div className="grim-card p-8 text-center flex flex-col items-center gap-3 border-blood-700/60 w-full">
+          <SkullIcon className="w-10 h-10 text-blood-400" />
+          <p className="text-parchment text-sm">{error}</p>
+          <Link href="/" className="grim-btn-ghost">
+            <ChevronIcon className="w-3.5 h-3.5 rotate-180" /> Back to bestiary
+          </Link>
+        </div>
       </div>
     );
   }
@@ -443,9 +447,11 @@ export default function StatBlockView() {
   return (
     <Suspense
       fallback={
-        <div className="max-w-xl mx-auto grim-card shimmer h-80 p-6">
-          <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
-          <div className="h-40 w-full bg-ink-900/60 rounded" />
+        <div className="grim-page max-w-xl mx-auto">
+          <div className="grim-card shimmer h-80 p-6 w-full">
+            <div className="h-6 w-1/2 bg-ink-900/80 rounded mb-3" />
+            <div className="h-40 w-full bg-ink-900/60 rounded" />
+          </div>
         </div>
       }
     >

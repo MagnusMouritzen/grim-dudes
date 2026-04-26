@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 grim-page">
       <div className="space-y-3">
         <div className="h-3 w-40 bg-ink-800 rounded shimmer" />
         <div className="h-12 w-64 bg-ink-800 rounded shimmer" />
