@@ -1,0 +1,26 @@
+{
+  "id": "daemonette",
+  "name": "Daemonette of Slaanesh",
+  "characteristics": {
+    "WS": 50,
+    "BS": 40,
+    "S": 20,
+    "T": 20,
+    "I": 55,
+    "Ag": 50,
+    "Dex": 25,
+    "Int": 20,
+    "WP": 60,
+    "Fel": 35
+  },
+  "size": "Average",
+  "movement": 4,
+  "talents": [],
+  "traits": {
+    "base": ["Champion", "Corruption", "Daemonic", "Distracting", "Fear", "Night Vision", "Unstable"],
+    "optional": []
+  },
+  "armour": "",
+  "weapons": ""
+}
+

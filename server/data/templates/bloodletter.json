@@ -1,0 +1,26 @@
+{
+  "id": "bloodletter",
+  "name": "Bloodletter of Khorne",
+  "characteristics": {
+    "WS": 45,
+    "BS": 25,
+    "S": 35,
+    "T": 25,
+    "I": 50,
+    "Ag": 30,
+    "Dex": 20,
+    "Int": 15,
+    "WP": 60,
+    "Fel": 5
+  },
+  "size": "Average",
+  "movement": 5,
+  "talents": [],
+  "traits": {
+    "base": ["Champion", "Claws", "Corruption", "Daemonic", "Fear", "Frenzy", "Horns", "Painless", "Unstable"],
+    "optional": []
+  },
+  "armour": "",
+  "weapons": ""
+}
+
