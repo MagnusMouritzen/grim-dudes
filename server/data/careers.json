@@ -61,7 +61,7 @@
               "name": "Wizard",
               "status": "Silver 3",
               "skills": ["Charm", "Cool", "Gossip", "Intimidate", "Language (Battle)", "Language (Any)"],
-              "characteristics": ["Agi"],
+              "characteristics": ["Ag"],
               "talents": ["Arcane Magic (Any Arcane Lore)", "Detect Artefact", "Fast Hands", "Sixth Sense"],
               "trappings": ["Magical License"]
             },
@@ -272,7 +272,7 @@
               "name": "Thief-taker",
               "status": "Silver 1",
               "skills": ["Bribery", "Charm", "Gossip", "Haggle", "Intuition", "Melee (Basic)", "Outdoor Survival", "Perception"],
-              "characteristics": ["WS", "T", "Agi"],
+              "characteristics": ["WS", "T", "Ag"],
               "talents": ["Break and Enter", "Shadow", "Strike to Stun", "Suave"],
               "trappings": ["Hand Weapon", "Leather Jerkin", "Rope"]
             },
@@ -322,7 +322,7 @@
               "name": "Coachman",
               "status": "Silver 2",
               "skills": ["Consume Alcohol", "Gossip", "Intuition", "Lore (Local)", "Navigation", "Ranged (Blackpowder)"],
-              "characteristics": ["Agi"],
+              "characteristics": ["Ag"],
               "talents": ["Coolheaded", "Crack the Whip", "Gunner", "Strong-minded"],
               "trappings": ["Blunderbuss with 10 Shots", "Coach Horn", "Leather Jack", "Hat"]
             },

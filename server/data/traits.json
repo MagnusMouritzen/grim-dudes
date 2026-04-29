@@ -59,7 +59,10 @@
   {
     "name": "Big",
     "description": "The creature is a large example of its species. It receives +10 Strength and Toughness, and –5 Agility.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "characteristics": { "S": 10, "T": 10, "Ag": -5 }
+    }
   },
   {
     "name": "Bite",
@@ -116,7 +119,10 @@
   {
     "name": "Clever",
     "description": "Receives +20 Intelligence and +10 Initiative.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "characteristics": { "Int": 20, "I": 10 }
+    }
   },
   {
     "name": "Cold-blooded",
@@ -147,7 +153,10 @@
   {
     "name": "Cunning",
     "description": "Receives +10 Fellowship, Intelligence, and Initiative.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "characteristics": { "Fel": 10, "Int": 10, "I": 10 }
+    }
   },
   {
     "name": "Creeping",
@@ -184,7 +193,10 @@
   {
     "name": "Elite",
     "description": "Receives +20 Weapon Skill, Ballistic Skill, and Willpower.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "characteristics": { "WS": 20, "BS": 20, "WP": 20 }
+    }
   },
   {
     "name": "Engulf",
@@ -199,7 +211,11 @@
   {
     "name": "Fast",
     "description": "Receives +1 Movement and +10 Agility.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "movement": 1,
+      "characteristics": { "Ag": 10 }
+    }
   },
   {
     "name": "Fear",
@@ -288,7 +304,10 @@
   {
     "name": "Leader",
     "description": "Receives +10 Fellowship and Willpower. Cannot be taken by creatures with the Bestial Trait.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "characteristics": { "Fel": 10, "WP": 10 }
+    }
   },
   {
     "name": "Magical",
@@ -438,7 +457,10 @@
   {
     "name": "Tough",
     "description": "Receives +10 Toughness and Willpower.",
-    "generic": true
+    "generic": true,
+    "effects": {
+      "characteristics": { "T": 10, "WP": 10 }
+    }
   },
   {
     "name": "Tracker",
